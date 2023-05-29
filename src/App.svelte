@@ -1,6 +1,9 @@
 <script>
 	export let name;
 	import p5 from 'p5-svelte';
+	import * as Tone from 'tone';
+	const s = new Tone.Synth().toDestination();
+	s.triggerAttackRelease("C4", "8n");
 </script>
 
 <main>
@@ -29,3 +32,5 @@
 		}
 	}
 </style>
+
+<!-- <p5 {sketch} /> -->
