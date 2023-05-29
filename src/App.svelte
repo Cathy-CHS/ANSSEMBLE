@@ -1,5 +1,6 @@
 <script>
 	export let name;
+	import p5 from 'p5-svelte';
 </script>
 
 <main>
