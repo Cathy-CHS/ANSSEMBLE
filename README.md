@@ -6,29 +6,29 @@ Basic structure from [typical SvelteKit project](https://kit.svelte.dev/docs/pro
 my-project/
 ├ src/
 │ ├ lib/
-│ │ ├ server/
-│ │ │ └ [your server-only lib files]
-│ │ └ [your lib files]
-│ ├ params/
-│ │ └ [your param matchers]
+│ ├ Components/
+│ │ ├ Interactions/
+│ │ │ └ Guitar.svelte // and more interactions by different instrument...
+│ │ ├ [Define basic objects: ex. Project, Layer, Point, ...]
+│ │ └ [Component files: ex. button]
 │ ├ routes/
-│ │ └ [your routes]
-│ ├ app.html
-│ ├ error.html
-│ ├ hooks.client.js
-│ └ hooks.server.js
-├ static/
+│ │ ├ Login.svelte
+│ │ ├ Home.svelte
+│ │ └ Edit.svelte
+│ ├ app.svelte
+│ └ main.js
+├ assets/
 │ └ [your static assets]
 ├ tests/
-│ └ [your tests]
+│ └ [your tests] // dummy data to test
 ├ package.json
-├ svelte.config.js
-├ tsconfig.json
-└ vite.config.js
+├ package-lock.json
+└ rollup.config.js
 ```
 
 -------------------------
 
+## Commands
 ```
 npm install
 npm install -save p5 p5-svelte
