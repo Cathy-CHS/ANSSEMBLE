@@ -15,22 +15,24 @@
     }
     //max number of bar in one display
     const numBarShow = 3;
-    const startingPoint = width/3
+    const startingPoint = width/3 
     const layerWidth = width-startingPoint;
     const lineWidth = height/700;
-    const duraWidth = height/20;
+    const duraWidth = height/15;
     let BPM = 60;
     
+    
 
+
+    let absoluteTick = 0;
     const sketch = (p5) =>{
         // If true, time cursor will move
         let cursorMode = true;
-        
         //showLocation: location of displayed starting point, previous bar*256 + location in bar -1
         let showLocation = 0;
         //pointer: location of time cursor (also a tick)
         let pointer = 0;
-        const mainLayerHeight = height/2;
+        const mainLayerHeight = height/3;
 
         //4/4 => 60/(BPM/4)s = 1 bar time. 1 bar = 256 tick
         // 1 bar time / 256 = 1 tick time
@@ -55,16 +57,13 @@
             p5.strokeCap(p5.ROUND)
             p5.strokeWeight(lineWidth);
             p5.stroke(colors.default);
-
-            
-
             let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
             p5.ellipse(X, lineWidth*15, lineWidth*15*2);
             p5.line(X, 0, X, mainLayerHeight+height/10);
-                
         }
         
         function timegoes(){
+            absoluteTick ++
             if (cursorMode){
                 pointer++
                 if (pointer>=numBarShow/2*256){cursorMode = false}
@@ -75,11 +74,11 @@
                         cursorMode = true
                         pointer = 0;
                         showLocation = 0;
+                        absoluteTick = 0;
                     }
                 }
                 else {showLocation ++}
             }
-            
         }
         
         //For element moving
@@ -89,6 +88,7 @@
             return X;
         }
         
+
         function grid(){
             p5.strokeCap(p5.ROUND)
             p5.strokeWeight(lineWidth);
@@ -98,9 +98,12 @@
             for (let i = 0 ; i<=numBarShow; i++){
                 let X = timeToX(Math.floor(showLocation/256)+i+1, 0);
                 if (X>startingPoint){p5.line(X, 0, X, mainLayerHeight+height/10);}
-                
             }
         }
+
+
+        
+
 
         function layerdrawing(yLocation, layer){
             
@@ -141,12 +144,43 @@
         }
 
     }
+    
+    let newDuration = 0;
+    let newStart = 0;
+    let newPitch = null;
+    function keyPressed(event) {
+        //System key
+        let key=event.key;
+        if (key === ' ') {
+            newPitch = 'C8'; 
+        }
+        if (!newStart && newPitch){
+            newStart = absoluteTick
+            layer.points.push(
+                {pitch: newPitch,
+                bar: Math.floor(newStart/256)+1,
+                start: newStart%256,
+                duration: 1})
+        } else{
+            layer.points[layer.points.length - 1].duration = absoluteTick - newStart;
+        }
+
+    }
+    function keyUped(event) {
+        //System key
+
+        newPitch = null;
+        newStart = 0;
+
+    }
 </script>
+
 
 
 
 <P5 {sketch}/>
 
-
+<svelte:window on:keydown|preventDefault={keyPressed}
+on:keyup|preventDefault={keyUped} />
 
 
