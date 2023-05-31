@@ -29,7 +29,7 @@
         //showLocation: location of displayed starting point, previous bar*256 + location in bar -1
         let showLocation = 0;
         //pointer: location of time cursor (also a tick)
-        let pointer = startingPoint;
+        let pointer = 0;
         const mainLayerHeight = height/2;
 
         //4/4 => 60/(BPM/4)s = 1 bar time. 1 bar = 256 tick
@@ -48,13 +48,41 @@
             p5.background(p5.color(colors.back));
             grid()
             layerdrawing(mainLayerHeight, layer);
+            timeCursor();
             timegoes()
         }
-        function timegoes(){
-            showLocation ++
-            if (showLocation>(NumBar)*256){showLocation=0}
+        function timeCursor(){
+            p5.strokeCap(p5.ROUND)
+            p5.strokeWeight(lineWidth);
+            p5.stroke(colors.default);
+
+            
+
+            let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
+            p5.ellipse(X, lineWidth*15, lineWidth*15*2);
+            p5.line(X, 0, X, mainLayerHeight+height/10);
+                
         }
         
+        function timegoes(){
+            if (cursorMode){
+                pointer++
+                if (pointer>=numBarShow/2*256){cursorMode = false}
+            } else{
+                if (showLocation>(NumBar-numBarShow)*256){
+                    pointer++
+                    if (pointer>=numBarShow*256){
+                        cursorMode = true
+                        pointer = 0;
+                        showLocation = 0;
+                    }
+                }
+                else {showLocation ++}
+            }
+            
+        }
+        
+        //For element moving
         function timeToX(bar, start){
             let tick = (bar-1)*256 +start - showLocation;
             let X = tick/(numBarShow*256) * layerWidth + startingPoint;
@@ -72,9 +100,7 @@
                 if (X>startingPoint){p5.line(X, 0, X, mainLayerHeight+height/10);}
                 
             }
-
         }
-
 
         function layerdrawing(yLocation, layer){
             
@@ -112,9 +138,6 @@
                 p5.strokeCap(p5.SQUARE);
             }
             p5.blendMode(p5.BLEND);
-        }
-        function timeCursor(pointer){
-
         }
 
     }

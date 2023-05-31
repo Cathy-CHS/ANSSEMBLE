@@ -45,8 +45,8 @@
 
 
 
-	let width = window.innerWidth/1.5;
-    let height = window.innerHeight/1.5;
+	let width = window.innerWidth;
+    let height = window.innerHeight;
 	let layers = test_project.Layers;
 	let layer = test_project.Layers[0];
 	let NumBar = test_project.NumBar;
