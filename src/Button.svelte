@@ -1,19 +1,16 @@
 <script>
-	
 	let buttonProps = {
 	class:[$$restProps.class]
 	}
 </script>
-	<button on:click
-            on:mouse
-            on:focus
-			on:mousedown
-			on:mouseover
-			on:mouseenter
-			on:mouseleave
-		{...buttonProps}>
-			<slot/>
-	</button>
+
+<button on:click
+		on:mouse
+		on:mousedown
+		on:mouseup
+	{...buttonProps}>
+		<slot/>
+</button>
 
 <style>
 	.sound{
