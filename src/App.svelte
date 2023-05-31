@@ -48,15 +48,16 @@
 	let width = window.innerWidth/1.5;
     let height = window.innerHeight/1.5;
 	let layers = test_project.Layers;
-	let layer = test_project.Layers[0]
-	console.log(width, height, layer)
+	let layer = test_project.Layers[0];
+	let NumBar = test_project.NumBar;
+	
 </script>
 
 
 
 <div transition:fade>
 	
-	<Layer {width} {height} {layer}, {layers}/>
+	<Layer {width} {height} {layer} {layers} {NumBar}/>
 </div>
 
 
