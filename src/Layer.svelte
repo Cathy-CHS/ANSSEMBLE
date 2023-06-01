@@ -145,7 +145,6 @@
 
     }
     
-    let newDuration = 0;
     let newStart = 0;
     let newPitch = null;
     function keyPressed(event) {
