@@ -23,6 +23,7 @@
        let key4 = ['z','x','c','v','b','n','m',',','.','/'];
        p5.background(0);
        p5.fill(255);
+       /////////
        
        p5.noStroke();
        p5.textSize(width_ratio*48);
