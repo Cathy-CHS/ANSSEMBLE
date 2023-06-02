@@ -1,7 +1,5 @@
 <script>
 	import { fly, fade, blur, slide, scale } from 'svelte/transition';
-	import p5 from 'p5-svelte';
-	import * as Tone from 'tone';
 	import Layer from "./Layer.svelte";
 
 	const test_project = {

@@ -1,7 +1,8 @@
 
 
 <script>
-    import P5 from "p5-svelte";
+    import { onMount } from 'svelte';
+    
     export let [width, height, layer, layers, NumBar] = [400,300, {}, []];
     console.log(width, height, layer, NumBar)
     const colors ={
@@ -21,9 +22,6 @@
     const duraWidth = height/15;
     let BPM = 60;
     
-    
-
-
     let absoluteTick = 0;
     const sketch = (p5) =>{
         // If true, time cursor will move
@@ -40,13 +38,15 @@
         let frameRate = 1/(60/(BPM/4)/256)
         console.log(frameRate);
 
-
-        p5.setup = function(){
+        //let sprite_test
+        p5.setup = async ()=>{
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
+            
+            //sprite_test = new p5.Sprite();
         }
-        p5.draw = function(){
+        p5.draw = ()=>{
             p5.background(p5.color(colors.back));
             grid()
             layerdrawing(mainLayerHeight, layer);
@@ -106,7 +106,6 @@
 
 
         function layerdrawing(yLocation, layer){
-            
             let inst = layer.Inst;
             let points = layer.points;
             p5.strokeWeight(lineWidth);
@@ -172,14 +171,18 @@
         newStart = 0;
 
     }
+    let sketchId;
+    onMount(function () {
+    let myp5 = new p5(sketch, sketchId);
+    });
 </script>
 
 
 
 
-<P5 {sketch}/>
+<div {sketchId} />
 
 <svelte:window on:keydown|preventDefault={keyPressed}
-on:keyup|preventDefault={keyUped} />
+                on:keyup|preventDefault={keyUped} />
 
 
