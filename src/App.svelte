@@ -9,7 +9,7 @@
     const sketch = (p5) => {
       let instrument = 'PIANO';
       let instrument_description = 'how to play description \nEx. press keyboard';
-       
+      let button1 = [100,100,100,100];
       p5.setup = () => {
        p5.createCanvas(p5.windowWidth, p5.windowWidth/1920*1080);
       };
@@ -79,16 +79,24 @@
           p5.fill('#93c7f1');
           p5.rect(width_ratio*746.5+width_ratio*89*key3.indexOf(p5.key),height_ratio*684.5,width_ratio*89,height_ratio*149.5);
        }
- 
        }
  
        console.log(p5.key);
- 
- 
- 
- 
- 
+       p5.rect(button1[0],button1[1],button1[2],button1[3]);
+
       };
+
+      p5.mousePressed = () => {
+         let width_ratio = p5.width/1920;
+         let height_ratio = p5.height/1080;
+         let mouseX = p5.mouseX;
+         let mouseY = p5.mouseY;
+         console.log(mouseX,mouseY);
+         if ((button1[0]<mouseX)&&(mouseX<button1[0]+button1[2])){
+            console.log("pressed");
+         }
+      }
+
     };
    </script>
    
