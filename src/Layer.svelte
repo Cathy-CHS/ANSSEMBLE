@@ -47,6 +47,7 @@
             timeCursor = timeCursorMake();
         }
         p5.draw = ()=>{
+            p5.clear();
             p5.background(p5.color(colors.back));
             keyboardHandler()
             grid()
@@ -69,18 +70,18 @@
                     duration: 1})
                 newPitch = null;
             }
-
             if (p5.kb.pressing()) {
 	            layer.points[layer.points.length - 1].duration = absoluteTick - newStart;
             }
             if (p5.kb.released()){
                 newStart = 0;
+                console.log(timeCursor.mouse)
             }
 
         }
 
         function timeCursorMake(){
-            let timeCursor = new p5.Sprite();
+            let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2);
             timeCursor.draw = ()=>{
                 p5.strokeCap(p5.ROUND)
                 p5.strokeWeight(lineWidth);
@@ -89,16 +90,44 @@
                 p5.ellipse(0, 0, lineWidth*15*2);
                 p5.line(0, 0, 0, mainLayerHeight+height/10);
             }
-            timeCursor.collider = 'none';
             return timeCursor
         }
         function timeCursorMove(){
             let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
             timeCursor.pos = {x:X,y: lineWidth*15}
+            if (timeCursor.mouse.dragging()) {
+                let mouseLocation = p5.mouse.x;
+                let relLocation = mouseLocation-X;
+                timeCursor.pos.x = Math.max(startingPoint, mouseLocation)// + timeCursor.mouse.x
+                console.log(absoluteTick)
+                absoluteTick = absoluteTick + relLocation/layerWidth*(numBarShow*256) * 0.1
+                if (absoluteTick<=0) absoluteTick = 0;
+                else if(absoluteTick>=NumBar*256) absoluteTick = NumBar*256;
+
+	        }
+
         }
 
 
         function timegoes(){
+            absoluteTick ++
+            if (absoluteTick<=numBarShow/2*256){
+                pointer = absoluteTick
+                showLocation = 0;
+            } else if (absoluteTick>(NumBar-numBarShow/2)*256){
+                pointer = absoluteTick - (NumBar-numBarShow)*256; 
+                showLocation = (NumBar-numBarShow)*256;
+                if (absoluteTick>=NumBar*256){
+                    absoluteTick = 0;
+                }
+            }
+            else {
+                pointer =numBarShow/2*256;
+                showLocation =absoluteTick - numBarShow/2*256}
+            
+        }
+        /*
+                function timegoes(){
             absoluteTick ++
             if (cursorMode){
                 pointer++
@@ -116,7 +145,8 @@
                 else {showLocation ++}
             }
         }
-        
+        */
+
         //For element moving
         function timeToX(bar, start){
             let tick = (bar-1)*256 +start - showLocation;
