@@ -38,30 +38,66 @@
         let frameRate = 1/(60/(BPM/4)/256)
         console.log(frameRate);
 
-        //let sprite_test
+        let timeCursor
         p5.setup = async ()=>{
             p5.createCanvas(width, height);
+            
             p5.noStroke();
             p5.frameRate(frameRate);
-            
-            //sprite_test = new p5.Sprite();
+            timeCursor = timeCursorMake();
         }
         p5.draw = ()=>{
             p5.background(p5.color(colors.back));
+            keyboardHandler()
             grid()
             layerdrawing(mainLayerHeight, layer);
-            timeCursor();
+            timeCursorMove()
             timegoes()
         }
-        function timeCursor(){
-            p5.strokeCap(p5.ROUND)
-            p5.strokeWeight(lineWidth);
-            p5.stroke(colors.default);
-            let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
-            p5.ellipse(X, lineWidth*15, lineWidth*15*2);
-            p5.line(X, 0, X, mainLayerHeight+height/10);
+        let newStart = 0;
+        let newPitch = null;
+        function keyboardHandler(){
+            if (p5.kb.presses('space')) {
+	            newPitch = 'C8';
+                newStart = absoluteTick
+            }
+            if (newPitch){
+                layer.points.push(
+                    {pitch: newPitch, 
+                    bar: Math.floor(newStart/256)+1,
+                    start: newStart%256,
+                    duration: 1})
+                newPitch = null;
+            }
+
+            if (p5.kb.pressing()) {
+	            layer.points[layer.points.length - 1].duration = absoluteTick - newStart;
+            }
+            if (p5.kb.released()){
+                newStart = 0;
+            }
+
         }
-        
+
+        function timeCursorMake(){
+            let timeCursor = new p5.Sprite();
+            timeCursor.draw = ()=>{
+                p5.strokeCap(p5.ROUND)
+                p5.strokeWeight(lineWidth);
+                p5.stroke(colors.default);
+                p5.fill(colors.default)
+                p5.ellipse(0, 0, lineWidth*15*2);
+                p5.line(0, 0, 0, mainLayerHeight+height/10);
+            }
+            timeCursor.collider = 'none';
+            return timeCursor
+        }
+        function timeCursorMove(){
+            let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
+            timeCursor.pos = {x:X,y: lineWidth*15}
+        }
+
+
         function timegoes(){
             absoluteTick ++
             if (cursorMode){
@@ -100,10 +136,6 @@
                 if (X>startingPoint){p5.line(X, 0, X, mainLayerHeight+height/10);}
             }
         }
-
-
-        
-
 
         function layerdrawing(yLocation, layer){
             let inst = layer.Inst;
@@ -144,33 +176,8 @@
 
     }
     
-    let newStart = 0;
-    let newPitch = null;
-    function keyPressed(event) {
-        //System key
-        let key=event.key;
-        if (key === ' ') {
-            newPitch = 'C8'; 
-        }
-        if (!newStart && newPitch){
-            newStart = absoluteTick
-            layer.points.push(
-                {pitch: newPitch,
-                bar: Math.floor(newStart/256)+1,
-                start: newStart%256,
-                duration: 1})
-        } else{
-            layer.points[layer.points.length - 1].duration = absoluteTick - newStart;
-        }
 
-    }
-    function keyUped(event) {
-        //System key
 
-        newPitch = null;
-        newStart = 0;
-
-    }
     let sketchId;
     onMount(function () {
     let myp5 = new p5(sketch, sketchId);
@@ -182,7 +189,5 @@
 
 <div {sketchId} />
 
-<svelte:window on:keydown|preventDefault={keyPressed}
-                on:keyup|preventDefault={keyUped} />
 
 

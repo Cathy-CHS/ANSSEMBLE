@@ -8,7 +8,7 @@
 	Tag : ['example', 'tags', 'P2'],
 	Desc : "Example project for implementation",
 	// 8 마디
-	NumBar : "8",
+	NumBar : "6",
 	NumOrbit : 0,
 	Origin : null,
 	NumReproduction : 0,
