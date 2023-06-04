@@ -2,7 +2,7 @@
 	import { fly, fade, blur, slide, scale } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import Layer from "./Layer.svelte";
-	import Piano from "./Piano.svelte";
+	// import Piano from "./Piano.svelte";
 
 	const test_project = {
 	Maker : "user",
@@ -44,7 +44,7 @@
 	}
 
 	let width = window.innerWidth;
-    let height = window.innerHeight;
+    let height = window.innerWidth/1920*1080;
 	let layers = test_project.Layers;
 	let layer = test_project.Layers[0];
 	let NumBar = test_project.NumBar;
@@ -67,7 +67,7 @@
 <div transition:fade>
 	
 	<Layer {width} {height} {layer} {layers} {NumBar}/>
-	<Piano/>
+	<!-- <Piano/> -->
 </div>
 
 

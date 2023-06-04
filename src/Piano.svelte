@@ -1,4 +1,4 @@
-<script>
+<script context="module">
     /**
     * a peeFive'd 10print algorithm
     * @see {@link https://10print.org/} to learn about it!
@@ -7,22 +7,28 @@
 
     import { onMount } from 'svelte';
 
-    const sketchPiano = (p5) => {
+    export function setupPiano (p5) {
         let instrument = 'PIANO';
         let instrument_description = 'how to play description \nEx. press keyboard';
         
-        p5.setup = async () => {
-            p5.createCanvas(p5.windowWidth, p5.windowWidth/1920*1080);
-        };
-        
+        // p5.setup = async () => {
+        //     p5.createCanvas(p5.windowWidth, p5.windowWidth/1920*1080);
+        // };
+        return;
+    };
+
+    export function drawPiano (p5) {
         p5.draw = () => {
+            let instrument = 'PIANO';
+            let instrument_description = 'how to play description \nEx. press keyboard';
+
             let width_ratio = p5.width/1920;
             let height_ratio = p5.height/1080;
             let key1 = ['2','3','none','5','6','7','none','9','0','none','='];
             let key2 = ['q','w','e','r','t','y','u','i','o','p','[',']'];
             let key3 = ['a','s','d','none','g','h','none','k','l',';'];
             let key4 = ['z','x','c','v','b','n','m',',','.','/'];
-            p5.background(0);
+            // p5.background(0);
             p5.fill(255);
             /////////
             
@@ -85,9 +91,14 @@
             
             // console.log(p5.key);            
         };
+        return;
     };
 
-    onMount(function () {
-        let pianop5 = new p5(sketchPiano);
-    })
+    // let sketchId;
+    // onMount(function () {
+    //     let pianop51 = new p5(setupPiano, sketchId);
+    //     let pianop52 = new p5(drawPiano, sketchId);
+    // })
 </script>
+
+<!-- <div {sketchId} /> -->

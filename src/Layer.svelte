@@ -1,5 +1,7 @@
 <script>
     import { onMount } from 'svelte';
+    // import Piano from './Piano.svelte';
+    import { setupPiano, drawPiano } from './Piano.svelte';
     
     export let [width, height, layer, layers, NumBar] = [400, 300, {}, []];
     console.log(width, height, layer, NumBar)
@@ -19,6 +21,8 @@
     const lineWidth = height/700;
     const duraWidth = height/15;
     let BPM = 60;
+
+    // let piano;
     
     let absoluteTick = 0;
     const sketch = (p5) =>{
@@ -28,7 +32,7 @@
         let showLocation = 0;
         //pointer: location of time cursor (also a tick)
         let pointer = 0;
-        const mainLayerHeight = height/3;
+        const mainLayerHeight = height/4.5;
 
         //4/4 => 60/(BPM/4)s = 1 bar time. 1 bar = 256 tick
         // 1 bar time / 256 = 1 tick time
@@ -41,15 +45,23 @@
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
+            setupPiano(p5);
+            // let setPiano = pianop51;
+            // const setPiano = require('./Piano.svelte');
+            // const { setupPiano } = setPiano;
             
             //sprite_test = new p5.Sprite();
         }
         p5.draw = ()=>{
             p5.background(p5.color(colors.back));
+            drawPiano(p5);
             grid()
             layerdrawing(mainLayerHeight, layer);
             timeCursor();
-            timegoes()
+            timegoes();
+            // let drawPiano = pianop52;
+            // const drPiano = require('./Piano.svelte');
+            // const { drawPiano } = drPiano;
         }
         function timeCursor(){
             p5.strokeCap(p5.ROUND)
@@ -98,10 +110,6 @@
                 if (X>startingPoint){p5.line(X, 0, X, mainLayerHeight+height/10);}
             }
         }
-
-
-        
-
 
         function layerdrawing(yLocation, layer){
             let inst = layer.Inst;
@@ -185,8 +193,7 @@
     });
 </script>
 
-
-
+<!-- <Piano bind:this={piano} /> -->
 
 <div {sketchId} />
 
