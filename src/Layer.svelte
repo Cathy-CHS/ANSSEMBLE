@@ -1,9 +1,7 @@
-
-
 <script>
     import { onMount } from 'svelte';
     
-    export let [width, height, layer, layers, NumBar] = [400,300, {}, []];
+    export let [width, height, layer, layers, NumBar] = [400, 300, {}, []];
     console.log(width, height, layer, NumBar)
     const colors ={
         back: '#030309',
@@ -151,6 +149,16 @@
         let key=event.key;
         if (key === ' ') {
             newPitch = 'C8'; 
+            // if (!newStart && newPitch){
+            // newStart = absoluteTick
+            // layer.points.push(
+            //     {pitch: newPitch,
+            //     bar: Math.floor(newStart/256)+1,
+            //     start: newStart%256,
+            //     duration: 1})
+            // } else{
+            //     layer.points[layer.points.length - 1].duration = absoluteTick - newStart;
+            // }
         }
         if (!newStart && newPitch){
             newStart = absoluteTick
