@@ -1,36 +1,67 @@
 <script>
-	export let name;
-	import p5 from 'p5-svelte';
-	import * as Tone from 'tone';
-	const s = new Tone.Synth().toDestination();
-	s.triggerAttackRelease("C4", "8n");
+	import { fly, fade, blur, slide, scale } from 'svelte/transition';
+	import Layer from "./Layer.svelte";
+
+	const test_project = {
+	Maker : "user",
+	Title: "Example_project",
+	Tag : ['example', 'tags', 'P2'],
+	Desc : "Example project for implementation",
+	// 8 마디
+	NumBar : "8",
+	NumOrbit : 0,
+	Origin : null,
+	NumReproduction : 0,
+	Layers :[
+                {
+                    Inst: "Piano",
+                    points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
+                                pitch: 'C8',
+                                bar: 1,
+                                start: 5,
+                                duration: 20
+                                }, {
+                                pitch: 'E8',
+                                bar: 1,
+                                start: 5,
+                                duration: 100
+                                }, {
+                                pitch: 'G8',
+                                bar: 1,
+                                start: 7,
+                                duration: 100
+                                },{
+                                pitch: 'C8',
+                                bar: 2,
+                                start: 120,
+                                duration: 30
+                                }
+                            ]
+                }
+			]
+	}
+
+
+
+	let width = window.innerWidth;
+    let height = window.innerHeight;
+	let layers = test_project.Layers;
+	let layer = test_project.Layers[0];
+	let NumBar = test_project.NumBar;
+	
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+
+
+<div transition:fade>
+	
+	<Layer {width} {height} {layer} {layers} {NumBar}/>
+</div>
+
+
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
 </style>
 
 <!-- <p5 {sketch} /> -->
