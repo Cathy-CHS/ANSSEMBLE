@@ -2,6 +2,7 @@
   import P5 from 'p5-svelte';
   import * as Tone from 'tone';
   import Piano from "./Piano.svelte";
+  import Guitar from "./Guitar.svelte";
 
   const sketch = (p5) => {
     // your sketch logic here
@@ -11,4 +12,4 @@
 
 <P5 {sketch} />
 
-<Piano />
+<Guitar />
