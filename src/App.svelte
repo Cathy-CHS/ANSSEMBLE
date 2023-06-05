@@ -37,6 +37,27 @@
                                 duration: 30
                                 }
                             ]
+                }, 
+                {
+                    Inst: "Base",
+                    points: [{ // Amp: 100이 최대
+                                amp: 100,
+                                bar: 1,
+                                start: 5,
+                                }, {
+                                amp: 50,
+                                bar: 1,
+                                start: 5,
+                                }, {
+                                amp: 30,
+                                bar: 1,
+                                start: 7,
+                                },{
+                                amp: 70,
+                                bar: 2,
+                                start: 120,
+                                }
+                            ]
                 }
 			]
 	}
@@ -46,7 +67,7 @@
 	let width = window.innerWidth;
     let height = window.innerHeight;
 	let layers = test_project.Layers;
-	let layer = test_project.Layers[0];
+	let layerToSee = 1;
 	let NumBar = test_project.NumBar;
 	
 </script>
@@ -55,7 +76,7 @@
 
 <div transition:fade>
 	
-	<Layer {width} {height} {layer} {layers} {NumBar}/>
+	<Layer {width} {height} {layers} {layerToSee} {NumBar}/>
 </div>
 
 
