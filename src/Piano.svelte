@@ -98,5 +98,6 @@ const sketch = (p5) => {
     }
 
   };
-export {sketch}; 
+
 </script>
+<P5 {sketch} />

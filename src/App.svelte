@@ -1,17 +1,14 @@
 <script>
-    import P5 from 'p5-svelte';
-    import * as Tone from 'tone';
-	 import sketch from "./Piano.svelte";
-   /**
-   * a peeFive'd 10print algorithm
-   * @see {@link https://10print.org/} to learn about it!
-   * @param {p5} p5 instance mode
-   */
+  import P5 from 'p5-svelte';
+  import * as Tone from 'tone';
+  import Piano from "./Piano.svelte";
 
-   let Piano = new sketch
+  const sketch = (p5) => {
+    // your sketch logic here
+  };
 
 </script>
-  
-  <P5 {Piano} />
 
- 
+<P5 {sketch} />
+
+<Piano />
