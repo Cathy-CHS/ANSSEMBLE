@@ -27,6 +27,7 @@ const sketch = (p5) => {
      drawbuttons();
      drawtexts();
      drawtiles();
+
     };
 
 
@@ -51,7 +52,16 @@ const sketch = (p5) => {
        let mouseY = p5.mouseY;
        console.log(mouseX,mouseY);
        if ((back_button[0]<mouseX)&&(mouseX<back_button[0]+back_button[2])){
-          console.log("pressed");
+          console.log("back_button");
+       }
+       if ((add_button[0]<mouseX)&&(mouseX<add_button[0]+add_button[2])){
+          console.log("add_button");
+       }
+       if ((speed_button[0]<mouseX)&&(mouseX<speed_button[0]+speed_button[2])){
+          console.log("speed_button");
+       }
+       if ((play_button[0]<mouseX)&&(mouseX<play_button[0]+play_button[2])){
+          console.log("play_button");
        }
     }
    }
@@ -80,56 +90,99 @@ const sketch = (p5) => {
      let width_ratio = p5.width/1920;
      let height_ratio = p5.height/1080;
      let key1 = ['2','3','none','5','6','7','none','9','0','none','='];
-     let key2 = ['q','w','e','r','t','y','u','i','o','p','[',']'];
-     let key3 = ['a','s','d','none','g','h','none','k','l',';'];
-     let key4 = ['z','x','c','v','b','n','m',',','.','/'];
+     let key2 = ['Q','W','E','R','T','Y','U','I','O','P','[',']'];
+     let key3 = ['A','S','D','none','G','H','none','K','L',';'];
+     let key4 = ['Z','X','C','V','B','N','M',',','.','/'];
+     let keypressed = [];
       p5.fill(0);
      p5.stroke('#93c7f1');
      p5.strokeWeight(width_ratio*5)
+
+     for (let i = 0; i < 250;i++){
+      if (p5.keyIsDown(i)){
+      keypressed.push(i);
+     }
+     }
+     
+     keypressed=keypressed.map(x =>{
+      if (x==187) return '=';
+      else if (x==219) return '[';
+      else if (x==221) return ']';
+      else if (x==186) return ';';
+      else if (x==188) return ',';
+      else if (x==190) return '.';
+      else if (x==191) return '/';
+      else return String.fromCharCode(x);
+     } );
+     console.log(keypressed);
+
+
+     //두번째 줄 그리기
      for (let i = 0; i<12; i++){
      p5.fill(0);
      p5.rect(width_ratio*702+width_ratio*89*i,height_ratio*412.5,width_ratio*89,height_ratio*248.5);
-     if (key2.includes(p5.key)){
-        p5.fill('#93c7f1');
-        p5.rect(width_ratio*702+width_ratio*89*key2.indexOf(p5.key),height_ratio*412.5,width_ratio*89,height_ratio*248.5);
      }
-     }
-
+      //네번째 줄 그리기
      for (let i = 0; i<10; i++){
      p5.fill(0);
      p5.rect(width_ratio*791+width_ratio*89*i,height_ratio*684.5,width_ratio*89,height_ratio*248.5);
-     if (key4.includes(p5.key)){
-        p5.fill('#93c7f1');
-        p5.rect(width_ratio*791+width_ratio*89*key4.indexOf(p5.key),height_ratio*684.5,width_ratio*89,height_ratio*248.5);
      }
-     }
-
+      //첫번째 줄 그리기
      for (let i = 0; i<11; i++){
      p5.fill(0);
      if ((i !== 2) && (i !== 6) && (i !== 9)){
      p5.rect(width_ratio*746.5+width_ratio*89*i,height_ratio*412.5,width_ratio*89,height_ratio*149.5);
      }
-     if (key1.includes(p5.key)){
-        p5.fill('#93c7f1');
-        p5.rect(width_ratio*746.5+width_ratio*89*key1.indexOf(p5.key),height_ratio*412.5,width_ratio*89,height_ratio*149.5);
      }
-     }
-
+      //세번째 줄 그리기
      for (let i = 0; i<10; i++){
      p5.fill(0);
      if ((i !== 3) && (i !== 6)){
      p5.rect(width_ratio*746.5+width_ratio*89*i,height_ratio*684.5,width_ratio*89,height_ratio*149.5);
      }
-     if (key3.includes(p5.key)){
-        p5.fill('#93c7f1');
-        p5.rect(width_ratio*746.5+width_ratio*89*key3.indexOf(p5.key),height_ratio*684.5,width_ratio*89,height_ratio*149.5);
-     }
      }
 
-     console.log(p5.key);
+
+
+
+     keypressed.map(x => {
+      x=x+'';
+      //첫번째 줄 칠하기
+      if (key1.includes(x)){
+         console.log(x)
+         x=x+'';
+         p5.fill('#93c7f1');
+         p5.rect(width_ratio*746.5+width_ratio*89*key1.indexOf(x),height_ratio*412.5,width_ratio*89,height_ratio*149.5);
+      }
+
+      //두번째 줄 칠하기
+      if (key2.includes(x)){
+         console.log(x)
+         p5.fill('#93c7f1');
+         p5.rect(width_ratio*702+width_ratio*89*key2.indexOf(x),height_ratio*412.5,width_ratio*89,height_ratio*248.5);
+      }
+
+      //세번째 줄 칠하기
+      if (key3.includes(x)){
+         console.log(x)
+         p5.fill('#93c7f1');
+         p5.rect(width_ratio*746.5+width_ratio*89*key3.indexOf(x),height_ratio*684.5,width_ratio*89,height_ratio*149.5);
+      }
+
+      //네번째 줄 칠하기
+      if (key4.includes(x)){
+         console.log(x)
+         p5.fill('#93c7f1');
+         p5.rect(width_ratio*791+width_ratio*89*key4.indexOf(x),height_ratio*684.5,width_ratio*89,height_ratio*248.5);
+      }
+     })
+
+
    }
 
-  };
+
+
+};
 
 </script>
 <P5 {sketch} />
