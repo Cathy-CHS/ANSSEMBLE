@@ -73,9 +73,6 @@
             //pause
             if (p5.kb.presses('space')) {
                 isPlay = !isPlay;
-                console.log(timeToX(3, 15))
-                console.log(xToTick(timeToX(3, 15)))
-                console.log(tickToTime(xToTick(timeToX(3, 15))))
 
             }
             if (inst == "Piano") keyboardHandlerPiano();
