@@ -48,17 +48,6 @@
 	let layers = test_project.Layers;
 	let layer = test_project.Layers[0];
 	let NumBar = test_project.NumBar;
-
-	// const sketch = (p5) => {
-	// 	p5.setup = async () => {
-	// 		p5.createCanvas(p5.windowWidth, p5.windowWidth/1920*1080);
-	// 	}
-	// };
-
-	// let sketchId;
-    // onMount(function () {
-    // let myp5 = new p5(sketch, sketchId);
-    // });
 	
 </script>
 
@@ -75,5 +64,3 @@
 <style>
 
 </style>
-
-<!-- <p5 {sketch} /> -->

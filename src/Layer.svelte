@@ -67,6 +67,7 @@
             p5.strokeCap(p5.ROUND)
             p5.strokeWeight(lineWidth);
             p5.stroke(colors.default);
+            p5.fill(colors.default);
             let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
             p5.ellipse(X, lineWidth*15, lineWidth*15*2);
             p5.line(X, 0, X, mainLayerHeight+height/10);
@@ -120,6 +121,7 @@
 
             p5.line(startingPoint, yLocation, width, yLocation);
             p5.noStroke();
+            p5.fill(colors.default);
             p5.ellipse(startingPoint, yLocation, lineWidth*10);
 
             p5.blendMode(p5.HARD_LIGHT);
