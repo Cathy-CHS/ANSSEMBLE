@@ -73,6 +73,10 @@
             //pause
             if (p5.kb.presses('space')) {
                 isPlay = !isPlay;
+                console.log(timeToX(3, 15))
+                console.log(xToTick(timeToX(3, 15)))
+                console.log(tickToTime(xToTick(timeToX(3, 15))))
+
             }
             if (inst == "Piano") keyboardHandlerPiano();
         }
@@ -163,12 +167,10 @@
             return X;
         }
         
-        //For element moving
-        function timeToX(bar, start){
-            let tick = (bar-1)*256 +start - showLocation;
-            let X = tick/(numBarShow*256) * layerWidth + startingPoint;
-            return X;
-        }
+        //For decoding drag
+        let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
+        let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
+
 
         function grid(){
             p5.strokeCap(p5.ROUND)
