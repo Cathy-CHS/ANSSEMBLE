@@ -1,6 +1,5 @@
 <script>
     import { onMount } from 'svelte';
-    // import Piano from './Piano.svelte';
     import { setupPiano, drawPiano } from './Piano.svelte';
     
     export let [width, height, layer, layers, NumBar] = [400, 300, {}, []];
@@ -21,9 +20,10 @@
     const lineWidth = height/700;
     const duraWidth = height/15;
     let BPM = 60;
-
-    // let piano;
     
+    let key;
+    let press;
+
     let absoluteTick = 0;
     const sketch = (p5) =>{
         // If true, time cursor will move
@@ -46,22 +46,16 @@
             p5.noStroke();
             p5.frameRate(frameRate);
             setupPiano(p5);
-            // let setPiano = pianop51;
-            // const setPiano = require('./Piano.svelte');
-            // const { setupPiano } = setPiano;
             
             //sprite_test = new p5.Sprite();
         }
         p5.draw = ()=>{
             p5.background(p5.color(colors.back));
-            drawPiano(p5);
+            drawPiano(key, press, p5);
             grid()
             layerdrawing(mainLayerHeight, layer);
             timeCursor();
             timegoes();
-            // let drawPiano = pianop52;
-            // const drPiano = require('./Piano.svelte');
-            // const { drawPiano } = drPiano;
         }
         function timeCursor(){
             p5.strokeCap(p5.ROUND)
@@ -97,8 +91,7 @@
             let tick = (bar-1)*256 +start - showLocation;
             let X = tick/(numBarShow*256) * layerWidth + startingPoint;
             return X;
-        }
-        
+        }        
 
         function grid(){
             p5.strokeCap(p5.ROUND)
@@ -156,7 +149,8 @@
     let newPitch = null;
     function keyPressed(event) {
         //System key
-        let key=event.key;
+        key = event.key;
+        press = 1;
         if (key === ' ') {
             newPitch = 'C8'; 
             // if (!newStart && newPitch){
@@ -184,6 +178,9 @@
     }
     function keyUped(event) {
         //System key
+
+        key = event.key;
+        press = 0;
 
         newPitch = null;
         newStart = 0;

@@ -17,7 +17,12 @@
         // return;
     };
 
-    export function drawPiano (p5) {
+    let highlight1 = new Array(11).fill(0);
+    let highlight2 = new Array(12).fill(0);
+    let highlight3 = new Array(9).fill(0);
+    let highlight4 = new Array(10).fill(0);
+
+    export function drawPiano (key, press, p5) {
         let instrument = 'PIANO';
         let instrument_description = 'how to play description \nEx. press keyboard';
 
@@ -31,6 +36,19 @@
         let key3ToPitch = ['G#4','A#4',null,'C#5','D#5',null,'F#5','G#5','A#5'];
         let key4 = ['z','x','c','v','b','n','m',',','.','/'];
         let key4ToPitch = ['A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+
+        if (key1.includes(key)){
+            highlight1[key1.indexOf(key)] = press;
+        }
+        if (key2.includes(key)){
+            highlight2[key2.indexOf(key)] = press;
+        }
+        if (key3.includes(key)){
+            highlight3[key3.indexOf(key)] = press;
+        }
+        if (key4.includes(key)){
+            highlight4[key4.indexOf(key)] = press;
+        }
         
         // p5.background(0);
         p5.fill(255);
@@ -51,56 +69,35 @@
         
         p5.fill(0);
         p5.stroke('#93c7f1');
-        p5.strokeWeight(width_ratio*5)
+        p5.strokeWeight(width_ratio*5);
+
         for (let i = 0; i<12; i++){
-            p5.fill(0);
+            p5.fill(highlightTile(highlight2[i]));
             p5.rect(width_ratio*702+width_ratio*89*i,height_ratio*412.5,width_ratio*89,height_ratio*248.5);
-            if (key2.includes(p5.key)){
-                p5.fill('#93c7f1');
-                p5.rect(width_ratio*702+width_ratio*89*key2.indexOf(p5.key),height_ratio*412.5,width_ratio*89,height_ratio*248.5);
-            }
         }
         
         for (let i = 0; i<10; i++){
-        p5.fill(0);
-        p5.rect(width_ratio*791+width_ratio*89*i,height_ratio*684.5,width_ratio*89,height_ratio*248.5);
-        if (key4.includes(p5.key)){
-            p5.fill('#93c7f1');
-            p5.rect(width_ratio*791+width_ratio*89*key4.indexOf(p5.key),height_ratio*684.5,width_ratio*89,height_ratio*248.5);
-        }
+            p5.fill(highlightTile(highlight4[i]));
+            p5.rect(width_ratio*791+width_ratio*89*i,height_ratio*684.5,width_ratio*89,height_ratio*248.5);
         }
         
         for (let i = 0; i<11; i++){
-        p5.fill(0);
+            p5.fill(highlightTile(highlight1[i]));
         if ((i !== 2) && (i !== 6) && (i !== 9)){
-        p5.rect(width_ratio*746.5+width_ratio*89*i,height_ratio*412.5,width_ratio*89,height_ratio*149.5);
-        }
-        if (key1.includes(p5.key)){
-            p5.fill('#93c7f1');
-            p5.rect(width_ratio*746.5+width_ratio*89*key1.indexOf(p5.key),height_ratio*412.5,width_ratio*89,height_ratio*149.5);
+            p5.rect(width_ratio*746.5+width_ratio*89*i,height_ratio*412.5,width_ratio*89,height_ratio*149.5);
         }
         }
         
         for (let i = 0; i<9; i++){
-            p5.fill(0);
+            p5.fill(highlightTile(highlight3[i]));
             if ((i !== 2) && (i !== 5) && (i !== 9)){
-            p5.rect(width_ratio*746.5+width_ratio*89*i,height_ratio*684.5,width_ratio*89,height_ratio*149.5);
+                p5.rect(width_ratio*746.5+width_ratio*89*i,height_ratio*684.5,width_ratio*89,height_ratio*149.5);
             }
-            if (key3.includes(p5.key)){
-                p5.fill('#93c7f1');
-                p5.rect(width_ratio*746.5+width_ratio*89*key3.indexOf(p5.key),height_ratio*684.5,width_ratio*89,height_ratio*149.5);
-            }
-        
         }
-        
-        // console.log(p5.key);
+
+        function highlightTile(indicator) {
+            if (indicator) return '#93c7f1';
+            else return 0;
+        };
     };
-
-    // let sketchId;
-    // onMount(function () {
-    //     let pianop51 = new p5(setupPiano, sketchId);
-    //     let pianop52 = new p5(drawPiano, sketchId);
-    // })
 </script>
-
-<!-- <div {sketchId} /> -->
