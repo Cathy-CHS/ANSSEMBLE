@@ -34,7 +34,7 @@
         let pointer = 0;
         const mainLayerHeight = height/3;
         const otherLayerHeight = height/6;
-
+        const gridHeight =  mainLayerHeight+height/10
         //4/4 => 60/(BPM/4)s = 1 bar time. 1 bar = 256 tick
         // 1 bar time / 256 = 1 tick time
         // inverse of 1 tick time = fr
@@ -42,24 +42,27 @@
         console.log(frameRate);
 
         let isPlay = 0;
-
+        let interactionTile
+        let cursorSprite
         p5.setup = async ()=>{
+            p5.noCursor()
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
             timeCursor = timeCursorMake();
+            makeInteractionField()
         }
         p5.draw = ()=>{
             p5.clear();
             p5.background(p5.color(colors.back));
-            keyboardHandler()
-            mouseHandler()
+            keyboardHandler()  
             grid()
             layerdrawing(mainLayerHeight, layer);
-            
+
             for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(otherLayerHeight, layers[i]);}
             
             timeCursorMove()
+            mouseHandler()
             timegoes()
         }
 
@@ -67,7 +70,14 @@
         let newPitch = null;
         let toggleLayer = 0;
 
+        function makeInteractionField(){
+            let fieldColor = p5.color(colors.back)
+            fieldColor.setAlpha(0);
 
+            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
+            interactionTile.color =  fieldColor;
+            interactionTile.stroke =  fieldColor;
+        }
 
         function keyboardHandler(){
             //pause
@@ -78,10 +88,72 @@
             if (inst == "Piano") keyboardHandlerPiano();
         }
 
+        let isDrag = 0;
         function mouseHandler(){
             //interaction section
-            
+            //console.log(p5.mouseX, p5.mouseY)
+            p5.noStroke()
+            p5.blendMode(p5.HARD_LIGHT);
+            layerColoring(inst)
+            if (isDrag || interactionTile.mouse.hovering()) {
+                p5.fill(layerColor);
+                p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
+
+
+                layerColor.setAlpha(100)
+                if (inst == "Base") mouseHandlerBase();
+                layerColor.setAlpha(90)
+
+            } else{
+                p5.fill(colors.default);
+                p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
+            }
+
+            p5.blendMode(p5.BLEND);
         }
+
+        let tempXY = [0, 0]
+        let amplitude
+        let radi
+        let tempRadi = 0;
+        function mouseHandlerBase(){
+            p5.strokeCap(p5.ROUND)
+            newStart = absoluteTick; 
+            if (interactionTile.mouse.presses()) {
+                tempXY = [p5.mouseX, p5.mouseY];
+                isDrag = 1;
+            }
+            else if (interactionTile.mouse.pressing()) {
+                let maxRadi = maxAmpRadius*2
+                radi = Math.sqrt(Math.pow(p5.mouseX-tempXY[0], 2)+Math.pow(p5.mouseY-tempXY[1], 2))
+                radi = (radi>=maxRadi? maxRadi: radi);
+                p5.ellipse(tempXY[0], tempXY[1], lineWidth*40);
+                p5.ellipse(tempXY[0], tempXY[1], radi*2);
+                p5.noFill()
+                p5.stroke(layerColor);
+                p5.strokeWeight(lineWidth*2)
+                p5.ellipse(tempXY[0], tempXY[1], maxRadi*2);
+                p5.line(tempXY[0], tempXY[1], p5.mouseX, p5.mouseY)
+                amplitude = Math.floor(Math.pow(radi, 2)/Math.pow(maxRadi, 2)*100)
+                
+            }
+            else if (interactionTile.mouse.released()){
+                isDrag = 0;
+                tempRadi = radi;
+                if (amplitude>10) layer.points.push(
+                                {amp: amplitude, 
+                                bar: Math.floor(newStart/256)+1,
+                                start: newStart%256,})
+            }
+            if(tempRadi > 5){
+                tempRadi  = tempRadi*0.8;
+                p5.ellipse(tempXY[0], tempXY[1], tempRadi*2);
+            } else tempRadi = 0;
+           
+        }
+
+
+
 
         function keyboardHandlerPiano(){
             if (p5.kb.presses('a')) {
@@ -119,8 +191,9 @@
                 p5.stroke(colors.default);
                 p5.fill(colors.default)
                 p5.ellipse(0, 0, lineWidth*15*2);
-                p5.line(0, 0, 0, mainLayerHeight+height/10);
+                p5.line(0, -lineWidth*15, 0, gridHeight- lineWidth*15);
             }
+            p5.noStroke();
             return timeCursor
         }
         function timeCursorMove(){
@@ -177,8 +250,19 @@
             p5.stroke(gridColor);
             for (let i = 0 ; i<=numBarShow; i++){
                 let X = timeToX(Math.floor(showLocation/256)+i+1, 0);
-                if (X>startingPoint){p5.line(X, 0, X, mainLayerHeight+height/10);}
+                if (X>startingPoint){p5.line(X, 0, X, gridHeight);}
             }
+        }
+        let layerColor
+        function layerColoring(inst){
+            
+            if (inst == 'Piano'){layerColor =p5.color(colors.blue)}
+            else if (inst == 'Trumpet'){layerColor =p5.color(colors.purple)}
+            else if (inst == 'Base'){layerColor =p5.color(colors.purple)}
+            else if (inst == 'Snare'){layerColor =p5.color(colors.yellow)}
+            else if (inst == 'Cymbal'){layerColor =p5.color(colors.pink)}
+            else if (inst == 'Guitar'){layerColor =p5.color(colors.green)}
+            layerColor.setAlpha(90);
         }
 
         function layerdrawing(yLocation, layer){
@@ -195,14 +279,11 @@
             p5.ellipse(startingPoint, yLocation, lineWidth*10);
 
             p5.blendMode(p5.HARD_LIGHT);
-            let layerColor = p5.color(colors.default)
+
+            layerColoring(inst)
             if (inst == 'Piano' || inst == 'Trumpet'){
                 p5.strokeCap(p5.ROUND);
                 p5.strokeWeight(layerInstLineWidth);
-                if (inst == 'Piano'){layerColor =p5.color(colors.blue)}
-                else if (inst == 'Trumpet'){layerColor =p5.color(colors.purple)}
-                layerColor.setAlpha(90);
-
                 p5.stroke(layerColor);
                 for (let point of points){
                     let xi = timeToX(point.bar, point.start);
@@ -217,11 +298,6 @@
                 p5.strokeCap(p5.SQUARE);
             } else if (inst == 'Base' || inst == 'Snare' || inst == 'Cymbal' || inst == 'Guitar'){
                 p5.noStroke();
-                if (inst == 'Base'){layerColor =p5.color(colors.purple)}
-                else if (inst == 'Snare'){layerColor =p5.color(colors.yellow)}
-                else if (inst == 'Cymbal'){layerColor =p5.color(colors.pink)}
-                else if (inst == 'Guitar'){layerColor =p5.color(colors.green)}
-                layerColor.setAlpha(90);
                 p5.fill(layerColor)
                 for (let point of points){
                     let x = timeToX(point.bar, point.start);
