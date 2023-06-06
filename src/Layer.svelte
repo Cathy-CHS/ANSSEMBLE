@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     // import * as Tone from 'tone';
-    import { setupPiano, drawPiano, playPiano } from './Piano.svelte';
+    import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
 
     import { setupSettings, playSettings } from './LayerSettings.svelte';
     
@@ -48,9 +48,6 @@
     // Tone.Transport.bpm.value = BPM;
 	// Tone.Transport.start();
     // sampler.start();
-    
-    let key;
-    let press;
 
     let absoluteTick = 0;
     const sketch = (p5) =>{
@@ -91,16 +88,13 @@
             layerdrawing(mainLayerHeight, layer);
             keyboardHandler()
             for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(otherLayerHeight, layers[i]);}
-            
+             
             timeCursorMove()
             mouseHandler()
             timegoes();
 
         }
 
-        let newStart = 0;
-        let newPitch = null;
-        let toggleLayer = 0;
 
         function makeInteractionField(){
             let fieldColor = p5.color(colors.back)
@@ -117,9 +111,10 @@
                 isPlay = !isPlay;
 
             }
-            if (inst == "Piano") keyboardHandlerPiano();
+            if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
         }
 
+        let newStart = 0;
         let isDrag = 0;
         function mouseHandler(){
             //interaction section
@@ -182,78 +177,6 @@
                 p5.ellipse(tempXY[0], tempXY[1], tempRadi*2);
             } else tempRadi = 0;
            
-        }
-
-        // [ [key, layerIndex], ... ]
-        let exsitingKeyPitchs = []
-        function keyboardHandlerPiano(){
-            let tempKeys = []
-            //holding keys, include useless things
-            for (let k of Object.keys(p5.kb)){
-                if (p5.kb[k]) tempKeys.push(k)
-            }
-            
-            drawPiano(tempKeys, p5);
-            
-            //[ [key, pitch], ...]
-            let tempPitch = playPiano (tempKeys)
-            //console.log(tempPitch)
-
-            if (!(tempPitch.length)) {
-                exsitingKeyPitchs = []
-            }
-            // drawing keys 
-            let exsistingKeys = exsitingKeyPitchs.map(function(element) {return element[0]})
-            //console.log(exsistingKeys);
-
-            for (let keyPitch of tempPitch){
-                if (exsistingKeys.includes(keyPitch[0])){
-                    // [key, pointIndex] [1] of point to modify
-                    let pointIndex = exsitingKeyPitchs[exsistingKeys.indexOf(keyPitch[0])][1]
-                    let mPoint =  layer.points[pointIndex]
-                    
-                    mPoint.duration = absoluteTick - ((mPoint.bar-1)*256 +mPoint.start);
-                }else{
-                    newStart = absoluteTick
-                    exsitingKeyPitchs.push([keyPitch[0], layer.points.length])
-                    console.log([keyPitch[0], layer.points.length])
-                    layer.points.push(
-                    {pitch: keyPitch[1], 
-                    bar: Math.floor(newStart/256)+1,
-                    start: newStart%256,
-                    duration: 1})
-                }
-            }
-            if (p5.kb.presses('b')) {
-	            console.log(layer.points)
-            }
-
-/*
-            if (p5.kb.presses('a')) {
-	            newPitch = 'C8';
-                newStart = absoluteTick
-                toggleLayer = 1;
-            }
-            //console.log(p5.kb)
-            if (newPitch){
-                if (toggleLayer){
-                    layer.points.push(
-                    {pitch: newPitch, 
-                    bar: Math.floor(newStart/256)+1,
-                    start: newStart%256,
-                    duration: 1})
-                    toggleLayer = 0;
-                }
-
-                if (p5.kb.pressing('a')) {
-                    layer.points[layer.points.length - 1].duration = absoluteTick - newStart;
-                }
-                if (p5.kb.released()){
-                    newStart = 0;
-                    newPitch = null;
-                }
-            }
-            */
         }
 
         function timeCursorMake(){
