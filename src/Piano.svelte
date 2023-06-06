@@ -7,7 +7,7 @@
 
     import { onMount } from 'svelte';
 
-    export function setupPiano (p5) {
+    export function setupPiano (p5, width, height) {
         let instrument = 'PIANO';
         let instrument_description = 'how to play description \nEx. press keyboard';
         
@@ -17,10 +17,7 @@
         // return;
     };
 
-    let highlight1 = new Array(11).fill(0);
-    let highlight2 = new Array(12).fill(0);
-    let highlight3 = new Array(9).fill(0);
-    let highlight4 = new Array(10).fill(0);
+    let highlight1, highlight2, highlight3, highlight4
 
     let key1 = ['2','3','none','5','6','7','none','9','0','none', '='];
     let key1ToPitch = ['C#3','D#3',null,'F#3','G#3','A#3',null,'C#4','D#4',null,'F#4'];
@@ -31,26 +28,33 @@
     let key4 = ['z','x','c','v','b','n','m',',','.','/'];
     let key4ToPitch = ['A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
-    export function drawPiano (key, press, p5) {
+    export function drawPiano (keys, p5) {
+        highlight1 = new Array(11).fill(0);
+        highlight2 = new Array(12).fill(0);
+        highlight3 = new Array(9).fill(0);
+        highlight4 = new Array(10).fill(0);
         let instrument = 'PIANO';
         let instrument_description = 'how to play description \nEx. press keyboard';
 
         let width_ratio = p5.width/1920;
         let height_ratio = p5.height/1080;
+        if (keys.length>=1){
+            for (let key of keys){
+            if (key1.includes(key)){
+                highlight1[key1.indexOf(key)] = 1;
+            }
+            if (key2.includes(key)){
+                highlight2[key2.indexOf(key)] = 1;
+            }
+            if (key3.includes(key)){
+                highlight3[key3.indexOf(key)] = 1;
+            }
+            if (key4.includes(key)){
+                highlight4[key4.indexOf(key)] = 1;
+            }
+        }
+        }
 
-        if (key1.includes(key)){
-            highlight1[key1.indexOf(key)] = press;
-        }
-        if (key2.includes(key)){
-            highlight2[key2.indexOf(key)] = press;
-        }
-        if (key3.includes(key)){
-            highlight3[key3.indexOf(key)] = press;
-        }
-        if (key4.includes(key)){
-            highlight4[key4.indexOf(key)] = press;
-        }
-        
         // p5.background(0);
         p5.fill(255);
         /////////
@@ -102,18 +106,29 @@
         };
     };
 
-    export function playPiano (key) {
-        if (key1.includes(key)){
-            return key1ToPitch[key1.indexOf(key)];
-        }
-        if (key2.includes(key)){
-            return key2ToPitch[key2.indexOf(key)];
-        }
-        if (key3.includes(key)){
-            return key3ToPitch[key3.indexOf(key)];
-        }
-        if (key4.includes(key)){
-            return key4ToPitch[key4.indexOf(key)];
-        }
+    export function playPiano (keys) {
+        let tempPitch = []
+        //console.log(keys);
+        for (let key of keys){
+            if (key1.includes(key)){
+                tempPitch.push([key, key1ToPitch[key1.indexOf(key)]]) ;
+            }
+            if (key2.includes(key)){
+                tempPitch.push([key,key2ToPitch[key2.indexOf(key)]]);
+            }
+            if (key3.includes(key)){
+                tempPitch.push([key, key3ToPitch[key3.indexOf(key)]]);
+            }
+            if (key4.includes(key)){
+                tempPitch.push([key, key4ToPitch[key4.indexOf(key)]]);
+            }
+        } 
+        
+        // export as [ [key, pitch], ...]
+        if (tempPitch.length>=1){
+            console.log(tempPitch)
+            return tempPitch
+        } else return [];
+        
     };
 </script>

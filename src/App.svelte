@@ -17,7 +17,7 @@
 	Tag : ['example', 'tags', 'P2'],
 	Desc : "Example project for implementation",
 	// 8 마디
-	NumBar : "8",
+	NumBar : "6",
 	NumOrbit : 0,
 	Origin : null,
 	NumReproduction : 0,
@@ -46,6 +46,27 @@
                                 duration: 30
                                 }
                             ]
+                }, 
+                {
+                    Inst: "Base",
+                    points: [{ // Amp: 100이 최대
+                                amp: 100,
+                                bar: 1,
+                                start: 5,
+                                }, {
+                                amp: 50,
+                                bar: 1,
+                                start: 5,
+                                }, {
+                                amp: 30,
+                                bar: 1,
+                                start: 7,
+                                },{
+                                amp: 70,
+                                bar: 2,
+                                start: 120,
+                                }
+                            ]
                 }
 			]
 	}
@@ -53,7 +74,7 @@
 	let width = window.innerWidth;
     let height = window.innerWidth/1920*1080;
 	let layers = test_project.Layers;
-	let layer = test_project.Layers[0];
+	let layerToSee =0;
 	let NumBar = test_project.NumBar;
 	
 </script>
@@ -62,7 +83,7 @@
 
 <div transition:fade>
 	
-	<Layer {width} {height} {layer} {layers} {NumBar}/>
+	<Layer {width} {height} {layers} {layerToSee} {NumBar}/>
 	<!-- <Piano/> -->
 </div>
 
