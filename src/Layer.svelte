@@ -4,6 +4,7 @@
     import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
 
     import { setupSettings, playSettings } from './LayerSettings.svelte';
+    import { drawSettings } from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
@@ -73,7 +74,7 @@
             p5.noStroke();
             p5.frameRate(frameRate);
             makeInteractionField()
-            setupPiano(p5, width, height);
+           // setupPiano(p5, width, height);
             setupSettings(p5, width, height)
             timeCursor = timeCursorMake();
             // await Tone.start();
@@ -85,10 +86,11 @@
             p5.background(p5.color(colors.back));
             
             grid()
+            drawSettings (p5, inst)
             layerdrawing(mainLayerHeight, layer);
-            keyboardHandler()
+            
             for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(otherLayerHeight, layers[i]);}
-             
+            keyboardHandler()
             timeCursorMove()
             mouseHandler()
             timegoes();
@@ -107,10 +109,8 @@
 
         function keyboardHandler(){
             //pause
-            if (p5.kb.presses('space')) {
-                isPlay = !isPlay;
-
-            }
+            if (p5.kb.presses('space')) {isPlay = !isPlay;}
+            
             if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
         }
 
