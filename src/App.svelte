@@ -1,8 +1,15 @@
 <script>
-	import { fly, fade, blur, slide, scale } from 'svelte/transition';
+    import { fly, fade, blur, slide, scale } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import Layer from "./Layer.svelte";
+    // import * as Tone from 'tone';
 	// import Piano from "./Piano.svelte";
+
+    // //create a synth and connect it to the main output (your speakers)
+    // const synth = new Tone.Synth().toDestination();
+
+    // //play a middle 'C' for the duration of an 8th note
+    // synth.triggerAttackRelease("C4", "8n");
 
 	const test_project = {
 	Maker : "user",

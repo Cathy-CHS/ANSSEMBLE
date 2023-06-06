@@ -22,20 +22,21 @@
     let highlight3 = new Array(9).fill(0);
     let highlight4 = new Array(10).fill(0);
 
+    let key1 = ['2','3','none','5','6','7','none','9','0','none', '='];
+    let key1ToPitch = ['C#3','D#3',null,'F#3','G#3','A#3',null,'C#4','D#4',null,'F#4'];
+    let key2 = ['q','w','e','r','t','y','u','i','o','p','[',']'];
+    let key2ToPitch = ['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4'];
+    let key3 = ['a','s','none','f','g','none','j','k','l'];
+    let key3ToPitch = ['G#4','A#4',null,'C#5','D#5',null,'F#5','G#5','A#5'];
+    let key4 = ['z','x','c','v','b','n','m',',','.','/'];
+    let key4ToPitch = ['A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+
     export function drawPiano (key, press, p5) {
         let instrument = 'PIANO';
         let instrument_description = 'how to play description \nEx. press keyboard';
 
         let width_ratio = p5.width/1920;
         let height_ratio = p5.height/1080;
-        let key1 = ['2','3','none','5','6','7','none','9','0','none', '='];
-        let key1ToPitch = ['C#3','D#3',null,'F#3','G#3','A#3',null,'C#4','D#4',null,'F#4'];
-        let key2 = ['q','w','e','r','t','y','u','i','o','p','[',']'];
-        let key2ToPitch = ['C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4'];
-        let key3 = ['a','s','none','f','g','none','j','k','l'];
-        let key3ToPitch = ['G#4','A#4',null,'C#5','D#5',null,'F#5','G#5','A#5'];
-        let key4 = ['z','x','c','v','b','n','m',',','.','/'];
-        let key4ToPitch = ['A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
         if (key1.includes(key)){
             highlight1[key1.indexOf(key)] = press;
@@ -99,5 +100,20 @@
             if (indicator) return '#93c7f1';
             else return 0;
         };
+    };
+
+    export function playPiano (key) {
+        if (key1.includes(key)){
+            return key1ToPitch[key1.indexOf(key)];
+        }
+        if (key2.includes(key)){
+            return key2ToPitch[key2.indexOf(key)];
+        }
+        if (key3.includes(key)){
+            return key3ToPitch[key3.indexOf(key)];
+        }
+        if (key4.includes(key)){
+            return key4ToPitch[key4.indexOf(key)];
+        }
     };
 </script>

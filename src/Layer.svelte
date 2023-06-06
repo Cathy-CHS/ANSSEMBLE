@@ -1,9 +1,10 @@
 <script>
     import { onMount } from 'svelte';
-    import { setupPiano, drawPiano } from './Piano.svelte';
+    // import * as Tone from 'tone';
+    import { setupPiano, drawPiano, playPiano } from './Piano.svelte';
     
     export let [width, height, layer, layers, NumBar] = [400, 300, {}, []];
-    console.log(width, height, layer, NumBar)
+    console.log(width, height, layer, NumBar);
     const colors ={
         back: '#030309',
         default: '#f5fafa',
@@ -20,6 +21,28 @@
     const lineWidth = height/700;
     const duraWidth = height/15;
     let BPM = 60;
+
+    // create a synth and connect it to the main output (your speakers)
+    // const synth = new Tone.Synth().toDestination();
+    // console.log(synth);
+
+    // // play a middle 'C' for the duration of an 8th note
+    // synth.triggerAttackRelease("C4", "8n");
+
+    // const sampler = new Tone.Sampler({
+	// 	urls: {
+	// 		"C4": "C4.mp3",
+	// 		"D#4": "Ds4.mp3",
+	// 		"F#4": "Fs4.mp3",
+	// 		"A4": "A4.mp3",
+	// 	},
+	// 	baseUrl: "https://tonejs.github.io/audio/salamander/",
+	// 	release: 1,
+	// }).toDestination();
+
+    // Tone.Transport.bpm.value = BPM;
+	// Tone.Transport.start();
+    // sampler.start();
     
     let key;
     let press;
@@ -46,9 +69,11 @@
             p5.noStroke();
             p5.frameRate(frameRate);
             setupPiano(p5);
-            
+
+            // await Tone.start();
             //sprite_test = new p5.Sprite();
         }
+
         p5.draw = ()=>{
             p5.background(p5.color(colors.back));
             drawPiano(key, press, p5);
@@ -57,6 +82,7 @@
             timeCursor();
             timegoes();
         }
+
         function timeCursor(){
             p5.strokeCap(p5.ROUND)
             p5.strokeWeight(lineWidth);
@@ -151,19 +177,17 @@
         //System key
         key = event.key;
         press = 1;
-        if (key === ' ') {
-            newPitch = 'C8'; 
-            // if (!newStart && newPitch){
-            // newStart = absoluteTick
-            // layer.points.push(
-            //     {pitch: newPitch,
-            //     bar: Math.floor(newStart/256)+1,
-            //     start: newStart%256,
-            //     duration: 1})
-            // } else{
-            //     layer.points[layer.points.length - 1].duration = absoluteTick - newStart;
-            // }
-        }
+
+        newPitch = playPiano(key);
+        console.log(newPitch);
+
+        // Tone.loaded().then(() => {
+		// 	sampler.triggerAttack(newPitch);
+		// 	// const start = Tone.now();
+		// 	// timerecord.push(start);
+		// 	// console.log(`start: ${timerecord}`);
+		// });
+
         if (!newStart && newPitch){
             newStart = absoluteTick
             layer.points.push(
@@ -176,27 +200,45 @@
         }
 
     }
+
     function keyUped(event) {
         //System key
 
         key = event.key;
         press = 0;
 
+        // Tone.loaded().then(() => {
+		// 	sampler.triggerRelease(newPitch);
+		// 	// timerecord.push(Tone.now());
+		// 	// console.log(`end: ${timerecord}`);
+		// 	// const point = {
+		// 	// 	pitch: "C4",
+		// 	// 	bar: 1,
+		// 	// 	start: Tone.Time(timerecord[0]).toBarsBeatsSixteenths(),
+		// 	// 	duration: Tone.Time(timerecord[1]-timerecord[0]).toNotation(),
+		// 	// 	// refer to https://github.com/Tonejs/Tone.js/wiki/Time
+		//     // };
+        //     // points.push(point);
+		// 	// console.log(points);
+		// 	// timerecord = [];
+		// });
+
         newPitch = null;
         newStart = 0;
 
     }
     let sketchId;
+    // let toneId;
     onMount(function () {
     let myp5 = new p5(sketch, sketchId);
+    // let mytone = new Tone(sampler, toneId);
     });
 </script>
 
 <!-- <Piano bind:this={piano} /> -->
 
 <div {sketchId} />
+<!-- <div {toneId} /> -->
 
 <svelte:window on:keydown|preventDefault={keyPressed}
                 on:keyup|preventDefault={keyUped} />
-
-
