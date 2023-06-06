@@ -23,7 +23,7 @@
     const lineWidth = height/700;
     const layerInstLineWidth = height/15
     const maxAmpRadius = height/8
-    let BPM = 60;
+    let BPM = 120;
     
     let absoluteTick = 0;
     const sketch = (p5) =>{
@@ -43,7 +43,6 @@
 
         let isPlay = 0;
         let interactionTile
-        let cursorSprite
         p5.setup = async ()=>{
             p5.noCursor()
             p5.createCanvas(width, height);
