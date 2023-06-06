@@ -2,6 +2,10 @@
 
     import { onMount } from 'svelte';
 
+    
+
+
+    
 
     export function setupSettings (p5) {
 
@@ -15,11 +19,11 @@
     
     export function drawSettings (p5, inst) {
         p5.fill('#f5fafa');
-        
+        p5.textFont("pretendard");
         let width_ratio = p5.width/1920;
         let height_ratio = p5.height/1080;
         p5.noStroke();
-        p5.textSize(width_ratio*48);
+        p5.textSize(width_ratio*60);
         p5.text(inst,width_ratio*120,height_ratio*204);
         
         p5.textSize(width_ratio*20);

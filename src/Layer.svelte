@@ -68,6 +68,8 @@
 
         let isPlay = 0;
         let interactionTile
+
+
         p5.setup = async ()=>{
             p5.noCursor()
             p5.createCanvas(width, height);
@@ -110,7 +112,7 @@
         function keyboardHandler(){
             //pause
             if (p5.kb.presses('space')) {isPlay = !isPlay;}
-            
+
             if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
         }
 
@@ -226,19 +228,21 @@
                 showLocation =absoluteTick - numBarShow/2*256}
             
         }
+
+
+        
+        //For decoding drag
+        let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
+        let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
+
         //For element moving
         function timeToX(bar, start){
             let tick = (bar-1)*256 +start - showLocation;
             let X = tick/(numBarShow*256) * layerWidth + startingPoint;
             return X;
         }
-        
-        //For decoding drag
-        let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
-        let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
 
-
-        function grid(){
+        function grid(gridHeight){
             p5.strokeCap(p5.ROUND)
             p5.strokeWeight(lineWidth);
             let gridColor = p5.color(colors.default);
@@ -262,19 +266,16 @@
         }
 
         function layerdrawing(yLocation, layer){
-            
             let points = layer.points;
             let inst = layer.Inst;
             p5.strokeWeight(lineWidth);
             p5.fill(p5.color(colors.default));
             p5.stroke(p5.color(colors.default));
             p5.strokeCap(p5.SQUARE)
-
             p5.line(startingPoint, yLocation, width, yLocation);
             p5.noStroke();
             p5.fill(colors.default);
             p5.ellipse(startingPoint, yLocation, lineWidth*10);
-
             p5.blendMode(p5.HARD_LIGHT);
 
             layerColoring(inst)
