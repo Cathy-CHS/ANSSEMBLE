@@ -3,11 +3,11 @@
     // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
-    import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
-    import { mouseHandlerBase } from './Base.svelte';
+    import { setupPiano, keyboardHandlerPiano } from './instruments/Piano.svelte';
+    import { mouseHandlerBase } from './instruments/Base.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
-    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing } from './LayerSettings.svelte';
+    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing } from './layers/LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];

@@ -4,7 +4,7 @@
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
 
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './layers/LayerSettings.svelte';
 
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
