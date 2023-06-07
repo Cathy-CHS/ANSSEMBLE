@@ -64,6 +64,10 @@
             {
                 Inst: "piano",
                 Soundtrack: []
+            },
+            {
+                Inst: "base",
+                Soundtrack: []
             }
         ];
 
@@ -159,7 +163,7 @@
         }
         
 
-        let layerColor
+        let layerColor;
         function mouseHandler(){
             //interaction section
             //console.log(p5.mouseX, p5.mouseY)
@@ -170,7 +174,10 @@
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
                 layerColor.setAlpha(100)
-                if (inst == "base") mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
+                if (inst == "base") {
+                    let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
+                    if (amplitude) playSound(inst, amplitude, null);
+                }
                 layerColor.setAlpha(90)
             } else{
                 p5.fill(colors.default);
@@ -241,13 +248,22 @@
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/A5.mp3'));
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/B5.mp3'));
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
+            //bass
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
         }
 
-        function playSound(inst, pitchList, pitches) {
+        function playSound(inst, a, b) {
             if(inst == 'piano') {
-                for(let i of pitches) {
-                    soundObject[0].Soundtrack[pitchList.indexOf(i)].play();
+                for(let i of b) {
+                    soundObject[0].Soundtrack[a.indexOf(i)].play();
                 }
+            }
+            else if(inst == 'base') {
+                const volume = parseFloat(a).toFixed(1);
+                console.log(volume);
+                // soundObject[1].Soundtrack[0].setVolume(volume);
+                soundObject[1].Soundtrack[0].play();
+                // soundObject[1].Soundtrack[0].play(0, 1, volume);
             }
         }
 

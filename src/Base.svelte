@@ -11,7 +11,8 @@
 
     
     export function mouseHandlerBase (p5, layer, absoluteTick, interactionTile) {
-        const layerColor = p5.color(colors.purple)
+        const layerColor = p5.color(colors.purple);
+        let amp = 0;
         p5.strokeCap(p5.ROUND)
         newStart = absoluteTick; 
         if (interactionTile.mouse.presses()) {
@@ -29,8 +30,7 @@
             p5.strokeWeight(lineWidth*2)
             p5.ellipse(tempXY[0], tempXY[1], maxRadi*2);
             p5.line(tempXY[0], tempXY[1], p5.mouseX, p5.mouseY)
-            amplitude = Math.floor(Math.pow(radi, 2)/Math.pow(maxRadi, 2)*100)
-            
+            amplitude = Math.floor(Math.pow(radi, 2)/Math.pow(maxRadi, 2)*100);
         }
         else if (interactionTile.mouse.released()){
             isDrag = 0;
@@ -39,11 +39,13 @@
                             {amp: amplitude, 
                             bar: Math.floor(newStart/256)+1,
                             start: newStart%256+1,})
+            amp = amplitude/100;
         }
         if(tempRadi > 5){
-            tempRadi  = tempRadi*0.8;
+            tempRadi = tempRadi*0.8;
             p5.ellipse(tempXY[0], tempXY[1], tempRadi*2);
         } else tempRadi = 0;
+        return amp;
     };
 
 </script>
