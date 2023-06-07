@@ -7,7 +7,7 @@
     import {mouseHandlerBase} from './Base.svelte';
 
 
-    import { setupSettings, playSettings } from './LayerSettings.svelte';
+    import {  } from './LayerSettings.svelte';
     import { drawSettings } from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
@@ -69,7 +69,6 @@
             p5.frameRate(frameRate);
             makeInteractionField()
            // setupPiano(p5, width, height);
-            setupSettings(p5, width, height)
             timeCursor = timeCursorMake();
             // await Tone.start();
             
@@ -91,24 +90,50 @@
             
         }
 
-
-        function makeInteractionField(){
-            let fieldColor = p5.color(colors.back)
-            fieldColor.setAlpha(0);
-
-            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
-            interactionTile.color =  fieldColor;
-            interactionTile.stroke =  fieldColor;
+        let inst_description = 
+        {
+            Piano: 'How to play: \nPress keyboard'
         }
+        
+        function drawSettings (p5, inst) {
+            p5.fill('#f5fafa');
+            p5.textFont("pretendard");
+            let width_ratio = p5.width/1920;
+            let height_ratio = p5.height/1080;
+            p5.noStroke();
+            p5.textSize(width_ratio*60);
+            p5.text(inst,width_ratio*120,height_ratio*204);
+            
+            p5.textSize(width_ratio*25);
+            p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
+            
+            p5.textSize(width_ratio*20);
+            p5.text('pitch',width_ratio*120,height_ratio*474);
+            
+            p5.textSize(width_ratio*20);
+            p5.text('Layer Amp',width_ratio*120,height_ratio*869);
+        };
 
-        function keyboardHandler(){
-            //pause
-            if (p5.kb.presses('space')) {isPlay = !isPlay;}
+        function playSettings (key) {
+        };
 
-            if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
-        }
+            function makeInteractionField(){
+                let fieldColor = p5.color(colors.back)
+                fieldColor.setAlpha(0);
 
-        let newStart = 0;
+                interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
+                interactionTile.color =  fieldColor;
+                interactionTile.stroke =  fieldColor;
+            }
+
+            function keyboardHandler(){
+                //pause
+                if (p5.kb.presses('space')) {isPlay = !isPlay;}
+
+                if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
+            }
+
+
         let isDrag = 0;
         function mouseHandler(){
             //interaction section
@@ -267,9 +292,6 @@
         }
 
     }
-    
-    let newStart = 0;
-    let newPitch = null;
 
     let sketchId;
     // let toneId;
