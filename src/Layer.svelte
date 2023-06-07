@@ -7,8 +7,7 @@
     import {mouseHandlerBase} from './Base.svelte';
 
 
-    import {  } from './LayerSettings.svelte';
-    import { drawSettings } from './LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove} from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
@@ -69,7 +68,7 @@
             p5.frameRate(frameRate);
             makeInteractionField()
            // setupPiano(p5, width, height);
-            timeCursor = timeCursorMake();
+            timeCursor = timeCursorMake(p5, gridHeight);
             // await Tone.start();
             
         }
@@ -78,13 +77,13 @@
             p5.clear();
             p5.background(p5.color(colors.back));
             
-            grid()
+            grid(gridHeight)
             drawSettings (p5, inst)
             layerdrawing(mainLayerHeight, layer);
             
             for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(otherLayerHeight, layers[i]);}
             keyboardHandler()
-            timeCursorMove()
+            absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
             
@@ -117,22 +116,21 @@
         function playSettings (key) {
         };
 
-            function makeInteractionField(){
-                let fieldColor = p5.color(colors.back)
-                fieldColor.setAlpha(0);
+        function makeInteractionField(){
+            let fieldColor = p5.color(colors.back)
+            fieldColor.setAlpha(0);
 
-                interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
-                interactionTile.color =  fieldColor;
-                interactionTile.stroke =  fieldColor;
-            }
+            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
+            interactionTile.color =  fieldColor;
+            interactionTile.stroke =  fieldColor;
+        }
 
-            function keyboardHandler(){
-                //pause
-                if (p5.kb.presses('space')) {isPlay = !isPlay;}
+        function keyboardHandler(){
+            //pause
+            if (p5.kb.presses('space')) {isPlay = !isPlay;}
 
-                if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
-            }
-
+            if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
+        }
 
         let isDrag = 0;
         function mouseHandler(){
@@ -156,37 +154,6 @@
             }
 
             p5.blendMode(p5.BLEND);
-        }
-
-
-        
-
-        function timeCursorMake(){
-            let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2);
-            timeCursor.draw = ()=>{
-                p5.strokeCap(p5.ROUND)
-                p5.strokeWeight(lineWidth);
-                p5.stroke(colors.default);
-                p5.fill(colors.default)
-                p5.ellipse(0, 0, lineWidth*15*2);
-                p5.line(0, -lineWidth*15, 0, gridHeight- lineWidth*15);
-            }
-            p5.noStroke();
-            return timeCursor
-        }
-        function timeCursorMove(){
-            let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
-            timeCursor.pos = {x:X,y: lineWidth*15}
-            if (timeCursor.mouse.dragging()) {
-                let mouseLocation = p5.mouse.x;
-                let relLocation = mouseLocation-X;
-                timeCursor.pos.x = Math.max(startingPoint, mouseLocation)// + timeCursor.mouse.x
-                absoluteTick = absoluteTick + relLocation/layerWidth*(numBarShow*256) * 0.1
-                if (absoluteTick<=0) absoluteTick = 0;
-                else if(absoluteTick>=NumBar*256) absoluteTick = NumBar*256;
-
-	        }
-
         }
 
 
