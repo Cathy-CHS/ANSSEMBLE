@@ -60,6 +60,10 @@
         let isPlay = 0;
         let interactionTile
 
+        let backIcon
+        p5.preload =async ()=>{
+            backIcon = p5.loadImage('assets/Back.png');
+        }
 
         p5.setup = async ()=>{
             p5.noCursor()
@@ -70,34 +74,49 @@
            // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, gridHeight);
             // await Tone.start();
-            
+            makeButtons()
         }
 
         p5.draw = ()=>{
             p5.clear();
             p5.background(p5.color(colors.back));
-            
             grid(p5, gridHeight, showLocation)
             drawSettings (inst)
             layerdrawing(p5, mainLayerHeight, layer);
-            
             for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(p5, otherLayerHeight, layers[i]);}
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            toggleToProject()
+        }
+        let backButton
+        function makeButtons(){
+            let highToolY = height/13
+            const buttonDia = width/20
+            backButton = new p5.Sprite(width/20+buttonDia/2, highToolY,buttonDia,buttonDia, 'kinematic')
+            backButton.img = 'assets/Back.png'
+            //ackButton.img.height = 300
+
+            console.log( backButton.img)
+            
+            backButton.draw = () =>{
+                p5.image(backButton.img, 0, 0, buttonDia, buttonDia)
+                
+                if(backButton.mouse.presses()){
+                    toggleToProject()
+                }
+                if(backButton.mouse.hovering()){
+                    p5.fill('rgba(200,200,200, 0.25)')
+                    p5.ellipse(0, 0, buttonDia)
+                }
+            }
             
         }
 
 
         function toggleToProject(){
-            if (p5.kb.presses('b')) {
-                console.log('asdf')
-                p5.remove();
-                dispatch('layer', false);
-                //checker()
-            }
+            p5.remove();
+            dispatch('layer', false);
         }
         let inst_description = 
         {
@@ -106,14 +125,15 @@
         
         function drawSettings (inst) {
             p5.fill('#f5fafa');
-            p5.textFont("pretendard");
+            p5.textFont('Pretendard Black');
             let width_ratio = p5.width/1920;
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.text(inst,width_ratio*120,height_ratio*204);
             
-            p5.textSize(width_ratio*25);
+            p5.textFont('Pretendard Medium');
+            p5.textSize(width_ratio*30);
             p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
             
             if (inst=='Guitar'){

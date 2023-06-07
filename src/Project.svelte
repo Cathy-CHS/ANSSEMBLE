@@ -103,13 +103,13 @@
         
         function drawSettings (inst) {
             p5.fill('#f5fafa');
-            p5.textFont("pretendard");
+            p5.textFont('Pretendard Black');
             let width_ratio = p5.width/1920;
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.text('Project title',width_ratio*120,height_ratio*204);
-            
+            p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*25);
             p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
             
