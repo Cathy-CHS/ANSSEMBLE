@@ -7,7 +7,7 @@
     import {mouseHandlerBase} from './Base.svelte';
 
 
-    import {timeCursorMake,  timeCursorMove} from './LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
@@ -77,11 +77,11 @@
             p5.clear();
             p5.background(p5.color(colors.back));
             
-            grid(gridHeight)
+            grid(p5, gridHeight, showLocation)
             drawSettings (p5, inst)
-            layerdrawing(mainLayerHeight, layer);
+            layerdrawing(p5, mainLayerHeight, layer);
             
-            for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(otherLayerHeight, layers[i]);}
+            for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(p5, otherLayerHeight, layers[i]);}
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
@@ -131,14 +131,15 @@
 
             if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
         }
-
+        
         let isDrag = 0;
+        let layerColor
         function mouseHandler(){
             //interaction section
             //console.log(p5.mouseX, p5.mouseY)
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
-            layerColoring(inst)
+            layerColor= layerColoring(inst, p5)
             if (isDrag || interactionTile.mouse.hovering()) {
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
@@ -181,83 +182,6 @@
         //For decoding drag
         let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
         let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
-
-        //For element moving
-        function timeToX(bar, start){
-            let tick = (bar-1)*256 +start - showLocation;
-            let X = tick/(numBarShow*256) * layerWidth + startingPoint;
-            return X;
-        }
-
-        function grid(gridHeight){
-            p5.strokeCap(p5.ROUND)
-            p5.strokeWeight(lineWidth);
-            let gridColor = p5.color(colors.default);
-            gridColor.setAlpha(50)
-            p5.stroke(gridColor);
-            for (let i = 0 ; i<=numBarShow; i++){
-                let X = timeToX(Math.floor(showLocation/256)+i+1, 0);
-                if (X>startingPoint){p5.line(X, 0, X, gridHeight);}
-            }
-        }
-        let layerColor
-        function layerColoring(inst){
-            
-            if (inst == 'Piano'){layerColor =p5.color(colors.blue)}
-            else if (inst == 'Trumpet'){layerColor =p5.color(colors.purple)}
-            else if (inst == 'Base'){layerColor =p5.color(colors.purple)}
-            else if (inst == 'Snare'){layerColor =p5.color(colors.yellow)}
-            else if (inst == 'Cymbal'){layerColor =p5.color(colors.pink)}
-            else if (inst == 'Guitar'){layerColor =p5.color(colors.green)}
-            layerColor.setAlpha(90);
-        }
-
-        function layerdrawing(yLocation, layer){
-            let points = layer.points;
-            let inst = layer.Inst;
-            p5.strokeWeight(lineWidth);
-            p5.fill(p5.color(colors.default));
-            p5.stroke(p5.color(colors.default));
-            p5.strokeCap(p5.SQUARE)
-            p5.line(startingPoint, yLocation, width, yLocation);
-            p5.noStroke();
-            p5.fill(colors.default);
-            p5.ellipse(startingPoint, yLocation, lineWidth*10);
-            p5.blendMode(p5.HARD_LIGHT);
-
-            layerColoring(inst)
-            if (inst == 'Piano' || inst == 'Trumpet'){
-                p5.strokeCap(p5.ROUND);
-                p5.strokeWeight(layerInstLineWidth);
-                p5.stroke(layerColor);
-                for (let point of points){
-                    let xi = timeToX(point.bar, point.start);
-                    let xf = timeToX(point.bar, point.start+point.duration);
-                    //console.log(xi, xf)
-                    if (xf>startingPoint && xi<width){
-                        if (xf>width){xf = width}
-                        if (xi<startingPoint){xi = startingPoint}
-                        p5.line(xi, yLocation, xf, yLocation);
-                    }
-                }
-                p5.strokeCap(p5.SQUARE);
-            } else if (inst == 'Base' || inst == 'Snare' || inst == 'Cymbal' || inst == 'Guitar'){
-                p5.noStroke();
-                p5.fill(layerColor)
-                for (let point of points){
-                    let x = timeToX(point.bar, point.start);
-
-                    if (x>startingPoint && x<width){
-                        if (x>width){x = width}
-                        if (x<startingPoint){x = startingPoint}
-                        p5.ellipse(x, yLocation, maxAmpRadius*Math.sqrt(point.amp/100));
-                    }
-                }
-                p5.strokeCap(p5.SQUARE);
-            } 
-            p5.blendMode(p5.BLEND);
-        }
-
     }
 
     let sketchId;
