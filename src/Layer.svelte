@@ -92,8 +92,9 @@
 
 
         function toggleToProject(){
-            if (p5.kb.presses('space')) {
+            if (p5.kb.presses('b')) {
                 console.log('asdf')
+                p5.remove();
                 dispatch('layer', false);
                 //checker()
             }

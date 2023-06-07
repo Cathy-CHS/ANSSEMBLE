@@ -101,8 +101,8 @@
 	let NumBar = test_project.NumBar;
 	let toggle= {toggleLayer : true, 
                 toggleProject: false};
-    function checker(){
-        toggle.toggleLayer = false
+    function layerToggle(){
+        toggle.toggleLayer = !toggle.toggleLayer
         console.log(toggle)
     }
 </script>
@@ -110,13 +110,12 @@
 {#if toggle.toggleLayer}
     <div transition:fade>
 
-        <Layer on:layer = {checker} {width} {height} {layers} {layerToSee} {NumBar}/>
+        <Layer on:layer = {layerToggle} {width} {height} {layers} {layerToSee} {NumBar}/>
         <!-- <Piano/> -->
     </div>
 {:else if !(toggle.toggleLayer)}
     <div transition:fade>
-        {console.log('asdfsadfasdf')}
-        <Project {width} {height} {layers} {layerToSee} {NumBar}/>
+        <Project on:layer = {layerToggle} {width} {height} {layers} {layerToSee} {NumBar}/>
     <!-- <Piano/> -->
     </div>
 {/if}

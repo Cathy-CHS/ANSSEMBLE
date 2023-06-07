@@ -1,12 +1,11 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, createEventDispatcher} from 'svelte';
     // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
-  import { toggle_class } from 'svelte/internal';
-    
+
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
     let inst = layer.Inst;
@@ -38,7 +37,7 @@
     // Tone.Transport.bpm.value = BPM;
 	// Tone.Transport.start();
     // sampler.start();
-
+    const dispatch=createEventDispatcher();
     let absoluteTick = 0;
     const sketch = (p5) =>{
         let timeCursor
@@ -89,7 +88,13 @@
         }
 
         function toggleToLayer(){
+            if (p5.kb.presses('a')) {
+                console.log('asdf')
+                p5.remove();
+                dispatch('layer', false);
+                //checker()
 
+            }
         }
         let inst_description = 
         {
