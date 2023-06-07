@@ -1,14 +1,17 @@
 <script context="module">
 
     import { onMount } from 'svelte';
-    
+    import {colors, lineWidth, maxAmpRadius} from './Constants.svelte';
     let newStart = 0;
     let isDrag = 0;
     let tempXY = [0, 0]
     let amplitude
     let radi
     let tempRadi = 0;
+
+    
     export function mouseHandlerBase (p5, layer, absoluteTick, interactionTile) {
+        const layerColor = p5.color(colors.purple)
         p5.strokeCap(p5.ROUND)
         newStart = absoluteTick; 
         if (interactionTile.mouse.presses()) {

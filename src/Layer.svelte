@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     // import * as Tone from 'tone';
-    import {numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
+    import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
     import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
     import {mouseHandlerBase} from './Base.svelte';
@@ -14,15 +14,7 @@
     let layer = layers[layerToSee];
     let inst = layer.Inst;
     console.log(width, height, layer, NumBar)
-    const colors ={
-        back: '#030309',
-        default: '#f5fafa',
-        blue: '#9395f1',
-        green: '#99e4d3',
-        purple: '#bd9af0',
-        pink: '#f293c7',
-        yellow: '#fade96'
-    }
+
     //max number of bar in one display
     //const numBarShow = 3;
 

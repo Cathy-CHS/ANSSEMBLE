@@ -8,7 +8,15 @@
     export const lineWidth = height/700;
     export const layerInstLineWidth = height/15
     export const maxAmpRadius = height/8
-
+    export const colors ={
+        back: '#030309',
+        default: '#f5fafa',
+        blue: '#9395f1',
+        green: '#99e4d3',
+        purple: '#bd9af0',
+        pink: '#f293c7',
+        yellow: '#fade96'
+    }
 
 
 
