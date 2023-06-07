@@ -4,10 +4,10 @@
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
     import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
-    import {mouseHandlerBase} from './Base.svelte';
+    import { mouseHandlerBase } from './Base.svelte';
 
- 
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
+    // import { loadSoundtrack } from './LayerSound.svelte';
+    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing } from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
@@ -58,19 +58,29 @@
         //console.log(frameRate);
 
         let isPlay = 0;
-        let interactionTile
+        let interactionTile;
 
+        let soundObject = [
+            {
+                Inst: "piano",
+                Soundtrack: []
+            }
+        ];
 
+        p5.preload = () => {
+            loadSoundtrack(soundObject);
+            console.log(soundObject);
+        }
+        
         p5.setup = async ()=>{
             p5.noCursor()
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
             makeInteractionField()
-           // setupPiano(p5, width, height);
+            // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, gridHeight);
-            // await Tone.start();
-            
+            // await Tone.start();            
         }
 
         p5.draw = ()=>{
@@ -90,9 +100,8 @@
             
         }
 
-
         function toggleToProject(){
-            if (p5.kb.presses('b')) {
+            if (p5.kb.presses('`')) {
                 console.log('asdf')
                 p5.remove();
                 dispatch('layer', false);
@@ -116,7 +125,7 @@
             p5.textSize(width_ratio*25);
             p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
             
-            if (inst=='Guitar'){
+            if (inst=='guitar'){
                 p5.textSize(width_ratio*20);
                 p5.text('pitch',width_ratio*120,height_ratio*474);
             }
@@ -138,7 +147,12 @@
             //pause
             if (p5.kb.presses('space')) {isPlay = !isPlay;}
 
-            if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
+            //piano handler
+            if (inst == "piano") {
+                const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+                let existingPitches = keyboardHandlerPiano(p5, layer, absoluteTick);
+                playSound(inst, pianoPitchList, existingPitches);
+            }
         }
         
 
@@ -153,7 +167,7 @@
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
                 layerColor.setAlpha(100)
-                if (inst == "Base") mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
+                if (inst == "base") mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
                 layerColor.setAlpha(90)
             } else{
                 p5.fill(colors.default);
@@ -184,6 +198,55 @@
         //For decoding drag
         let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
         let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
+
+        function loadSoundtrack(soundObject) {
+            // piano
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Db3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Eb3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Gb3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Ab3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Bb3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Db4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Eb4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Gb4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Ab4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Bb4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Db5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Eb5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Gb5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Ab5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/Bb5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/D3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/E3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/F3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/G3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/A3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/B3.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/D4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/E4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/F4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/G4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/A4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/B4.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/D5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/E5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/F5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/G5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/A5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/B5.mp3'));
+            soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
+        }
+
+        function playSound(inst, pitchList, existingPitches) {
+            if(inst == 'piano') {
+                for(let i of existingPitches) {
+                    soundObject[0].Soundtrack[pitchList.indexOf(i)].play();
+                }
+            }
+        }
     }
 
     let sketchId;

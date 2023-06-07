@@ -88,7 +88,7 @@
         }
 
         function toggleToLayer(){
-            if (p5.kb.presses('a')) {
+            if (p5.kb.presses('1')) {
                 console.log('asdf')
                 p5.remove();
                 dispatch('layer', false);
@@ -113,7 +113,7 @@
             p5.textSize(width_ratio*25);
             p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
             
-            if (inst=='Guitar'){
+            if (inst=='guitar'){
                 p5.textSize(width_ratio*20);
                 p5.text('pitch',width_ratio*120,height_ratio*474);
             }

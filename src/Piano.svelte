@@ -27,11 +27,9 @@
     const key3ToPitch = ['G#4','A#4',null,'C#5','D#5',null,'F#5','G#5','A#5'];
     const key4 = ['z','x','c','v','b','n','m',',','.','/'];
     const key4ToPitch = ['A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+    const keyList = key1.concat(key2, key3, key4);
+    const keyToPitch = key1ToPitch.concat(key2ToPitch, key3ToPitch, key4ToPitch);
     
-
-
-
-
     export function drawPiano (keys, p5) {
         const width_ratio = p5.width/1920;
         const height_ratio = p5.height/1080;
@@ -123,12 +121,12 @@
     };
 
     // [ [key, layerIndex], ... ]
-    let exsitingKeyPitchs = []
+    let existingKeyPitches = []
     export function keyboardHandlerPiano(p5, layer, absoluteTick){
         let tempKeys = []
         //holding keys, include useless things
         for (let k of Object.keys(p5.kb)){
-            if (p5.kb[k]) tempKeys.push(k)
+            if (p5.kb[k]) tempKeys.push(k);
         }
         
         //[ [key, pitch], ...]
@@ -136,30 +134,28 @@
         //console.log(tempPitch)
         drawPiano(tempKeys, p5);
         if (!(tempPitch.length)) {
-            exsitingKeyPitchs = []
+            existingKeyPitches = []
         }
 
-        exsitingKeyPitchs = exsitingKeyPitchs.filter((value, index, arr) =>{
+        existingKeyPitches = existingKeyPitches.filter((value, index, arr) =>{
             if (tempKeys.includes(value[0])){
                 return value
             }
         })
         // drawing keys 
-        let exsistingKeys = exsitingKeyPitchs.map(function(element) {return element[0]})
-        //console.log(exsistingKeys);
-
-
+        let existingKeys = existingKeyPitches.map(function(element) {return element[0]})
+        // console.log(existingKeys);
         
         for (let keyPitch of tempPitch){
-            if (exsistingKeys.includes(keyPitch[0])){
+            if (existingKeys.includes(keyPitch[0])){
                 // [key, pointIndex] [1] of point to modify
-                let pointIndex = exsitingKeyPitchs[exsistingKeys.indexOf(keyPitch[0])][1]
+                let pointIndex = existingKeyPitches[existingKeys.indexOf(keyPitch[0])][1]
                 let mPoint =  layer.points[pointIndex]
                 
                 mPoint.duration = absoluteTick - ((mPoint.bar-1)*256 +mPoint.start);
             }else{
                 let starting = absoluteTick
-                exsitingKeyPitchs.push([keyPitch[0], layer.points.length])
+                existingKeyPitches.push([keyPitch[0], layer.points.length])
                 console.log([keyPitch[0], layer.points.length])
                 layer.points.push(
                 {pitch: keyPitch[1], 
@@ -168,6 +164,10 @@
                 duration: 1})
             }
         }
+
+        let existingPitches = existingKeys.map(function(element) {return keyToPitch[keyList.indexOf(element)]});
+        // console.log(existingPitches);
+        return existingPitches;
         /*
         if (p5.kb.presses('b')) {
            console.log(layer.points)

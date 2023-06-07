@@ -25,7 +25,7 @@
 	NumReproduction : 0,
 	Layers :[
                 {
-                    Inst: "Piano",
+                    Inst: "piano",
                     points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
                                 pitch: 'C8',
                                 bar: 1,
@@ -50,7 +50,7 @@
                             ]
                 }, 
                 {
-                    Inst: "Base",
+                    Inst: "base",
                     points: [{ // Amp: 100이 최대
                                 amp: 100,
                                 bar: 1,
@@ -71,7 +71,7 @@
                             ]
                 },
                 {
-                    Inst: "Cymbal",
+                    Inst: "cymbal",
                     points: [{ // Amp: 100이 최대
                                 amp: 30,
                                 bar: 1,
@@ -97,7 +97,7 @@
 
 
 	let layers = test_project.Layers;
-	let layerToSee =1;
+	let layerToSee = 0;
 	let NumBar = test_project.NumBar;
 	let toggle= {toggleLayer : true, 
                 toggleProject: false};
