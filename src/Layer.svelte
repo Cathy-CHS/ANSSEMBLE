@@ -89,31 +89,38 @@
             mouseHandler()
             timegoes();
         }
-        let backButton
+        let backButton, duplButton, bpmButton, playButton
         function makeButtons(){
             let highToolY = height/13
             const buttonDia = width/20
-            backButton = new p5.Sprite(width/20+buttonDia/2, highToolY,buttonDia,buttonDia, 'kinematic')
-            backButton.img = 'assets/Back.png'
-            //ackButton.img.height = 300
-
-            console.log( backButton.img)
-            
-            backButton.draw = () =>{
-                p5.image(backButton.img, 0, 0, buttonDia, buttonDia)
-                
-                if(backButton.mouse.presses()){
-                    toggleToProject()
+            function makeButton(text, func, order){
+                let tempButton = new  p5.Sprite(width/20+buttonDia/2+order*buttonDia*1.1, highToolY,buttonDia,buttonDia, 'kinematic')
+                tempButton.img = 'assets/'+text+'.png'
+                tempButton.draw = () =>{
+                    p5.image(tempButton.img, 0, 0, buttonDia, buttonDia)
+                        if(tempButton.mouse.presses()){
+                        func()
+                    }
+                    if(tempButton.mouse.hovering()){
+                        p5.fill('rgba(200,200,200, 0.25)')
+                        p5.ellipse(0, 0, buttonDia)
+                    }
                 }
-                if(backButton.mouse.hovering()){
-                    p5.fill('rgba(200,200,200, 0.25)')
-                    p5.ellipse(0, 0, buttonDia)
-                }
+                return tempButton
             }
-            
+
+            backButton = makeButton('Back', toggleToProject, 0)
+            duplButton = makeButton('DuplicateLayer', placeholder, 1)
+            bpmButton = makeButton('BPMIcon', placeholder, 3)
+            playButton = makeButton('songPlay', function(){isPlay = !isPlay}, 4)
+
+
+
         }
 
+        function placeholder(){
 
+        }
         function toggleToProject(){
             p5.remove();
             dispatch('layer', false);
