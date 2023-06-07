@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
     import {width, height} from './Constants.svelte';
 	import Layer from "./Layer.svelte";
+    import Project from "./Project.svelte";
     // import * as Tone from 'tone';
 	// import Piano from "./Piano.svelte";
 
@@ -68,7 +69,29 @@
                                 start: 120,
                                 }
                             ]
+                },
+                {
+                    Inst: "Cymbal",
+                    points: [{ // Amp: 100이 최대
+                                amp: 30,
+                                bar: 1,
+                                start: 100,
+                                }, {
+                                amp: 30,
+                                bar: 1,
+                                start: 200,
+                                }, {
+                                amp: 50,
+                                bar: 3,
+                                start: 7,
+                                },{
+                                amp: 20,
+                                bar: 2,
+                                start: 120,
+                                }
+                            ]
                 }
+                
 			]
 	}
 
@@ -76,17 +99,27 @@
 	let layers = test_project.Layers;
 	let layerToSee =1;
 	let NumBar = test_project.NumBar;
-	
+	let toggle= {toggleLayer : true, 
+                toggleProject: false};
+    function checker(){
+        toggle.toggleLayer = false
+        console.log(toggle)
+    }
 </script>
 
+{#if toggle.toggleLayer}
+    <div transition:fade>
 
-
-<div transition:fade>
-	
-	<Layer {width} {height} {layers} {layerToSee} {NumBar}/>
-	<!-- <Piano/> -->
-</div>
-
+        <Layer on:layer = {checker} {width} {height} {layers} {layerToSee} {NumBar}/>
+        <!-- <Piano/> -->
+    </div>
+{:else if !(toggle.toggleLayer)}
+    <div transition:fade>
+        {console.log('asdfsadfasdf')}
+        <Project {width} {height} {layers} {layerToSee} {NumBar}/>
+    <!-- <Piano/> -->
+    </div>
+{/if}
 
 
 <style>

@@ -1,12 +1,12 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount, createEventDispatcher } from 'svelte';
     // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
     import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
     import {mouseHandlerBase} from './Base.svelte';
 
-
+ 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
@@ -40,7 +40,7 @@
     // Tone.Transport.bpm.value = BPM;
 	// Tone.Transport.start();
     // sampler.start();
-
+    const dispatch=createEventDispatcher();
     let absoluteTick = 0;
     const sketch = (p5) =>{
         let timeCursor
@@ -86,9 +86,18 @@
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
+            toggleToProject()
             
         }
 
+
+        function toggleToProject(){
+            if (p5.kb.presses('space')) {
+                console.log('asdf')
+                dispatch('layer', false);
+                //checker()
+            }
+        }
         let inst_description = 
         {
             Piano: 'How to play: \nPress keyboard'
@@ -131,7 +140,7 @@
             if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
         }
         
-        let isDrag = 0;
+
         let layerColor
         function mouseHandler(){
             //interaction section
@@ -139,7 +148,7 @@
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
             layerColor= layerColoring(inst, p5)
-            if (isDrag || interactionTile.mouse.hovering()) {
+            if (interactionTile.mouse.hovering()) {
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
                 layerColor.setAlpha(100)
@@ -152,6 +161,7 @@
             p5.blendMode(p5.BLEND);
         }
 
+        
 
         function timegoes(){
             if(isPlay){absoluteTick ++}

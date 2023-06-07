@@ -38,7 +38,7 @@
             if (amplitude>10) layer.points.push(
                             {amp: amplitude, 
                             bar: Math.floor(newStart/256)+1,
-                            start: newStart%256,})
+                            start: newStart%256+1,})
         }
         if(tempRadi > 5){
             tempRadi  = tempRadi*0.8;
