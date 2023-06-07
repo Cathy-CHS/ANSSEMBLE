@@ -143,6 +143,7 @@
             interactionTile.stroke =  fieldColor;
         }
 
+        let pastPitches = [];
         function keyboardHandler(){
             //pause
             if (p5.kb.presses('space')) {isPlay = !isPlay;}
@@ -151,7 +152,9 @@
             if (inst == "piano") {
                 const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
                 let existingPitches = keyboardHandlerPiano(p5, layer, absoluteTick);
-                playSound(inst, pianoPitchList, existingPitches);
+                playSound(inst, pianoPitchList, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
+                stopSound(inst, pianoPitchList, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
+                pastPitches = existingPitches;
             }
         }
         
@@ -240,10 +243,18 @@
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
         }
 
-        function playSound(inst, pitchList, existingPitches) {
+        function playSound(inst, pitchList, pitches) {
             if(inst == 'piano') {
-                for(let i of existingPitches) {
+                for(let i of pitches) {
                     soundObject[0].Soundtrack[pitchList.indexOf(i)].play();
+                }
+            }
+        }
+
+        function stopSound(inst, pitchList, pitches) {
+            if(inst == 'piano') {
+                for(let i of pitches) {
+                    soundObject[0].Soundtrack[pitchList.indexOf(i)].stop();
                 }
             }
         }
