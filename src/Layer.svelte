@@ -73,7 +73,6 @@
 
         p5.preload = () => {
             loadSoundtrack(soundObject);
-            console.log(soundObject);
         }
         
         p5.setup = async ()=>{
@@ -259,11 +258,7 @@
                 }
             }
             else if(inst == 'base') {
-                const volume = parseFloat(a).toFixed(1);
-                console.log(volume);
-                // soundObject[1].Soundtrack[0].setVolume(volume);
-                soundObject[1].Soundtrack[0].play();
-                // soundObject[1].Soundtrack[0].play(0, 1, volume);
+                soundObject[1].Soundtrack[0].play(0, 1, a);
             }
         }
 

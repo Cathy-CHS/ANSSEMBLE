@@ -23,7 +23,7 @@
             let mouseLocation = p5.mouse.x;
             let relLocation = mouseLocation-X;
             timeCursor.pos.x = Math.max(startingPoint, mouseLocation)// + timeCursor.mouse.x
-            absoluteTick = absoluteTick + relLocation/layerWidth*(numBarShow*256) * 0.1
+            absoluteTick = parseInt(absoluteTick + relLocation/layerWidth*(numBarShow*256) * 0.1)
             if (absoluteTick<=0) absoluteTick = 0;
             else if(absoluteTick>=maxNumBar*256) absoluteTick = maxNumBar*256;
         }
