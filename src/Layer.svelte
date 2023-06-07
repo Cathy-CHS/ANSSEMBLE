@@ -1,7 +1,11 @@
 <script>
     import { onMount } from 'svelte';
     // import * as Tone from 'tone';
+    import {numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
+
     import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
+    import {mouseHandlerBase} from './Base.svelte';
+
 
     import { setupSettings, playSettings } from './LayerSettings.svelte';
     import { drawSettings } from './LayerSettings.svelte';
@@ -20,12 +24,8 @@
         yellow: '#fade96'
     }
     //max number of bar in one display
-    const numBarShow = 3;
-    const startingPoint = width/2.5
-    const layerWidth = width-startingPoint;
-    const lineWidth = height/700;
-    const layerInstLineWidth = height/15
-    const maxAmpRadius = height/8
+    //const numBarShow = 3;
+
     let BPM = 60;
 
     // create a synth and connect it to the main output (your speakers)
@@ -96,7 +96,7 @@
             timeCursorMove()
             mouseHandler()
             timegoes();
-
+            
         }
 
 
@@ -130,7 +130,7 @@
 
 
                 layerColor.setAlpha(100)
-                if (inst == "Base") mouseHandlerBase();
+                if (inst == "Base") mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
                 layerColor.setAlpha(90)
 
             } else{
@@ -141,45 +141,8 @@
             p5.blendMode(p5.BLEND);
         }
 
-        let tempXY = [0, 0]
-        let amplitude
-        let radi
-        let tempRadi = 0;
-        function mouseHandlerBase(){
-            p5.strokeCap(p5.ROUND)
-            newStart = absoluteTick; 
-            if (interactionTile.mouse.presses()) {
-                tempXY = [p5.mouseX, p5.mouseY];
-                isDrag = 1;
-            }
-            else if (interactionTile.mouse.pressing()) {
-                let maxRadi = maxAmpRadius*2
-                radi = Math.sqrt(Math.pow(p5.mouseX-tempXY[0], 2)+Math.pow(p5.mouseY-tempXY[1], 2))
-                radi = (radi>=maxRadi? maxRadi: radi);
-                p5.ellipse(tempXY[0], tempXY[1], lineWidth*40);
-                p5.ellipse(tempXY[0], tempXY[1], radi*2);
-                p5.noFill()
-                p5.stroke(layerColor);
-                p5.strokeWeight(lineWidth*2)
-                p5.ellipse(tempXY[0], tempXY[1], maxRadi*2);
-                p5.line(tempXY[0], tempXY[1], p5.mouseX, p5.mouseY)
-                amplitude = Math.floor(Math.pow(radi, 2)/Math.pow(maxRadi, 2)*100)
-                
-            }
-            else if (interactionTile.mouse.released()){
-                isDrag = 0;
-                tempRadi = radi;
-                if (amplitude>10) layer.points.push(
-                                {amp: amplitude, 
-                                bar: Math.floor(newStart/256)+1,
-                                start: newStart%256,})
-            }
-            if(tempRadi > 5){
-                tempRadi  = tempRadi*0.8;
-                p5.ellipse(tempXY[0], tempXY[1], tempRadi*2);
-            } else tempRadi = 0;
-           
-        }
+
+        
 
         function timeCursorMake(){
             let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2);

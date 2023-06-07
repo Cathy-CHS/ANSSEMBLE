@@ -168,9 +168,11 @@
                 duration: 1})
             }
         }
+        /*
         if (p5.kb.presses('b')) {
-            console.log(layer.points)
+           console.log(layer.points)
         }
+        */
     }
 
 

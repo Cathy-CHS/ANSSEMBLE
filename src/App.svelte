@@ -1,6 +1,7 @@
 <script>
     import { fly, fade, blur, slide, scale } from 'svelte/transition';
 	import { onMount } from 'svelte';
+    import {width, height} from './Constants.svelte';
 	import Layer from "./Layer.svelte";
     // import * as Tone from 'tone';
 	// import Piano from "./Piano.svelte";
@@ -71,10 +72,9 @@
 			]
 	}
 
-	let width = window.innerWidth;
-    let height = window.innerWidth/1920*1080;
+
 	let layers = test_project.Layers;
-	let layerToSee =0;
+	let layerToSee =1;
 	let NumBar = test_project.NumBar;
 	
 </script>

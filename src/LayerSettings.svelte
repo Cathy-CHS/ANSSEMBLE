@@ -14,7 +14,7 @@
 
     let inst_description = 
     {
-        Piano: 'how to play description \nEx. press keyboard'
+        Piano: 'How to play: \nPress keyboard'
     }
     
     export function drawSettings (p5, inst) {
@@ -26,7 +26,7 @@
         p5.textSize(width_ratio*60);
         p5.text(inst,width_ratio*120,height_ratio*204);
         
-        p5.textSize(width_ratio*20);
+        p5.textSize(width_ratio*25);
         p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
         
         p5.textSize(width_ratio*20);
