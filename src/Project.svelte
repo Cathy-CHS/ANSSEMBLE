@@ -1,14 +1,11 @@
 <script>
-    import { onMount, createEventDispatcher } from 'svelte';
+    import { onMount, createEventDispatcher} from 'svelte';
     // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
-    import { setupPiano, keyboardHandlerPiano } from './Piano.svelte';
-    import {mouseHandlerBase} from './Base.svelte';
 
- 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
-    
+
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
     let inst = layer.Inst;
@@ -66,37 +63,37 @@
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
-            makeInteractionField()
+            makeLayerBackSprite()
            // setupPiano(p5, width, height);
-            timeCursor = timeCursorMake(p5, gridHeight);
+            timeCursor = timeCursorMake(p5, height);
             // await Tone.start();
             
         }
-
+        let showHeight = 0;
         p5.draw = ()=>{
             p5.clear();
             p5.background(p5.color(colors.back));
             
-            grid(p5, gridHeight, showLocation)
+            grid(p5, height, showLocation)
             drawSettings (inst)
-            layerdrawing(p5, mainLayerHeight, layer);
-            
-            for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(p5, otherLayerHeight, layers[i]);}
+
+            for (let i=0; i<layers.length;i++){
+                layerdrawing(p5, showHeight+(i+1)*height/7, layers[i]);
+            }
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            toggleToProject()
-            
+            toggleToLayer();
         }
 
-
-        function toggleToProject(){
-            if (p5.kb.presses('b')) {
+        function toggleToLayer(){
+            if (p5.kb.presses('a')) {
                 console.log('asdf')
                 p5.remove();
                 dispatch('layer', false);
                 //checker()
+
             }
         }
         let inst_description = 
@@ -111,7 +108,7 @@
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
-            p5.text(inst,width_ratio*120,height_ratio*204);
+            p5.text('Project title',width_ratio*120,height_ratio*204);
             
             p5.textSize(width_ratio*25);
             p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
@@ -125,7 +122,7 @@
             p5.text('Layer Amp',width_ratio*120,height_ratio*869);
         };
 
-        function makeInteractionField(){
+        function makeLayerBackSprite(){
             let fieldColor = p5.color(colors.back)
             fieldColor.setAlpha(0);
 
@@ -137,11 +134,10 @@
         function keyboardHandler(){
             //pause
             if (p5.kb.presses('space')) {isPlay = !isPlay;}
-
-            if (inst == "Piano") keyboardHandlerPiano(p5, layer, absoluteTick);
+            
         }
         
-
+        let isDrag = 0;
         let layerColor
         function mouseHandler(){
             //interaction section
@@ -149,12 +145,10 @@
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
             layerColor= layerColoring(inst, p5)
-            if (interactionTile.mouse.hovering()) {
+            if (isDrag || interactionTile.mouse.hovering()) {
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
                 layerColor.setAlpha(100)
-                if (inst == "Base") mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
-                layerColor.setAlpha(90)
             } else{
                 p5.fill(colors.default);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
@@ -162,7 +156,6 @@
             p5.blendMode(p5.BLEND);
         }
 
-        
 
         function timegoes(){
             if(isPlay){absoluteTick ++}
