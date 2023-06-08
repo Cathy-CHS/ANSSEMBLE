@@ -25,24 +25,24 @@
 	NumReproduction : 0,
 	Layers :[
                 {
-                    Inst: "Piano",
+                    Inst: "piano",
                     points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
-                                pitch: 'C8',
+                                pitch: 'C4',
                                 bar: 1,
                                 start: 5,
                                 duration: 20
                                 }, {
-                                pitch: 'E8',
+                                pitch: 'E5',
                                 bar: 1,
                                 start: 5,
                                 duration: 100
                                 }, {
-                                pitch: 'G8',
+                                pitch: 'G4',
                                 bar: 1,
                                 start: 7,
                                 duration: 100
                                 },{
-                                pitch: 'C8',
+                                pitch: 'C5',
                                 bar: 2,
                                 start: 120,
                                 duration: 30
@@ -50,7 +50,7 @@
                             ]
                 }, 
                 {
-                    Inst: "Base",
+                    Inst: "base",
                     points: [{ // Amp: 100이 최대
                                 amp: 100,
                                 bar: 1,
@@ -70,34 +70,34 @@
                                 }
                             ]
                 },
-                {
-                    Inst: "Cymbal",
-                    points: [{ // Amp: 100이 최대
-                                amp: 30,
-                                bar: 1,
-                                start: 100,
-                                }, {
-                                amp: 30,
-                                bar: 1,
-                                start: 200,
-                                }, {
-                                amp: 50,
-                                bar: 3,
-                                start: 7,
-                                },{
-                                amp: 20,
-                                bar: 2,
-                                start: 120,
-                                }
-                            ]
-                }
+                // {
+                //     Inst: "cymbal",
+                //     points: [{ // Amp: 100이 최대
+                //                 amp: 30,
+                //                 bar: 1,
+                //                 start: 100,
+                //                 }, {
+                //                 amp: 30,
+                //                 bar: 1,
+                //                 start: 200,
+                //                 }, {
+                //                 amp: 50,
+                //                 bar: 3,
+                //                 start: 7,
+                //                 },{
+                //                 amp: 20,
+                //                 bar: 2,
+                //                 start: 120,
+                //                 }
+                //             ]
+                // }
                 
 			]
 	}
 
 
 	let layers = test_project.Layers;
-	let layerToSee =0;
+	let layerToSee =1;
 	let NumBar = test_project.NumBar;
 	let toggle= {toggleLayer : true, 
                 toggleProject: false};

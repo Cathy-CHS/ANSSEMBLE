@@ -1,7 +1,7 @@
 <script context="module">
 
     import { onMount } from 'svelte';
-    import {width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius} from './Constants.svelte';
+    import { width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius } from '../Constants.svelte';
 
     export function timeCursorMake(p5, cursorHeight){
         let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2);
@@ -23,7 +23,7 @@
             let mouseLocation = p5.mouse.x;
             let relLocation = mouseLocation-X;
             timeCursor.pos.x = Math.max(startingPoint, mouseLocation)// + timeCursor.mouse.x
-            absoluteTick = absoluteTick + relLocation/layerWidth*(numBarShow*256) * 0.1
+            absoluteTick = parseInt(absoluteTick + relLocation/layerWidth*(numBarShow*256) * 0.1)
             if (absoluteTick<=0) absoluteTick = 0;
             else if(absoluteTick>=maxNumBar*256) absoluteTick = maxNumBar*256;
         }
@@ -57,12 +57,12 @@
     let layerColor
     export function layerColoring(inst, p5){
         
-        if (inst == 'Piano'){layerColor =p5.color(colors.blue)}
-        else if (inst == 'Trumpet'){layerColor =p5.color(colors.purple)}
-        else if (inst == 'Base'){layerColor =p5.color(colors.purple)}
-        else if (inst == 'Snare'){layerColor =p5.color(colors.yellow)}
-        else if (inst == 'Cymbal'){layerColor =p5.color(colors.pink)}
-        else if (inst == 'Guitar'){layerColor =p5.color(colors.green)}
+        if (inst == 'piano'){layerColor =p5.color(colors.blue)}
+        else if (inst == 'trumpet'){layerColor =p5.color(colors.purple)}
+        else if (inst == 'base'){layerColor =p5.color(colors.purple)}
+        else if (inst == 'snare'){layerColor =p5.color(colors.yellow)}
+        else if (inst == 'cymbal'){layerColor =p5.color(colors.pink)}
+        else if (inst == 'guitar'){layerColor =p5.color(colors.green)}
         layerColor.setAlpha(90);
         return layerColor
     }
@@ -81,7 +81,7 @@
         p5.blendMode(p5.HARD_LIGHT);
 
         layerColor = layerColoring(inst, p5)
-        if (inst == 'Piano' || inst == 'Trumpet'){
+        if (inst == 'piano' || inst == 'trumpet'){
             p5.strokeCap(p5.ROUND);
             p5.strokeWeight(layerInstLineWidth);
             p5.stroke(layerColor);
@@ -96,7 +96,7 @@
                 }
             }
             p5.strokeCap(p5.SQUARE);
-        } else if (inst == 'Base' || inst == 'Snare' || inst == 'Cymbal' || inst == 'Guitar'){
+        } else if (inst == 'base' || inst == 'snare' || inst == 'cymbal' || inst == 'guitar'){
             p5.noStroke();
             p5.fill(layerColor)
             for (let point of points){
@@ -112,10 +112,5 @@
         } 
         p5.blendMode(p5.BLEND);
     }
-
-
-    
-
-
 
 </script>
