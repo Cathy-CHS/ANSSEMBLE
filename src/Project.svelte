@@ -1,7 +1,7 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
     // import * as Tone from 'tone';
-    import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
+    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
@@ -80,6 +80,10 @@
             makeButtons()
             makeLayerSps()
         }
+
+
+
+
         let showHeight = 0;
         p5.draw = ()=>{
             p5.clear();
@@ -87,9 +91,9 @@
             
             grid(p5, height, showLocation)
             drawSettings (inst)
-
+            
             for (let i=0; i<layers.length;i++){
-                layerdrawing(p5, showHeight+(i+1)*height/7, layers[i]);
+                layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, layers[i]);
             }
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
@@ -97,9 +101,9 @@
             timegoes();
         }
         p5.mouseWheel = (a)=>{
-            console.log(a)
-            showHeight+=((a.delta>0)? -1:1)*height/30
-            
+            //console.log(a)
+            showHeight+=((a.delta>0)? -1:1)*height/25
+            updateLayerSps()
         }
 
 
@@ -111,14 +115,23 @@
             bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
         }
-        let testLayer
+
+        let layerSps=[]
         function makeLayerSps(){
-            testLayer = makeLayerSp(p5, 'Back', placeholder, 7)
+            for (let i=0; i<layers.length;i++){
+                layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, i, i))
+            }
         }
+
+        function updateLayerSps(){
+            if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
+        }
+
 
         function placeholder(){
 
         }
+
 
         function toggleToLayer(toLayer){
             p5.remove();

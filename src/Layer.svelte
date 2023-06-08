@@ -120,8 +120,8 @@
         }
         let inst_description = 
         {
-            Piano: 'Press keyboard',
-            Base: 'Click, Drag, and let go'
+            piano: 'Press keyboard',
+            base: 'Click, Drag, and let go'
         }
         
         function drawSettings (inst) {

@@ -9,6 +9,8 @@
     export const lineWidth = height/700;
     export const layerInstLineWidth = height/15
     export const maxAmpRadius = height/8
+    //in Project page
+    export const HeightBetLayer = height/7
     export const colors ={
         back: '#030309',
         default: '#f5fafa',
