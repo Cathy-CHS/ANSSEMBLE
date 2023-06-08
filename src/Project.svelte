@@ -3,12 +3,9 @@
     // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
-    import { setupPiano, keyboardHandlerPiano } from './instruments/Piano.svelte';
-    import { mouseHandlerBase } from './instruments/Base.svelte';
 
-    // import { loadSoundtrack } from './LayerSound.svelte';
-    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing } from './layers/LayerSettings.svelte';
-    
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './layers/LayerSettings.svelte';
+
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
     let inst = layer.Inst;
@@ -19,12 +16,18 @@
 
     let BPM = 60;
 
-    // create a synth and connect it to the main output (your speakers)
-    // const synth = new Tone.Synth().toDestination();
-    // console.log(synth);
-
-    // // play a middle 'C' for the duration of an 8th note
-    // synth.triggerAttackRelease("C4", "8n");
+    let soundObject = [
+        {
+            Inst: "piano",
+            Soundtrack: []
+        },
+        {
+            Inst: "base",
+            Soundtrack: []
+        }
+    ];
+    let instList = ["piano", "base", "cymbal"];
+    const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
     // const sampler = new Tone.Sampler({
 	// 	urls: {
@@ -60,55 +63,46 @@
         let isPlay = 0;
         let interactionTile;
 
-        let soundObject = [
-            {
-                Inst: "piano",
-                Soundtrack: []
-            },
-            {
-                Inst: "base",
-                Soundtrack: []
-            }
-        ];
-
         p5.preload = () => {
             loadSoundtrack(soundObject);
         }
-        
+
         p5.setup = async ()=>{
             p5.noCursor()
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
-            makeInteractionField()
-            // setupPiano(p5, width, height);
-            timeCursor = timeCursorMake(p5, gridHeight);
-            // await Tone.start();            
+            makeLayerBackSprite()
+           // setupPiano(p5, width, height);
+            timeCursor = timeCursorMake(p5, height);
+            // await Tone.start();
+            
         }
-
+        let showHeight = 0;
         p5.draw = ()=>{
             p5.clear();
             p5.background(p5.color(colors.back));
             
-            grid(p5, gridHeight, showLocation)
+            grid(p5, height, showLocation)
             drawSettings (inst)
-            layerdrawing(p5, mainLayerHeight, layer);
-            
-            for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(p5, otherLayerHeight, layers[i]);}
+
+            for (let i=0; i<layers.length;i++){
+                layerdrawing(p5, showHeight+(i+1)*height/7, layers[i]);
+            }
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            toggleToProject()
-            
+            toggleToLayer();
         }
 
-        function toggleToProject(){
-            if (p5.kb.presses('`')) {
+        function toggleToLayer(){
+            if (p5.kb.presses('1')) {
                 console.log('asdf')
                 p5.remove();
                 dispatch('layer', false);
                 //checker()
+
             }
         }
         let inst_description = 
@@ -123,7 +117,7 @@
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
-            p5.text(inst,width_ratio*120,height_ratio*204);
+            p5.text('Project title',width_ratio*120,height_ratio*204);
             
             p5.textSize(width_ratio*25);
             p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
@@ -137,7 +131,7 @@
             p5.text('Layer Amp',width_ratio*120,height_ratio*869);
         };
 
-        function makeInteractionField(){
+        function makeLayerBackSprite(){
             let fieldColor = p5.color(colors.back)
             fieldColor.setAlpha(0);
 
@@ -146,38 +140,23 @@
             interactionTile.stroke =  fieldColor;
         }
 
-        let pastPitches = [];
         function keyboardHandler(){
             //pause
             if (p5.kb.presses('space')) {isPlay = !isPlay;}
-
-            //piano handler
-            if (inst == "piano") {
-                const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
-                let existingPitches = keyboardHandlerPiano(p5, layer, absoluteTick);
-                playSound(inst, pianoPitchList, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
-                stopSound(inst, pianoPitchList, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
-                pastPitches = existingPitches;
-            }
         }
         
-
-        let layerColor;
+        let isDrag = 0;
+        let layerColor
         function mouseHandler(){
             //interaction section
             //console.log(p5.mouseX, p5.mouseY)
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
             layerColor= layerColoring(inst, p5)
-            if (interactionTile.mouse.hovering()) {
+            if (isDrag || interactionTile.mouse.hovering()) {
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
                 layerColor.setAlpha(100)
-                if (inst == "base") {
-                    let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
-                    if (amplitude) playSound(inst, amplitude, null);
-                }
-                layerColor.setAlpha(90)
             } else{
                 p5.fill(colors.default);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
@@ -185,10 +164,29 @@
             p5.blendMode(p5.BLEND);
         }
 
-        
 
         function timegoes(){
-            if(isPlay){absoluteTick ++}
+            if(isPlay){
+                for (let layer of layers) {
+                    for (let point of layer.points) {
+                        if (absoluteTick == (point.bar-1)*256+point.start) {
+                            // console.log(layer.Inst);
+                            if (point.hasOwnProperty("duration")) {
+                                const inst = instList.indexOf(layer.Inst);
+                                const pitchnum = pianoPitchList.indexOf(point.pitch);
+                                soundObject[inst].Soundtrack[pitchnum].play();
+                                soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                            } else {
+                                const inst = instList.indexOf(layer.Inst);
+                                soundObject[inst].Soundtrack[0].play(0, 1, point.amp/100);
+                            }
+                        }
+                    }
+                }
+                absoluteTick ++;
+            } else {
+                // pause all sound
+            }
 
             if (absoluteTick<=numBarShow/2*256){
                 pointer = absoluteTick
@@ -249,25 +247,6 @@
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
             //bass
             soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
-        }
-
-        function playSound(inst, a, b) {
-            if(inst == 'piano') {
-                for(let i of b) {
-                    soundObject[0].Soundtrack[a.indexOf(i)].play();
-                }
-            }
-            else if(inst == 'base') {
-                soundObject[1].Soundtrack[0].play(0, 1, a);
-            }
-        }
-
-        function stopSound(inst, pitchList, pitches) {
-            if(inst == 'piano') {
-                for(let i of pitches) {
-                    soundObject[0].Soundtrack[pitchList.indexOf(i)].stop();
-                }
-            }
         }
     }
 
