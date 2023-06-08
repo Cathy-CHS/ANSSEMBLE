@@ -4,7 +4,7 @@
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
 
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
 
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
@@ -84,17 +84,14 @@
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            toggleToLayer();
         }
 
-        function toggleToLayer(){
-            if (p5.kb.presses('a')) {
-                console.log('asdf')
-                p5.remove();
-                dispatch('layer', false);
-                //checker()
-
-            }
+        function toggleToLayer(toLayer){
+            console.log('asdf')
+            p5.remove();
+            dispatch('layernum', toLayer)
+            dispatch('layer', false);
+            //checker()
         }
         let inst_description = 
         {

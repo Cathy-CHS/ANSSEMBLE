@@ -7,7 +7,7 @@
     import {mouseHandlerBase} from './Base.svelte';
 
  
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
@@ -93,29 +93,11 @@
         function makeButtons(){
             let highToolY = height/13
             const buttonDia = width/20
-            function makeButton(text, func, order){
-                let tempButton = new  p5.Sprite(width/20+buttonDia/2+order*buttonDia*1.1, highToolY,buttonDia,buttonDia, 'kinematic')
-                tempButton.img = 'assets/'+text+'.png'
-                tempButton.draw = () =>{
-                    p5.image(tempButton.img, 0, 0, buttonDia, buttonDia)
-                        if(tempButton.mouse.presses()){
-                        func()
-                    }
-                    if(tempButton.mouse.hovering()){
-                        p5.fill('rgba(200,200,200, 0.25)')
-                        p5.ellipse(0, 0, buttonDia)
-                    }
-                }
-                return tempButton
-            }
 
-            backButton = makeButton('Back', toggleToProject, 0)
-            duplButton = makeButton('DuplicateLayer', placeholder, 1)
-            bpmButton = makeButton('BPMIcon', placeholder, 3)
-            playButton = makeButton('songPlay', function(){isPlay = !isPlay}, 4)
-
-
-
+            backButton = makeButton(p5, 'Back', toggleToProject, 0)
+            duplButton = makeButton(p5, 'DuplicateLayer', function(){dispatch('layerDup')}, 1)
+            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
+            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
         }
 
         function placeholder(){

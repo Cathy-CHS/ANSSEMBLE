@@ -13,6 +13,7 @@
     // //play a middle 'C' for the duration of an 8th note
     // synth.triggerAttackRelease("C4", "8n");
 
+    
 	const test_project = {
 	Maker : "user",
 	Title: "Example_project",
@@ -101,21 +102,23 @@
 	let NumBar = test_project.NumBar;
 	let toggle= {toggleLayer : true, 
                 toggleProject: false};
-    function layerToggle(){
-        toggle.toggleLayer = !toggle.toggleLayer
-        console.log(toggle)
-    }
+    function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
+    function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
 </script>
 
 {#if toggle.toggleLayer}
     <div transition:fade>
 
-        <Layer on:layer = {layerToggle} {width} {height} {layers} {layerToSee} {NumBar}/>
+        <Layer 
+        on:layer = {layerToggle}
+        on:layerDup={layerDuplicate} 
+        {width} {height} {layers} {layerToSee} {NumBar}/>
         <!-- <Piano/> -->
     </div>
 {:else if !(toggle.toggleLayer)}
     <div transition:fade>
-        <Project on:layer = {layerToggle} {width} {height} {layers} {layerToSee} {NumBar}/>
+        <Project on:layer = {layerToggle}
+         {width} {height} {layers} {layerToSee} {NumBar}/>
     <!-- <Piano/> -->
     </div>
 {/if}
