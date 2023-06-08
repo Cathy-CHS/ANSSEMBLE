@@ -97,7 +97,7 @@
 
 
 	let layers = test_project.Layers;
-	let layerToSee =0;
+	let layerToSee =1;
 	let NumBar = test_project.NumBar;
 	let toggle= {toggleLayer : true, 
                 toggleProject: false};

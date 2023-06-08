@@ -127,7 +127,8 @@
         }
         let inst_description = 
         {
-            Piano: 'How to play: \nPress keyboard'
+            Piano: 'Press keyboard',
+            Base: 'Click, Drag, and let go'
         }
         
         function drawSettings (inst) {
@@ -141,7 +142,7 @@
             
             p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*30);
-            p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
+            p5.text('How to play: \n'+inst_description[inst],width_ratio*120,height_ratio*351);
             
             if (inst=='Guitar'){
                 p5.textSize(width_ratio*20);
