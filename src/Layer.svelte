@@ -59,6 +59,7 @@
 
         let isPlay = 0;
         let interactionTile;
+        let backIcon
 
         let soundObject = [
             {
@@ -72,6 +73,7 @@
         ];
 
         p5.preload = () => {
+            backIcon = p5.loadImage('assets/Back.png');
             loadSoundtrack(soundObject);
         }
         
@@ -83,7 +85,8 @@
             makeInteractionField()
             // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, gridHeight);
-            // await Tone.start();            
+            // await Tone.start();          
+            makeButtons();  
         }
 
         p5.draw = ()=>{
@@ -99,34 +102,59 @@
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            toggleToProject()
-            
+            // toggleToProject();
+        }
+
+        let backButton, duplButton, bpmButton, playButton
+        function makeButtons(){
+            let highToolY = height/13
+            const buttonDia = width/20
+            function makeButton(text, func, order){
+                let tempButton = new  p5.Sprite(width/20+buttonDia/2+order*buttonDia*1.1, highToolY,buttonDia,buttonDia, 'kinematic')
+                tempButton.img = 'assets/'+text+'.png'
+                tempButton.draw = () =>{
+                    p5.image(tempButton.img, 0, 0, buttonDia, buttonDia)
+                        if(tempButton.mouse.presses()){
+                        func()
+                    }
+                    if(tempButton.mouse.hovering()){
+                        p5.fill('rgba(200,200,200, 0.25)')
+                        p5.ellipse(0, 0, buttonDia)
+                    }
+                }
+                return tempButton
+            }
+            backButton = makeButton('Back', toggleToProject, 0)
+            duplButton = makeButton('DuplicateLayer', placeholder, 1)
+            bpmButton = makeButton('BPMIcon', placeholder, 3)
+            playButton = makeButton('songPlay', function(){isPlay = !isPlay}, 4)
+        }
+
+        function placeholder(){
         }
 
         function toggleToProject(){
-            if (p5.kb.presses('`')) {
-                console.log('asdf')
-                p5.remove();
-                dispatch('layer', false);
-                //checker()
-            }
+            p5.remove();
+            dispatch('layer', false);
         }
         let inst_description = 
         {
-            Piano: 'How to play: \nPress keyboard'
+            Piano: 'Press keyboard',
+            Base: 'Click, Drag, and let go'
         }
         
         function drawSettings (inst) {
             p5.fill('#f5fafa');
-            p5.textFont("pretendard");
+            p5.textFont("pretendard Black");
             let width_ratio = p5.width/1920;
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.text(inst,width_ratio*120,height_ratio*204);
             
-            p5.textSize(width_ratio*25);
-            p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
+            p5.textFont('Pretendard Medium');
+            p5.textSize(width_ratio*30);
+            p5.text('How to play: \n'+inst_description[inst],width_ratio*120,height_ratio*351);
             
             if (inst=='guitar'){
                 p5.textSize(width_ratio*20);
@@ -203,10 +231,10 @@
             else {
                 pointer =numBarShow/2*256;
                 showLocation =absoluteTick - numBarShow/2*256}
+            //For decoding drag
+            let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
+            let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
         }
-        //For decoding drag
-        let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
-        let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
 
         function loadSoundtrack(soundObject) {
             // piano
