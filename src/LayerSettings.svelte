@@ -130,7 +130,22 @@
         }
         return tempButton
     }
+    export function makeLayerSp(p5, text, func, order, value){
+        let tempSprite = new  p5.Sprite(width/20+buttonDia/2+order*buttonDia*1.1, highToolY,buttonDia,buttonDia, 'kinematic')
+        tempSprite.img = 'assets/'+text+'.png'
+        tempSprite.draw = () =>{
+            p5.image(tempSprite.img, 0, 0, buttonDia, buttonDia)
+                if(tempSprite.mouse.presses()){
+                func(value)
+            }
+            if(tempSprite.mouse.hovering()){
+                p5.fill('rgba(200,200,200, 0.25)')
+                p5.rect(0, 0, buttonDia)
+            }
+        }
+        return tempSprite
     
+    }
 
 
 

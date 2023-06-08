@@ -4,7 +4,7 @@
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
 
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './LayerSettings.svelte';
 
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
@@ -69,6 +69,7 @@
             timeCursor = timeCursorMake(p5, height);
             // await Tone.start();
             makeButtons()
+            makeLayerSps()
         }
         let showHeight = 0;
         p5.draw = ()=>{
@@ -86,7 +87,13 @@
             mouseHandler()
             timegoes();
         }
-        
+        p5.mouseWheel = (a)=>{
+            console.log(a)
+            showHeight+=((a.delta>0)? -1:1)*height/30
+            
+        }
+
+
         let backButton, duplButton, bpmButton, playButton
         function makeButtons(){
             //backButton = makeButton(p5, 'Back', toggleToNode, 0)
@@ -94,6 +101,10 @@
             duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
             bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
+        }
+        let testLayer
+        function makeLayerSps(){
+            testLayer = makeLayerSp(p5, 'Back', placeholder, 7)
         }
 
         function placeholder(){
