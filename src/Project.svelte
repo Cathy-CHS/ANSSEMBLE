@@ -8,6 +8,7 @@
 
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
+
     let inst = layer.Inst;
     console.log(width, height, layer, NumBar)
 
@@ -67,7 +68,7 @@
            // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, height);
             // await Tone.start();
-            
+            makeButtons()
         }
         let showHeight = 0;
         p5.draw = ()=>{
@@ -85,13 +86,24 @@
             mouseHandler()
             timegoes();
         }
+        
+        let backButton, duplButton, bpmButton, playButton
+        function makeButtons(){
+            //backButton = makeButton(p5, 'Back', toggleToNode, 0)
+            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
+            duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
+            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
+            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
+        }
+
+        function placeholder(){
+
+        }
 
         function toggleToLayer(toLayer){
-            console.log('asdf')
             p5.remove();
             dispatch('layernum', toLayer)
             dispatch('layer', false);
-            //checker()
         }
         let inst_description = 
         {

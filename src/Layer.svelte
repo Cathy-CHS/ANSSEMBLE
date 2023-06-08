@@ -10,14 +10,10 @@
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
-    let layer = layers[layerToSee];
-    let inst = layer.Inst;
-    console.log(width, height, layer, NumBar)
+
 
     //max number of bar in one display
     //const numBarShow = 3;
-
-    let BPM = 60;
 
     // create a synth and connect it to the main output (your speakers)
     // const synth = new Tone.Synth().toDestination();
@@ -37,6 +33,10 @@
 	// 	release: 1,
 	// }).toDestination();
 
+    let layer = layers[layerToSee];
+    let inst = layer.Inst;
+    console.log(width, height, layer, NumBar)
+    let BPM = 60;
     // Tone.Transport.bpm.value = BPM;
 	// Tone.Transport.start();
     // sampler.start();
@@ -66,6 +66,8 @@
         }
 
         p5.setup = async ()=>{
+
+
             p5.noCursor()
             p5.createCanvas(width, height);
             p5.noStroke();
@@ -91,9 +93,6 @@
         }
         let backButton, duplButton, bpmButton, playButton
         function makeButtons(){
-            let highToolY = height/13
-            const buttonDia = width/20
-
             backButton = makeButton(p5, 'Back', toggleToProject, 0)
             duplButton = makeButton(p5, 'DuplicateLayer', function(){dispatch('layerDup')}, 1)
             bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
@@ -105,7 +104,7 @@
         }
         function toggleToProject(){
             p5.remove();
-            dispatch('layer', false);
+            dispatch('layerToProject');
         }
         let inst_description = 
         {

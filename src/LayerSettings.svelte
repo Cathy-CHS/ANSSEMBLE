@@ -115,13 +115,13 @@
 
     let highToolY = height/13
     const buttonDia = width/20
-    export function makeButton(p5, text, func, order){
+    export function makeButton(p5, text, func, order, value){
         let tempButton = new  p5.Sprite(width/20+buttonDia/2+order*buttonDia*1.1, highToolY,buttonDia,buttonDia, 'kinematic')
         tempButton.img = 'assets/'+text+'.png'
         tempButton.draw = () =>{
             p5.image(tempButton.img, 0, 0, buttonDia, buttonDia)
                 if(tempButton.mouse.presses()){
-                func()
+                func(value)
             }
             if(tempButton.mouse.hovering()){
                 p5.fill('rgba(200,200,200, 0.25)')

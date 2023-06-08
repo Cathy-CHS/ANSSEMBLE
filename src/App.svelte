@@ -104,13 +104,17 @@
                 toggleProject: false};
     function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
     function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
+    const layerSwitch = event => {
+        console.log(event.detail)
+        layerToSee=event.detail
+  }
 </script>
 
 {#if toggle.toggleLayer}
     <div transition:fade>
 
         <Layer 
-        on:layer = {layerToggle}
+        on:layerToProject = {layerToggle}
         on:layerDup={layerDuplicate} 
         {width} {height} {layers} {layerToSee} {NumBar}/>
         <!-- <Piano/> -->
@@ -118,6 +122,7 @@
 {:else if !(toggle.toggleLayer)}
     <div transition:fade>
         <Project on:layer = {layerToggle}
+        on:layernum ={layerSwitch}
          {width} {height} {layers} {layerToSee} {NumBar}/>
     <!-- <Piano/> -->
     </div>
