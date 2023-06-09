@@ -1,6 +1,5 @@
 <script context="module">
 
-    import { onMount } from 'svelte';
     import {width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius, HeightBetLayer} from '../Constants.svelte';
 
     export function timeCursorMake(p5, cursorHeight){
@@ -16,6 +15,7 @@
         p5.noStroke();
         return timeCursor
     }
+
     export function timeCursorMove(p5, timeCursor, pointer, absoluteTick, maxNumBar){
         let X = pointer/(numBarShow*256) * layerWidth + startingPoint;
         timeCursor.pos = {x:X,y: lineWidth*15}
@@ -29,6 +29,7 @@
         }
         return absoluteTick
     }
+
     export function timeCursorRemove(timeCursor){
         timeCursor.remove()
     }
@@ -88,7 +89,6 @@
             for (let point of points){
                 let xi = timeToX(point.bar, point.start);
                 let xf = timeToX(point.bar, point.start+point.duration);
-                //console.log(xi, xf)
                 if (xf>startingPoint && xi<width){
                     if (xf>width){xf = width}
                     if (xi<startingPoint){xi = startingPoint}
@@ -130,6 +130,7 @@
         }
         return tempButton
     }
+
     export function makeLayerSp(p5, func, showHeight, order, value){
         let yLocation = showHeight+(1+order)*HeightBetLayer
         let tempSprite = new  p5.Sprite((startingPoint+width)/2, yLocation,width-startingPoint,HeightBetLayer, 'kinematic')
@@ -147,9 +148,6 @@
             tempSprite.y = showHeight+(1+order)*HeightBetLayer
         }
         return tempSprite
-    
     }
-
-
 
 </script>
