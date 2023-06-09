@@ -1,6 +1,5 @@
 <script context="module">
 
-    import { onMount } from 'svelte';
     import {colors, lineWidth, maxAmpRadius} from '../Constants.svelte';
     let newStart = 0;
     let isDrag = 0;

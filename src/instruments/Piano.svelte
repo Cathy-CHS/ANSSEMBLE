@@ -5,18 +5,6 @@
     * @param {p5} p5 instance mode
     */
 
-    import { onMount } from 'svelte';
-
-    export function setupPiano (p5, width, height) {
-        let instrument = 'PIANO';
-        let instrument_description = 'how to play description \nEx. press keyboard';
-        
-        // p5.setup = async () => {
-        //     p5.createCanvas(p5.windowWidth, p5.windowWidth/1920*1080);
-        // };
-        // return;
-    };
-
     let highlight1, highlight2, highlight3, highlight4
 
     const key1 = ['2','3','none','5','6','7','none','9','0','none', '='];

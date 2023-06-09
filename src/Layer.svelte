@@ -1,9 +1,8 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
-    // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
-    import { setupPiano, keyboardHandlerPiano } from './instruments/Piano.svelte';
+    import { keyboardHandlerPiano } from './instruments/Piano.svelte';
     import { mouseHandlerBase } from './instruments/Base.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
@@ -11,35 +10,13 @@
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
 
-
     //max number of bar in one display
     //const numBarShow = 3;
-
-    // create a synth and connect it to the main output (your speakers)
-    // const synth = new Tone.Synth().toDestination();
-    // console.log(synth);
-
-    // // play a middle 'C' for the duration of an 8th note
-    // synth.triggerAttackRelease("C4", "8n");
-
-    // const sampler = new Tone.Sampler({
-	// 	urls: {
-	// 		"C4": "C4.mp3",
-	// 		"D#4": "Ds4.mp3",
-	// 		"F#4": "Fs4.mp3",
-	// 		"A4": "A4.mp3",
-	// 	},
-	// 	baseUrl: "https://tonejs.github.io/audio/salamander/",
-	// 	release: 1,
-	// }).toDestination();
 
     let layer = layers[layerToSee];
     let inst = layer.Inst;
     console.log(width, height, layer, NumBar)
     let BPM = 60;
-    // Tone.Transport.bpm.value = BPM;
-	// Tone.Transport.start();
-    // sampler.start();
     const dispatch=createEventDispatcher();
     let absoluteTick = 0;
     const sketch = (p5) =>{
@@ -54,12 +31,11 @@
         //4/4 => 60/(BPM/4)s = 1 bar time. 1 bar = 256 tick
         // 1 bar time / 256 = 1 tick time
         // inverse of 1 tick time = fr
-        let frameRate = 1/(60/(BPM/4)/256)
-        //console.log(frameRate);
+        let frameRate = 1/(60/(BPM/4)/256);
 
         let isPlay = 0;
         let interactionTile;
-        let backIcon
+        let backIcon;
 
         let soundObject = [
             {
@@ -84,10 +60,8 @@
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
-            makeInteractionField()
-            // setupPiano(p5, width, height);
-            timeCursor = timeCursorMake(p5, gridHeight);
-            // await Tone.start();          
+            makeInteractionField();
+            timeCursor = timeCursorMake(p5, gridHeight);   
             makeButtons();
         }
 
@@ -120,6 +94,7 @@
             p5.remove();
             dispatch('layerToProject');
         }
+        
         let inst_description = 
         {
             piano: 'Press keyboard',
@@ -164,10 +139,10 @@
 
             //piano handler
             if (inst == "piano") {
-                const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+                const pianoPitch = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
                 let existingPitches = keyboardHandlerPiano(p5, layer, absoluteTick);
-                playSound(inst, pianoPitchList, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
-                stopSound(inst, pianoPitchList, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
+                playSound(inst, pianoPitch, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
+                stopSound(inst, pianoPitch, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
                 pastPitches = existingPitches;
             }
         }
@@ -176,7 +151,6 @@
         let layerColor;
         function mouseHandler(){
             //interaction section
-            //console.log(p5.mouseX, p5.mouseY)
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
             layerColor= layerColoring(inst, p5)
@@ -196,11 +170,28 @@
             p5.blendMode(p5.BLEND);
         }
 
-        
+        let instList = ["piano", "base", "cymbal"];
+        const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
         function timegoes(){
-            if(isPlay){absoluteTick ++}
-
+            if(isPlay){
+                for (let layer of layers) {
+                    for (let point of layer.points) {
+                        if (absoluteTick == (point.bar-1)*256+point.start) {
+                            if (point.hasOwnProperty("duration")) {
+                                const inst = instList.indexOf(layer.Inst);
+                                const pitchnum = pianoPitchList.indexOf(point.pitch);
+                                soundObject[inst].Soundtrack[pitchnum].play();
+                                soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                            } else {
+                                const inst = instList.indexOf(layer.Inst);
+                                soundObject[inst].Soundtrack[0].play(0, 1, point.amp/100);
+                            }
+                        }
+                    }
+                }
+                absoluteTick ++
+            }
             if (absoluteTick<=numBarShow/2*256){
                 pointer = absoluteTick
                 showLocation = 0;
@@ -283,15 +274,10 @@
     }
 
     let sketchId;
-    // let toneId;
     onMount(function () {
     let myp5 = new p5(sketch, sketchId);
-    // let mytone = new Tone(sampler, toneId);
     });
 
 </script>
 
-<!-- <Piano bind:this={piano} /> -->
-
 <div {sketchId} />
-<!-- <div {toneId} /> -->
