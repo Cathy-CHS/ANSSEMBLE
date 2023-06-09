@@ -6,9 +6,12 @@
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
 
-    export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
+    export let [width, height, database, NumBar, user] = [400,300, {}, []];
     
-    let layers = project.Layers;
+    console.log(database)
+    let projectToSee = 1;
+    console.log(database[projectToSee].Layers)
+    let layers = database[projectToSee].Layers;
 
     console.log(width, height, NumBar)
 
@@ -69,7 +72,6 @@
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
-            textSprites()
            // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, height);
             // await Tone.start();
@@ -84,10 +86,16 @@
             popUp()
             grid(p5, height, showLocation)
             drawSettings ()
-            
-            for (let i=0; i<layers.length;i++){
-                layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, layers[i]);
+            for (let i=0; i<Object.keys(database).length;i++){
+
+                let tempLayers = database[i.toString()].Layers
+                for (let j=0; j<tempLayers.length;j++){
+                    layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, tempLayers[j]);
+                }
             }
+
+
+
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
@@ -97,45 +105,56 @@
             //console.log(a)
             if (p5.mouseX>startingPoint){
                 showHeight+=((a.delta>0)? -1:1)*height/25
-                updateLayerSps()
+                updateWheelSps()
             }
         }
 
         let layerSps=[]
         function makeLayerSps(){
-            for (let i=0; i<layers.length;i++){
-                layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, i, i))
+            for (let i=0; i<Object.keys(database).length;i++){
+                layerSps.push(makeLayerSp(p5, toggleToProject, showHeight, i, i))
             }
         }
 
-        let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
-        let layerMakers = []
+        let backButton, duplButton, bpmButton, playButton, newProjButton
+        let followButtons = []
         function makeButtons(){
-            //backButton = makeButton(p5, 'Back', toggleToNode, 0)
-            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
-            duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
-            ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
-            bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
-            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
-            deleteButton = makeButton(p5, 'Delete', deleteProject, 0)
-            deleteButton.y = height*12/13
+            backButton = makeButton(p5, 'Back', function(){dispatch('totToTitle')}, 0, 0)
+            bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 1)
 
-            // instruments
-            const insts = ['piano', 'guitar', 'base', 'cymBal', 'snare']
-            let magicLocationNumber = 9
-            for (let inst of insts){
-                let tempButton = makeButton(p5, inst, makeNewLayer, magicLocationNumber+insts.indexOf(inst), inst)
-                tempButton.y = height*12/13
-                layerMakers.push(tempButton)
-            }
+            duplButton = makeButton(p5, 'AddProject', dupNewProject, 4)
+            duplButton.y = HeightBetLayer*(projectToSee+1)
+            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 5)
+            playButton.y = HeightBetLayer*(projectToSee+1)
+            followButtons.push(duplButton)
+            followButtons.push(playButton)
+            newProjButton = makeButton(p5, 'AddProject', makeNewProject, 9)
+            newProjButton.y = height*12/13
         }
-        function makeNewLayer(inst){
-            let newLayer = {}
-            newLayer.Inst = inst
-            newLayer.points = []
-            layers.push(newLayer)
-            let index = layers.length - 1
-            layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, index, index))
+        function dupNewProject(){
+            let index = Object.keys(database).length
+            database[index] = JSON.parse(JSON.stringify(database[projectToSee]))
+            layerSps.push(makeLayerSp(p5, toggleToProject, showHeight, index, index))
+            console.log(database)
+        }
+        function makeNewProject(){
+            let newProject = {
+            Maker : user,
+            Title: "New Project",
+            Tag : [],
+            Desc : "Write the description in 200 characters",
+            // 8 마디
+            NumBar : "4",
+            NumOrbit : 0,
+            Origin : null,
+            NumReproduction : 0,
+            Layers :[{Inst:"base", points:[]}]
+            }
+            let index = Object.keys(database).length
+            
+            database[index] = newProject
+            layerSps.push(makeLayerSp(p5, toggleToProject, showHeight, index, index))
+            console.log(database)
         }
         
         let BPMindex = 0
@@ -165,109 +184,53 @@
         }
 
 
-
-
-        function deleteProject(){
-
-        }
-
-        function updateLayerSps(){
+        function updateWheelSps(){
             if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
+            for (let button of followButtons){
+                button.y = showHeight + HeightBetLayer*(projectToSee+1)
+            }
         }
 
 
-        function placeholder(){
 
+        function toggleToProject(clickProject){
+            if (clickProject == projectToSee){
+                p5.remove();
+                dispatch('projectnum', clickProject)
+                dispatch('project', false);
+            }
+            projectToSee = clickProject
+            updateWheelSps()
+            layers = database[projectToSee].Layers;
+            console.log(layers)
         }
 
 
-        function toggleToLayer(toLayer){
-            p5.remove();
-            dispatch('projectTexts', [project_title, project_description])
-            dispatch('layernum', toLayer)
-            dispatch('layer', false);
-        }
-
-        let project_title = project.Title
-        let project_description = project.Desc
         function drawSettings () {
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
             let width_ratio = width/1920;
-            let height_ratio = height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
-            p5.textWrap(p5.CHAR);
-            p5.text(project_title,text_start,height*0.2, text_end);
+            p5.textWrap(p5.WORD);
+            p5.text("Project select",text_start,height*0.2, text_end*0.5);
             
             p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*30);
-            p5.text(project_description,text_start,height*0.4, text_end);
+            p5.text("Scroll and click",text_start,height*0.4, text_end*0.5);
         };
-        let titleTile, descTile
-        let titleOK = false
-        let descOK = false
-        function textSprites(){
-            
-            
-            let fieldColor = p5.color(colors.default)
-            fieldColor.setAlpha(30);
-            titleTile = new p5.Sprite((text_end+text_start*2)/2, height*0.27, text_end, (height*0.2), 'kinematic')
-            titleTile.color =  fieldColor;
-            titleTile.stroke = fieldColor;
-
-            titleTile.draw = () =>{
-                if(titleTile.mouse.hovering()){
-                    p5.fill(fieldColor);
-                    p5.rect(0, 0, text_end, (height*0.2))
-                    titleOK =true;
-                } else{ titleOK = false }}
-
-            descTile = new p5.Sprite((text_end+text_start*2)/2, height*0.59, text_end, (height*0.4), 'kinematic')
-            descTile.color =  fieldColor;
-            descTile.stroke =  fieldColor;
-            descTile.draw = () =>{
-                if(descTile.mouse.hovering()){
-                    p5.fill(fieldColor);
-                    p5.rect(0, 0, text_end, (height*0.4))
-                    descOK =true;
-                } else{ descOK = false }}
-        }
-        let isUser=true
-        p5.keyTyped=()=>{
-            
-            if (titleOK && isUser &&(project_title.length<25)){
-                project_title = project_title+p5.key}
-            if (descOK && isUser &&(project_description.length<200)){
-                project_description = project_description+p5.key}
-        }
-        p5.keyPressed=()=>{
-            if (titleOK && isUser){
-                if(p5.key=='Backspace'){project_title = project_title.slice(0, -1);}
-                else if(p5.key==' '){project_title = project_title+' '}
-            }
-            if (descOK && isUser){
-                if(p5.key=='Backspace'){project_description = project_description.slice(0, -1);}
-                else if(p5.key==' '){project_description = project_description+' '}
-            }
-        }
 
         function keyboardHandler(){
             //pause
-            if(!(titleOK) && !(descOK)){
-                if (p5.kb.presses('space')) {isPlay = !isPlay;}
-            }
-            
+
+            if (p5.kb.presses('space')) {isPlay = !isPlay;}
         }
-        
-        let isDrag = 0;
-        let layerColor
+
         function mouseHandler(){
             //interaction section
             //console.log(p5.mouseX, p5.mouseY)
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
-            layerColor= layerColoring('piano', p5)
 
             p5.fill(colors.default);
             p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);

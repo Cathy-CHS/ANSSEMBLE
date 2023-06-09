@@ -4,6 +4,7 @@
     import {width, height} from './Constants.svelte';
 	import Layer from "./Layer.svelte";
     import Project from "./Project.svelte";
+    import ProjectSelect from './ProjectSelect.svelte';
     // import * as Tone from 'tone';
 	// import Piano from "./Piano.svelte";
 
@@ -96,14 +97,17 @@
 	}
     const test_project2 = JSON.parse(JSON.stringify(test_project))
     test_project2.Layers.splice(2, 1);
+    test_project2.Title = "P2"
     const test_project3 = JSON.parse(JSON.stringify(test_project))
     test_project3.Layers.splice(0, 1);
+    test_project3.Title = "P3"
 
 
 
-    const test_DB = {0:test_project, 1:test_project2, 2:test_project3}
+    const database = {0:test_project, 1:test_project2, 2:test_project3}
 
-    let project = test_DB[2]
+    let project = database[2]
+    let user = "Anon"
 	let layers = project.Layers;
 	let layerToSee = 1;
 	let NumBar = project.NumBar;
@@ -125,27 +129,35 @@
      }
 
 </script>
+{#if !(toggle.toggleProject)}
+    <ProjectSelect on:layer = {layerToggle}
+    on:projectTexts = {changeDescs}
+    on:layernum ={layerSwitch}
+    {width} {height} {database} {NumBar}, {user}/>
+{:else}
+    {#if toggle.toggleLayer}
+        <div transition:fade>
+            <Layer 
+            on:layerToProject = {layerToggle}
+            on:layerDup={layerDuplicate} 
+            on:deleteLayer={layerDelete}
+            {width} {height} {layers} {layerToSee} {NumBar}/>
+            <!-- <Piano/> -->
+        </div>
+    {:else if !(toggle.toggleLayer)}
+        <div transition:fade>
+            <Project on:layer = {layerToggle}
+            on:projectTexts = {changeDescs}
+            on:layernum ={layerSwitch}
 
-{#if toggle.toggleLayer}
-    <div transition:fade>
-
-        <Layer 
-        on:layerToProject = {layerToggle}
-        on:layerDup={layerDuplicate} 
-        on:deleteLayer={layerDelete}
-        {width} {height} {layers} {layerToSee} {NumBar}/>
+            {width} {height} {project} {layerToSee} {NumBar}/>
         <!-- <Piano/> -->
-    </div>
-{:else if !(toggle.toggleLayer)}
-    <div transition:fade>
-        <Project on:layer = {layerToggle}
-        on:projectTexts = {changeDescs}
-        on:layernum ={layerSwitch}
-
-         {width} {height} {project} {layerToSee} {NumBar}/>
-    <!-- <Piano/> -->
-    </div>
+        </div>
+    {/if}
 {/if}
+
+
+
 
 
 <style>
