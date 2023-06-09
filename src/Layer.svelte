@@ -1,13 +1,13 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
     // import * as Tone from 'tone';
-    import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
+    import {BPMorigin, colors, numBarShow, startingPoint, layerWidth, lineWidth,text_start, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
     import { setupPiano, keyboardHandlerPiano } from './instruments/Piano.svelte';
     import { mouseHandlerBase } from './instruments/Base.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
-    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeSlider } from './layers/LayerSettings.svelte';
+    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './layers/LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
 
@@ -36,7 +36,8 @@
     let layer = layers[layerToSee];
     let inst = layer.Inst;
     console.log(width, height, layer, NumBar)
-    let BPM = 60;
+    
+    let BPM = BPMorigin;
     // Tone.Transport.bpm.value = BPM;
 	// Tone.Transport.start();
     // sampler.start();
@@ -78,24 +79,19 @@
             loadSoundtrack(soundObject);
         }
         let gui
+
         p5.setup = async ()=>{
-            p5.noCursor()
             p5.createCanvas(width, height);
-            //gui  = p5.createGui()
             p5.noStroke();
             p5.frameRate(frameRate);
             makeInteractionField()
+            
             // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, gridHeight);
             // await Tone.start();
             makeButtons()
-            makeSliders()
         }
 
-        let BPMslider
-        function makeSliders(){
-            BPMslider = makeSlider(p5, 100, 60, 120)
-        }
         p5.draw = ()=>{
             //p5.drawGui();
             p5.clear();
@@ -109,11 +105,12 @@
             mouseHandler()
             timegoes();
         }
-        let backButton, duplButton, bpmButton, playButton
+        let backButton, duplButton, ampButton, bpmButton, playButton
         function makeButtons(){
             backButton = makeButton(p5, 'Back', toggleToProject, 0)
             duplButton = makeButton(p5, 'DuplicateLayer', function(){dispatch('layerDup')}, 1)
-            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
+            ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
+            bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
         }
 
@@ -121,6 +118,15 @@
 
         }
 
+        let BPMindex = 0
+        function BPMchanger(){
+            const BPMmulti = [1, 1.25, 1.5, 1.75, 2]
+            BPMindex = ((BPMindex>=(BPMmulti.length-1))? 0: BPMindex+1);
+            BPM = BPMorigin*BPMmulti[BPMindex]
+            frameRate = 1/(60/(BPM/4)/256)
+            p5.frameRate(frameRate);
+            console.log(BPM)
+        }
 
         function toggleToProject(){
             p5.remove();
@@ -136,22 +142,23 @@
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
             let width_ratio = p5.width/1920;
+            
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
-            p5.text(inst,width_ratio*120,height_ratio*204);
+            p5.text(inst,text_start,height_ratio*204);
             
             p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*30);
-            p5.text('How to play: \n'+inst_description[inst],width_ratio*120,height_ratio*351);
+            p5.text('How to play: \n'+inst_description[inst],text_start,height_ratio*351);
             
             if (inst=='guitar'){
                 p5.textSize(width_ratio*20);
-                p5.text('pitch',width_ratio*120,height_ratio*474);
+                p5.text('pitch',text_start,height_ratio*474);
             }
 
             p5.textSize(width_ratio*20);
-            p5.text('Layer Amp',width_ratio*120,height_ratio*869);
+            p5.text('Layer Amp',text_start,height_ratio*869);
         };
 
         function makeInteractionField(){
@@ -278,7 +285,7 @@
                 soundObject[1].Soundtrack[0].play(0, 1, a);
             }
         }
-
+ 
         function stopSound(inst, pitchList, pitches) {
             if(inst == 'piano') {
                 for(let i of pitches) {

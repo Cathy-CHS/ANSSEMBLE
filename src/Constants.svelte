@@ -4,7 +4,9 @@
     //export let height = window.innerWidth/1920*1080;
     export let height = window.innerWidth/1920*905;
     export  const numBarShow = 3;
+    export const BPMorigin = 60;
     export const startingPoint = width/2.5
+    export const text_start = width/16
     export const layerWidth = width-startingPoint;
     export const lineWidth = height/700;
     export const layerInstLineWidth = height/15

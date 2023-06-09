@@ -1,7 +1,7 @@
 <script context="module">
 
     import { onMount } from 'svelte';
-    import {width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius, HeightBetLayer} from '../Constants.svelte';
+    import {width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius, HeightBetLayer,text_start} from '../Constants.svelte';
 
     export function timeCursorMake(p5, cursorHeight){
         let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2, 'kinematic');
@@ -131,11 +131,6 @@
         return tempButton
     }
     
-    export function makeSlider(p5, ylocation, min, max){
-        let slider = p5.createSlider(min, max, min)
-        slider.position(0, ylocation)
-        return slider
-    }
 
 
     export function makeLayerSp(p5, func, showHeight, order, value){
