@@ -195,9 +195,10 @@
 
         function toggleToProject(clickProject){
             if (clickProject == projectToSee){
-                p5.remove();
-                dispatch('projectnum', clickProject)
+                
                 dispatch('project', false);
+                dispatch('projectnum', clickProject)
+                p5.remove();
             }
             projectToSee = clickProject
             updateWheelSps()
