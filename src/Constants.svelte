@@ -1,7 +1,6 @@
 <script context="module">
     
     export let width = window.innerWidth*0.98;
-    //export let height = window.innerWidth/1920*1080;
     export let height = window.innerWidth/1920*905;
     export  const numBarShow = 3;
     export const BPMorigin = 60;
@@ -23,7 +22,5 @@
         pink: '#f293c7',
         yellow: '#fade96'
     }
-
-
 
 </script>

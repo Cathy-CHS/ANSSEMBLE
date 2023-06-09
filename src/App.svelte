@@ -4,15 +4,6 @@
     import {width, height} from './Constants.svelte';
 	import Layer from "./Layer.svelte";
     import Project from "./Project.svelte";
-    // import * as Tone from 'tone';
-	// import Piano from "./Piano.svelte";
-
-    // //create a synth and connect it to the main output (your speakers)
-    // const synth = new Tone.Synth().toDestination();
-
-    // //play a middle 'C' for the duration of an 8th note
-    // synth.triggerAttackRelease("C4", "8n");
-
     
 	const test_project = {
 	Maker : "user",
@@ -96,11 +87,11 @@
 			]
 	}
 
-    let project = test_project
+  let project = test_project
 	let layers = project.Layers;
 	let layerToSee = 1;
 	let NumBar = project.NumBar;
-	let toggle= {toggleLayer : false, 
+	let toggle= {toggleLayer : false,
                 toggleProject: false};
     function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
     function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
@@ -121,29 +112,21 @@
 
 {#if toggle.toggleLayer}
     <div transition:fade>
-
         <Layer 
         on:layerToProject = {layerToggle}
         on:layerDup={layerDuplicate} 
         on:deleteLayer={layerDelete}
         {width} {height} {layers} {layerToSee} {NumBar}/>
-        <!-- <Piano/> -->
     </div>
 {:else if !(toggle.toggleLayer)}
     <div transition:fade>
         <Project on:layer = {layerToggle}
         on:projectTexts = {changeDescs}
         on:layernum ={layerSwitch}
-
-         {width} {height} {project} {layerToSee} {NumBar}/>
-    <!-- <Piano/> -->
+         {width} {height} {layers} {layerToSee} {NumBar}/>
     </div>
 {/if}
 
-
 <style>
-
-
-
 
 </style>
