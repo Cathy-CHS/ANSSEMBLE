@@ -199,8 +199,25 @@
         
 
         function timegoes(){
-            if(isPlay){absoluteTick ++}
-
+            if(isPlay){
+                for (let layer of layers) {
+                    for (let point of layer.points) {
+                        if (absoluteTick == (point.bar-1)*256+point.start) {
+                            // console.log(layer.Inst);
+                            if (point.hasOwnProperty("duration")) {
+                                const inst = instList.indexOf(layer.Inst);
+                                const pitchnum = pianoPitchList.indexOf(point.pitch);
+                                soundObject[inst].Soundtrack[pitchnum].play();
+                                soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                            } else {
+                                const inst = instList.indexOf(layer.Inst);
+                                soundObject[inst].Soundtrack[0].play(0, 1, point.amp/100);
+                            }
+                        }
+                    }
+                }
+                absoluteTick ++
+            }
             if (absoluteTick<=numBarShow/2*256){
                 pointer = absoluteTick
                 showLocation = 0;
