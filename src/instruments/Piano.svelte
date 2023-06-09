@@ -114,7 +114,7 @@
         
         // export as [ [key, pitch], ...]
         if (tempPitch.length>=1){
-            //console.log(tempPitch)
+            console.log(tempPitch)
             return tempPitch
         } else return [];
         

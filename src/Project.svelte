@@ -1,7 +1,7 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
     // import * as Tone from 'tone';
-    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, layerInstLineWidth,  maxAmpRadius, BPMorigin} from './Constants.svelte';
+    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, text_start} from './Constants.svelte';
 
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
@@ -53,8 +53,6 @@
         //pointer: location of time cursor (also a tick)
         let pointer = 0;
         const mainLayerHeight = height/3;
-        const otherLayerHeight = height/6;
-        const gridHeight =  mainLayerHeight+height/10
         //4/4 => 60/(BPM/4)s = 1 bar time. 1 bar = 256 tick
         // 1 bar time / 256 = 1 tick time
         // inverse of 1 tick time = fr
@@ -62,7 +60,6 @@
         //console.log(frameRate);
 
         let isPlay = 0;
-        let interactionTile;
 
         p5.preload = () => {
             loadSoundtrack(soundObject);
@@ -80,9 +77,6 @@
             makeButtons()
             makeLayerSps()
         }
-
-
-
 
         let showHeight = 0;
         p5.draw = ()=>{
@@ -117,7 +111,6 @@
 
         let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
         let layerMakers = []
-        
         function makeButtons(){
             //backButton = makeButton(p5, 'Back', toggleToNode, 0)
             backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
@@ -146,7 +139,6 @@
             layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, index, index))
         }
         
-        
         let BPMindex = 0
         function BPMchanger(){
             const BPMmulti = [1, 1.25, 1.5, 1.75, 2, 2.25, 2.5]
@@ -160,9 +152,6 @@
 
         }
 
-
-
-
         function updateLayerSps(){
             if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
         }
@@ -175,40 +164,81 @@
 
         function toggleToLayer(toLayer){
             p5.remove();
+            dispatch('projectTexts', [project_title, project_description])
             dispatch('layernum', toLayer)
             dispatch('layer', false);
         }
+
         let project_title = project.Title
         let project_description = project.Desc
         function drawSettings () {
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
-            let width_ratio = p5.width/1920;
-            let height_ratio = p5.height/1080;
+            let width_ratio = width/1920;
+            let height_ratio = height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.textWrap(p5.CHAR);
-            p5.text(project_title,width_ratio*120,height_ratio*204, startingPoint*0.7);
+            p5.text(project_title,text_start,height*0.2, text_end);
             
             p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*30);
-            p5.text(project_description,width_ratio*120,height_ratio*400, startingPoint*0.7);
-            
-
+            p5.text(project_description,text_start,height*0.4, text_end);
         };
-
+        let titleTile, descTile
+        let titleOK = false
+        let descOK = false
         function textSprites(){
-            let fieldColor = p5.color(colors.back)
-            fieldColor.setAlpha(0);
+            
+            
+            let fieldColor = p5.color(colors.default)
+            fieldColor.setAlpha(30);
+            titleTile = new p5.Sprite((text_end+text_start*2)/2, height*0.27, text_end, (height*0.2), 'kinematic')
+            titleTile.color =  fieldColor;
+            titleTile.stroke = fieldColor;
 
-            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
-            interactionTile.color =  fieldColor;
-            interactionTile.stroke =  fieldColor;
+            titleTile.draw = () =>{
+                if(titleTile.mouse.hovering()){
+                    p5.fill(fieldColor);
+                    p5.rect(0, 0, text_end, (height*0.2))
+                    titleOK =true;
+                } else{ titleOK = false }}
+
+            descTile = new p5.Sprite((text_end+text_start*2)/2, height*0.59, text_end, (height*0.4), 'kinematic')
+            descTile.color =  fieldColor;
+            descTile.stroke =  fieldColor;
+            descTile.draw = () =>{
+                if(descTile.mouse.hovering()){
+                    p5.fill(fieldColor);
+                    p5.rect(0, 0, text_end, (height*0.4))
+                    descOK =true;
+                } else{ descOK = false }}
+        }
+        let isUser=true
+        p5.keyTyped=()=>{
+            
+            if (titleOK && isUser &&(project_title.length<25)){
+                project_title = project_title+p5.key}
+            if (descOK && isUser &&(project_description.length<200)){
+                project_description = project_description+p5.key}
+        }
+        p5.keyPressed=()=>{
+            if (titleOK && isUser){
+                if(p5.key=='Backspace'){project_title = project_title.slice(0, -1);}
+                else if(p5.key==' '){project_title = project_title+' '}
+            }
+            if (descOK && isUser){
+                if(p5.key=='Backspace'){project_description = project_description.slice(0, -1);}
+                else if(p5.key==' '){project_description = project_description+' '}
+            }
         }
 
         function keyboardHandler(){
             //pause
-            if (p5.kb.presses('space')) {isPlay = !isPlay;}
+            if(!(titleOK) && !(descOK)){
+                if (p5.kb.presses('space')) {isPlay = !isPlay;}
+            }
+            
         }
         
         let isDrag = 0;
@@ -219,14 +249,10 @@
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
             layerColor= layerColoring('piano', p5)
-            if (isDrag || interactionTile.mouse.hovering()) {
-                p5.fill(layerColor);
-                p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
-                layerColor.setAlpha(100)
-            } else{
-                p5.fill(colors.default);
-                p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
-            }
+
+            p5.fill(colors.default);
+            p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
+            
             p5.blendMode(p5.BLEND);
         }
 

@@ -154,7 +154,8 @@
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
-            p5.text(inst,text_start,height_ratio*204);
+            p5.textWrap(p5.CHAR);
+            p5.text(inst,text_start,height_ratio*204, startingPoint*0.63);
             
             p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*30);

@@ -7,6 +7,7 @@
     export const BPMorigin = 60;
     export const startingPoint = width/2.5
     export const text_start = width/16
+    export const text_end = startingPoint*0.63
     export const layerWidth = width-startingPoint;
     export const lineWidth = height/700;
     export const layerInstLineWidth = height/15

@@ -20,7 +20,7 @@
 	Tag : ['example', 'tags', 'P2'],
 	Desc : "Example project for implementation, Example project for implementation,Example project for implementation,Example project for implementation",
 	// 8 마디
-	NumBar : "6",
+	NumBar : "4",
 	NumOrbit : 0,
 	Origin : null,
 	NumReproduction : 0,
@@ -112,6 +112,11 @@
         console.log(layers)
      }
     const layerSwitch = event => {layerToSee=event.detail}
+    const changeDescs = event => {
+        project.Title = event.detail[0]
+        project.Desc = event.detail[1]
+     }
+
 </script>
 
 {#if toggle.toggleLayer}
@@ -127,6 +132,7 @@
 {:else if !(toggle.toggleLayer)}
     <div transition:fade>
         <Project on:layer = {layerToggle}
+        on:projectTexts = {changeDescs}
         on:layernum ={layerSwitch}
 
          {width} {height} {project} {layerToSee} {NumBar}/>
