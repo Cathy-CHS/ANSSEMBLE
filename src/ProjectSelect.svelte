@@ -5,6 +5,7 @@
 
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
+  import { text } from 'svelte/internal';
 
     export let [width, height, database, projToSee, NumBar, user] = [400,300, {}, []];
     
@@ -86,16 +87,33 @@
             popUp()
             grid(p5, height, showLocation)
             drawSettings ()
+            /*
+                let fieldColor = p5.color(colors.default)
+                fieldColor.setAlpha(100*BPMpup/frameRate);
+                p5.fill(fieldColor)
+                p5.textFont('Pretendard Medium');
+                p5.textAlign(p5.CENTER, p5.CENTER)
+                p5.textSize(height/3);
+                p5.text('BPM = '+ BPM,width/2, height/2 )
+                BPMpup--
+                p5.textAlign(p5.LEFT, p5.TOP)
+            }
+            
+            */
+            p5.textFont('Pretendard Medium');
+            p5.textSize(height/40);
+            p5.textWrap(p5.CHAR)
             for (let i=0; i<Object.keys(database).length;i++){
+                let elemHeight = showHeight+(i+1)*HeightBetLayer
+                p5.fill(p5.color(colors.default))
+                p5.text(database[i].Title, startingPoint/2, elemHeight- height/40*3/2, text_end/4)
 
                 let tempLayers = database[i.toString()].Layers
                 for (let j=0; j<tempLayers.length;j++){
-                    layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, tempLayers[j]);
+                    layerdrawing(p5, elemHeight, tempLayers[j]);
                 }
             }
-
-
-
+            //p5.textAlign(p5.LEFT, p5.TOP)
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
@@ -134,7 +152,7 @@
         function dupNewProject(){
             let index = Object.keys(database).length
             database[index] = JSON.parse(JSON.stringify(database[projectToSee]))
-            database[index].Title +="-Copy" 
+            if (database[index].Title.length<=(25-5)) database[index].Title +="-Copy" 
             layerSps.push(makeLayerSp(p5, toggleToProject, showHeight, index, index))
             projectToSee = index
             updateWheelSps()

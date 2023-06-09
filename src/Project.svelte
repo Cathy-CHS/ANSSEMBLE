@@ -112,8 +112,7 @@
         let layerMakers = []
         function makeButtons(){
             //backButton = makeButton(p5, 'Back', toggleToNode, 0)
-            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')
-                                                            p5.remove()}, 0, 0)
+            backButton = makeButton(p5, 'Back', projToTot , 0, 0)
             duplButton = makeButton(p5, 'AddProject', dupProject, 1, 0)
             ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
             bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
@@ -129,6 +128,12 @@
                 layerMakers.push(tempButton)
             }
         }
+        function projToTot(){
+            dispatch('projToTot')
+            dispatch('projectTexts', [project_title, project_description])
+            p5.remove()
+        }
+        
         function dupProject(){
             dispatch('projDup')
             p5.remove()
@@ -194,7 +199,6 @@
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
             let width_ratio = width/1920;
-            let height_ratio = height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.textWrap(p5.CHAR);
