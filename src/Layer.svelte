@@ -54,8 +54,9 @@
             loadSoundtrack(soundObject);
         }
         let gui
-
+        
         p5.setup = async ()=>{
+            p5.noCursor();
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
