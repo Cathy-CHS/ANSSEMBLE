@@ -6,10 +6,10 @@
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
 
-    export let [width, height, database, NumBar, user] = [400,300, {}, []];
+    export let [width, height, database, projToSee, NumBar, user] = [400,300, {}, []];
     
     console.log(database)
-    let projectToSee = 1;
+    let projectToSee = projToSee;
     console.log(database[projectToSee].Layers)
     let layers = database[projectToSee].Layers;
 
@@ -134,7 +134,10 @@
         function dupNewProject(){
             let index = Object.keys(database).length
             database[index] = JSON.parse(JSON.stringify(database[projectToSee]))
+            database[index].Title +="-Copy" 
             layerSps.push(makeLayerSp(p5, toggleToProject, showHeight, index, index))
+            projectToSee = index
+            updateWheelSps()
             console.log(database)
         }
         function makeNewProject(){

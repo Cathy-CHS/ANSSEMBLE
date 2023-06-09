@@ -108,17 +108,17 @@
             }
         }
 
-        let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
+        let backButton, duplButton, ampButton, bpmButton, playButton
         let layerMakers = []
         function makeButtons(){
             //backButton = makeButton(p5, 'Back', toggleToNode, 0)
-            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
-            duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
+            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')
+                                                            p5.remove()}, 0, 0)
+            duplButton = makeButton(p5, 'AddProject', dupProject, 1, 0)
             ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
             bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
-            deleteButton = makeButton(p5, 'Delete', deleteProject, 0)
-            deleteButton.y = height*12/13
+
 
             // instruments
             const insts = ['piano', 'guitar', 'base', 'cymBal', 'snare']
@@ -129,6 +129,12 @@
                 layerMakers.push(tempButton)
             }
         }
+        function dupProject(){
+            dispatch('projDup')
+            p5.remove()
+        }
+
+
         function makeNewLayer(inst){
             let newLayer = {}
             newLayer.Inst = inst
@@ -164,12 +170,6 @@
             }
         }
 
-
-
-
-        function deleteProject(){
-
-        }
 
         function updateLayerSps(){
             if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
