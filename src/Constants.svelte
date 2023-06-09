@@ -4,6 +4,7 @@
     export let height = window.innerWidth/1920*905;
     export  const numBarShow = 3;
     export const BPMorigin = 60;
+    export const MasterVolOrigin = 1;
     export const startingPoint = width/2.5
     export const text_start = width/16
     export const text_end = startingPoint*0.63

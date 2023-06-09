@@ -14,7 +14,6 @@
 
     let layer = layers[layerToSee];
     let inst = layer.Inst;
-    let amp = layer.Amplitude;
     console.log(width, height, layer, NumBar);
   
     let BPM = BPMorigin;
@@ -81,11 +80,12 @@
             mouseHandler()
             timegoes();
         }
+
         let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
         function makeButtons(){
             backButton = makeButton(p5, 'Back', toggleToProject, 0)
             duplButton = makeButton(p5, 'DuplicateLayer', function(){dispatch('layerDup')}, 1)
-            ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
+            ampButton = makeButton(p5, 'AmpIcon', amplitudeChanger, 2)
             bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
             deleteButton = makeButton(p5, 'Delete', deleteLayer, 0)
@@ -98,11 +98,18 @@
             dispatch('deleteLayer', layerToSee)
             p5.remove();
         }
-        function placeholder(){
 
+        let ampindex = 4;
+        let amppup = 0;
+        function amplitudeChanger(){
+            const ampmulti = [0.2, 0.4, 0.6, 0.8, 1]
+            ampindex = ((ampindex>=(ampmulti.length-1))? 0: ampindex+1);
+            layer.Amplitude = ampmulti[ampindex];
+            amppup = 70;
+            console.log(layer.Amplitude);
         }
 
-        let BPMindex = 0
+        let BPMindex = 0;
         let BPMpup = 0;
         function BPMchanger(){
             const BPMmulti = [1, 1.25, 1.5, 1.75, 2, 2.25, 2.5]
@@ -110,10 +117,10 @@
             BPM = BPMorigin*BPMmulti[BPMindex]
             frameRate = 1/(60/(BPM/4)/256)
             p5.frameRate(frameRate);
-            BPMpup = frameRate
-
+            BPMpup = frameRate;
             console.log(BPM)
         }
+
         function popUp(){
             if(BPMpup){
                 let fieldColor = p5.color(colors.default)
@@ -122,8 +129,20 @@
                 p5.textFont('Pretendard Medium');
                 p5.textAlign(p5.CENTER, p5.CENTER)
                 p5.textSize(height/3);
-                p5.text('BPM = '+ BPM,width/2, height/2 )
+                p5.text('BPM = '+ BPM, width/2, height/2 )
                 BPMpup--
+                console.log(BPMpup);
+                p5.textAlign(p5.LEFT, p5.TOP)
+            }
+            if(amppup){
+                let fieldColor = p5.color(colors.default)
+                fieldColor.setAlpha(100*amppup/frameRate);
+                p5.fill(fieldColor)
+                p5.textFont('Pretendard Medium');
+                p5.textAlign(p5.CENTER, p5.CENTER)
+                p5.textSize(height/5);
+                p5.text('LAYER VOL = '+ layer.Amplitude +'x', width/2, height/2 )
+                amppup--
                 p5.textAlign(p5.LEFT, p5.TOP)
             }
         }
@@ -181,7 +200,7 @@
             if (inst == "piano") {
                 const pianoPitch = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
                 let existingPitches = keyboardHandlerPiano(p5, layer, absoluteTick);
-                playSound(inst, amp, pianoPitch, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
+                playSound(inst, layer.Amplitude, pianoPitch, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
                 stopSound(inst, pianoPitch, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
                 pastPitches = existingPitches;
             }
@@ -200,7 +219,7 @@
                 layerColor.setAlpha(100)
                 if (inst == "base") {
                     let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
-                    if (amplitude) playSound(inst, amp, amplitude, null);
+                    if (amplitude) playSound(inst, layer.Amplitude, amplitude, null);
                 }
                 layerColor.setAlpha(90)
             } else{
