@@ -1,13 +1,14 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
     // import * as Tone from 'tone';
-    import {colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
+    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
 
 
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing} from './layers/LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
 
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
     let layer = layers[layerToSee];
+
     let inst = layer.Inst;
     console.log(width, height, layer, NumBar)
 
@@ -76,8 +77,13 @@
            // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, height);
             // await Tone.start();
-            
+            makeButtons()
+            makeLayerSps()
         }
+
+
+
+
         let showHeight = 0;
         p5.draw = ()=>{
             p5.clear();
@@ -85,25 +91,52 @@
             
             grid(p5, height, showLocation)
             drawSettings (inst)
-
+            
             for (let i=0; i<layers.length;i++){
-                layerdrawing(p5, showHeight+(i+1)*height/7, layers[i]);
+                layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, layers[i]);
             }
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            toggleToLayer();
+        }
+        p5.mouseWheel = (a)=>{
+            //console.log(a)
+            showHeight+=((a.delta>0)? -1:1)*height/25
+            updateLayerSps()
         }
 
-        function toggleToLayer(){
-            if (p5.kb.presses('1')) {
-                console.log('asdf')
-                p5.remove();
-                dispatch('layer', false);
-                //checker()
 
+        let backButton, duplButton, bpmButton, playButton
+        function makeButtons(){
+            //backButton = makeButton(p5, 'Back', toggleToNode, 0)
+            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
+            duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
+            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
+            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
+        }
+
+        let layerSps=[]
+        function makeLayerSps(){
+            for (let i=0; i<layers.length;i++){
+                layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, i, i))
             }
+        }
+
+        function updateLayerSps(){
+            if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
+        }
+
+
+        function placeholder(){
+
+        }
+
+
+        function toggleToLayer(toLayer){
+            p5.remove();
+            dispatch('layernum', toLayer)
+            dispatch('layer', false);
         }
         let inst_description = 
         {
@@ -112,13 +145,13 @@
         
         function drawSettings (inst) {
             p5.fill('#f5fafa');
-            p5.textFont("pretendard");
+            p5.textFont('Pretendard Black');
             let width_ratio = p5.width/1920;
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.text('Project title',width_ratio*120,height_ratio*204);
-            
+            p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*25);
             p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
             
