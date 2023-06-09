@@ -6,7 +6,9 @@
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
 
-    export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
+    export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
+    
+    let layers = project.Layers;
     let layer = layers[layerToSee];
 
     let inst = layer.Inst;
@@ -73,7 +75,7 @@
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
-            makeLayerBackSprite()
+            textSprites()
            // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, height);
             // await Tone.start();
@@ -102,8 +104,10 @@
         }
         p5.mouseWheel = (a)=>{
             //console.log(a)
-            showHeight+=((a.delta>0)? -1:1)*height/25
-            updateLayerSps()
+            if (p5.mouseX>startingPoint){
+                showHeight+=((a.delta>0)? -1:1)*height/25
+                updateLayerSps()
+            }
         }
 
 
@@ -138,11 +142,8 @@
             dispatch('layernum', toLayer)
             dispatch('layer', false);
         }
-        let inst_description = 
-        {
-            Piano: 'How to play: \nPress keyboard'
-        }
-        
+        let project_title = project.Title
+        let project_description = project.Desc
         function drawSettings (inst) {
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
@@ -150,10 +151,12 @@
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
-            p5.text('Project title',width_ratio*120,height_ratio*204);
+            p5.textWrap(p5.CHAR);
+            p5.text(project_title,width_ratio*120,height_ratio*204, startingPoint*0.7);
+            
             p5.textFont('Pretendard Medium');
-            p5.textSize(width_ratio*25);
-            p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
+            p5.textSize(width_ratio*30);
+            p5.text(project_description,width_ratio*120,height_ratio*400, startingPoint*0.7);
             
             if (inst=='guitar'){
                 p5.textSize(width_ratio*20);
@@ -164,7 +167,7 @@
             p5.text('Layer Amp',width_ratio*120,height_ratio*869);
         };
 
-        function makeLayerBackSprite(){
+        function textSprites(){
             let fieldColor = p5.color(colors.back)
             fieldColor.setAlpha(0);
 

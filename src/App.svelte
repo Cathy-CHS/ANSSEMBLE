@@ -16,9 +16,9 @@
     
 	const test_project = {
 	Maker : "user",
-	Title: "Example_project",
+	Title: "Example_projectasdfas",
 	Tag : ['example', 'tags', 'P2'],
-	Desc : "Example project for implementation",
+	Desc : "Example project for implementation, Example project for implementation,Example project for implementation,Example project for implementation",
 	// 8 마디
 	NumBar : "6",
 	NumOrbit : 0,
@@ -96,18 +96,15 @@
 			]
 	}
 
-
-	let layers = test_project.Layers;
+    let project = test_project
+	let layers = project.Layers;
 	let layerToSee = 1;
-	let NumBar = test_project.NumBar;
+	let NumBar = project.NumBar;
 	let toggle= {toggleLayer : true, 
                 toggleProject: false};
     function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
     function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
-    const layerSwitch = event => {
-        console.log(event.detail)
-        layerToSee=event.detail
-  }
+    const layerSwitch = event => {layerToSee=event.detail}
 </script>
 
 {#if toggle.toggleLayer}
@@ -123,12 +120,15 @@
     <div transition:fade>
         <Project on:layer = {layerToggle}
         on:layernum ={layerSwitch}
-         {width} {height} {layers} {layerToSee} {NumBar}/>
+         {width} {height} {project} {layerToSee} {NumBar}/>
     <!-- <Piano/> -->
     </div>
 {/if}
 
 
 <style>
+
+
+
 
 </style>

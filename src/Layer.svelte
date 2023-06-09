@@ -7,7 +7,7 @@
     import { mouseHandlerBase } from './instruments/Base.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
-    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton } from './layers/LayerSettings.svelte';
+    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeSlider } from './layers/LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
 
@@ -42,6 +42,7 @@
     // sampler.start();
     const dispatch=createEventDispatcher();
     let absoluteTick = 0;
+    
     const sketch = (p5) =>{
         let timeCursor
         //showLocation: location of displayed starting point, previous bar*256 + location in bar -1
@@ -74,12 +75,11 @@
         p5.preload = () => {
             loadSoundtrack(soundObject);
         }
-        
+        let gui
         p5.setup = async ()=>{
-
-
             p5.noCursor()
             p5.createCanvas(width, height);
+            //gui  = p5.createGui()
             p5.noStroke();
             p5.frameRate(frameRate);
             makeInteractionField()
@@ -87,9 +87,15 @@
             timeCursor = timeCursorMake(p5, gridHeight);
             // await Tone.start();
             makeButtons()
+            makeSliders()
         }
 
+        let BPMslider
+        function makeSliders(){
+            BPMslider = makeSlider(p5, 100, 60, 120)
+        }
         p5.draw = ()=>{
+            //p5.drawGui();
             p5.clear();
             p5.background(p5.color(colors.back));
             grid(p5, gridHeight, showLocation)

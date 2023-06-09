@@ -130,6 +130,14 @@
         }
         return tempButton
     }
+    
+    export function makeSlider(p5, ylocation, min, max){
+        let slider = p5.createSlider(min, max, min)
+        slider.position(0, ylocation)
+        return slider
+    }
+
+
     export function makeLayerSp(p5, func, showHeight, order, value){
         let yLocation = showHeight+(1+order)*HeightBetLayer
         let tempSprite = new  p5.Sprite((startingPoint+width)/2, yLocation,width-startingPoint,HeightBetLayer, 'kinematic')
@@ -153,3 +161,9 @@
 
 
 </script>
+
+<style>
+
+    
+    
+</style>
