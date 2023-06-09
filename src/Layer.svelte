@@ -59,6 +59,7 @@
 
         let isPlay = 0;
         let interactionTile;
+        let backIcon
 
         let soundObject = [
             {
@@ -72,6 +73,7 @@
         ];
 
         p5.preload = () => {
+            backIcon = p5.loadImage('assets/Back.png');
             loadSoundtrack(soundObject);
         }
         
@@ -85,8 +87,8 @@
             makeInteractionField()
             // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, gridHeight);
-            // await Tone.start();
-            makeButtons()
+            // await Tone.start();          
+            makeButtons();
         }
 
         p5.draw = ()=>{
@@ -212,10 +214,10 @@
             else {
                 pointer =numBarShow/2*256;
                 showLocation =absoluteTick - numBarShow/2*256}
+            //For decoding drag
+            let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
+            let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
         }
-        //For decoding drag
-        let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
-        let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
 
         function loadSoundtrack(soundObject) {
             // piano
