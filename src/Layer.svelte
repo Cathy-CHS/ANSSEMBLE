@@ -7,17 +7,13 @@
     import { mouseHandlerBase } from './instruments/Base.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
-    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing } from './layers/LayerSettings.svelte';
+    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton } from './layers/LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
-    let layer = layers[layerToSee];
-    let inst = layer.Inst;
-    console.log(width, height, layer, NumBar)
+
 
     //max number of bar in one display
     //const numBarShow = 3;
-
-    let BPM = 60;
 
     // create a synth and connect it to the main output (your speakers)
     // const synth = new Tone.Synth().toDestination();
@@ -37,6 +33,10 @@
 	// 	release: 1,
 	// }).toDestination();
 
+    let layer = layers[layerToSee];
+    let inst = layer.Inst;
+    console.log(width, height, layer, NumBar)
+    let BPM = 60;
     // Tone.Transport.bpm.value = BPM;
 	// Tone.Transport.start();
     // sampler.start();
@@ -59,6 +59,7 @@
 
         let isPlay = 0;
         let interactionTile;
+        let backIcon
 
         let soundObject = [
             {
@@ -72,10 +73,13 @@
         ];
 
         p5.preload = () => {
+            backIcon = p5.loadImage('assets/Back.png');
             loadSoundtrack(soundObject);
         }
         
         p5.setup = async ()=>{
+
+
             p5.noCursor()
             p5.createCanvas(width, height);
             p5.noStroke();
@@ -83,50 +87,57 @@
             makeInteractionField()
             // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, gridHeight);
-            // await Tone.start();            
+            // await Tone.start();          
+            makeButtons();
         }
 
         p5.draw = ()=>{
             p5.clear();
             p5.background(p5.color(colors.back));
-            
             grid(p5, gridHeight, showLocation)
             drawSettings (inst)
             layerdrawing(p5, mainLayerHeight, layer);
-            
             for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(p5, otherLayerHeight, layers[i]);}
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            toggleToProject()
-            
+        }
+        let backButton, duplButton, bpmButton, playButton
+        function makeButtons(){
+            backButton = makeButton(p5, 'Back', toggleToProject, 0)
+            duplButton = makeButton(p5, 'DuplicateLayer', function(){dispatch('layerDup')}, 1)
+            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
+            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
         }
 
+        function placeholder(){
+
+        }
+
+
         function toggleToProject(){
-            if (p5.kb.presses('`')) {
-                console.log('asdf')
-                p5.remove();
-                dispatch('layer', false);
-                //checker()
-            }
+            p5.remove();
+            dispatch('layerToProject');
         }
         let inst_description = 
         {
-            Piano: 'How to play: \nPress keyboard'
+            piano: 'Press keyboard',
+            base: 'Click, Drag, and let go'
         }
         
         function drawSettings (inst) {
             p5.fill('#f5fafa');
-            p5.textFont("pretendard");
+            p5.textFont('Pretendard Black');
             let width_ratio = p5.width/1920;
             let height_ratio = p5.height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.text(inst,width_ratio*120,height_ratio*204);
             
-            p5.textSize(width_ratio*25);
-            p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
+            p5.textFont('Pretendard Medium');
+            p5.textSize(width_ratio*30);
+            p5.text('How to play: \n'+inst_description[inst],width_ratio*120,height_ratio*351);
             
             if (inst=='guitar'){
                 p5.textSize(width_ratio*20);
@@ -203,10 +214,10 @@
             else {
                 pointer =numBarShow/2*256;
                 showLocation =absoluteTick - numBarShow/2*256}
+            //For decoding drag
+            let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
+            let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
         }
-        //For decoding drag
-        let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
-        let tickToTime = (tick) => [Math.floor((tick+showLocation)/256)+1, Math.round((tick+showLocation)%256)]
 
         function loadSoundtrack(soundObject) {
             // piano

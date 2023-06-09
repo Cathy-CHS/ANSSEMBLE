@@ -30,7 +30,7 @@
             p5.strokeWeight(lineWidth*2)
             p5.ellipse(tempXY[0], tempXY[1], maxRadi*2);
             p5.line(tempXY[0], tempXY[1], p5.mouseX, p5.mouseY)
-            amplitude = Math.floor(Math.pow(radi, 2)/Math.pow(maxRadi, 2)*100);
+            amplitude = Math.floor(Math.pow(radi, 1.5)/Math.pow(maxRadi, 1.5)*100);
         }
         else if (interactionTile.mouse.released()){
             isDrag = 0;

@@ -13,6 +13,7 @@
     // //play a middle 'C' for the duration of an 8th note
     // synth.triggerAttackRelease("C4", "8n");
 
+    
 	const test_project = {
 	Maker : "user",
 	Title: "Example_project",
@@ -97,25 +98,32 @@
 
 
 	let layers = test_project.Layers;
-	let layerToSee = 1;
+	let layerToSee = 0;
 	let NumBar = test_project.NumBar;
 	let toggle= {toggleLayer : true, 
                 toggleProject: false};
-    function layerToggle(){
-        toggle.toggleLayer = !toggle.toggleLayer
-        console.log(toggle)
-    }
+    function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
+    function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
+    const layerSwitch = event => {
+        console.log(event.detail)
+        layerToSee=event.detail
+  }
 </script>
 
 {#if toggle.toggleLayer}
     <div transition:fade>
 
-        <Layer on:layer = {layerToggle} {width} {height} {layers} {layerToSee} {NumBar}/>
+        <Layer 
+        on:layerToProject = {layerToggle}
+        on:layerDup={layerDuplicate} 
+        {width} {height} {layers} {layerToSee} {NumBar}/>
         <!-- <Piano/> -->
     </div>
 {:else if !(toggle.toggleLayer)}
     <div transition:fade>
-        <Project on:layer = {layerToggle} {width} {height} {layers} {layerToSee} {NumBar}/>
+        <Project on:layer = {layerToggle}
+        on:layernum ={layerSwitch}
+         {width} {height} {layers} {layerToSee} {NumBar}/>
     <!-- <Piano/> -->
     </div>
 {/if}
