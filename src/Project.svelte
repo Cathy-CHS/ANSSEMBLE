@@ -1,20 +1,18 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
-    import { colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, layerInstLineWidth,  maxAmpRadius } from './Constants.svelte';
-
-
+    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, text_start} from './Constants.svelte';
     import { timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp } from './layers/LayerSettings.svelte';
 
-    export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
-    let layer = layers[layerToSee];
+    export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
+    
+    let layers = project.Layers;
 
-    let inst = layer.Inst;
-    console.log(width, height, layer, NumBar)
+    console.log(width, height, NumBar)
 
     //max number of bar in one display
     //const numBarShow = 3;
 
-    let BPM = 60;
+    let BPM = BPMorigin;
 
     let soundObject = [
         {
@@ -37,16 +35,12 @@
         let showLocation = 0;
         //pointer: location of time cursor (also a tick)
         let pointer = 0;
-        const mainLayerHeight = height/3;
-        const otherLayerHeight = height/6;
-        const gridHeight =  mainLayerHeight+height/10
         //4/4 => 60/(BPM/4)s = 1 bar time. 1 bar = 256 tick
         // 1 bar time / 256 = 1 tick time
         // inverse of 1 tick time = fr
         let frameRate = 1/(60/(BPM/4)/256)
 
         let isPlay = 0;
-        let interactionTile;
 
         p5.preload = () => {
             loadSoundtrack(soundObject);
@@ -57,7 +51,7 @@
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
-            makeLayerBackSprite()
+            textSprites()
             timeCursor = timeCursorMake(p5, height);
             makeButtons()
             makeLayerSps()
@@ -67,9 +61,9 @@
         p5.draw = ()=>{
             p5.clear();
             p5.background(p5.color(colors.back));
-            
+            popUp()
             grid(p5, height, showLocation)
-            drawSettings (inst)
+            drawSettings ()
             
             for (let i=0; i<layers.length;i++){
                 layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, layers[i]);
@@ -81,17 +75,11 @@
         }
 
         p5.mouseWheel = (a)=>{
-            showHeight+=((a.delta>0)? -1:1)*height/25
-            updateLayerSps()
-        }
-
-        let backButton, duplButton, bpmButton, playButton
-        function makeButtons(){
-            //backButton = makeButton(p5, 'Back', toggleToNode, 0)
-            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
-            duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
-            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
-            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
+            //console.log(a)
+            if (p5.mouseX>startingPoint){
+                showHeight+=((a.delta>0)? -1:1)*height/25
+                updateLayerSps()
+            }
         }
 
         let layerSps=[]
@@ -99,6 +87,70 @@
             for (let i=0; i<layers.length;i++){
                 layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, i, i))
             }
+        }
+
+        let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
+        let layerMakers = []
+        
+        function makeButtons(){
+            //backButton = makeButton(p5, 'Back', toggleToNode, 0)
+            backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
+            duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
+            ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
+            bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
+            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
+            deleteButton = makeButton(p5, 'Delete', deleteProject, 0)
+            deleteButton.y = height*12/13
+
+            // instruments
+            const insts = ['piano', 'guitar', 'base', 'cymBal', 'snare']
+            let magicLocationNumber = 9
+            for (let inst of insts){
+                let tempButton = makeButton(p5, inst, makeNewLayer, magicLocationNumber+insts.indexOf(inst), inst)
+                tempButton.y = height*12/13
+                layerMakers.push(tempButton)
+            }
+        }
+        function makeNewLayer(inst){
+            let newLayer = {}
+            newLayer.Inst = inst
+            newLayer.points = []
+            layers.push(newLayer)
+            let index = layers.length - 1
+            layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, index, index))
+        }
+        
+        let BPMindex = 0
+        let BPMpup = 0;
+        function BPMchanger(){
+            const BPMmulti = [1, 1.25, 1.5, 1.75, 2, 2.25, 2.5]
+            BPMindex = ((BPMindex>=(BPMmulti.length-1))? 0: BPMindex+1);
+            BPM = BPMorigin*BPMmulti[BPMindex]
+            frameRate = 1/(60/(BPM/4)/256)
+            p5.frameRate(frameRate);
+            BPMpup = frameRate
+
+            console.log(BPM)
+        }
+        function popUp(){
+            if(BPMpup){
+                let fieldColor = p5.color(colors.default)
+                fieldColor.setAlpha(100*BPMpup/frameRate);
+                p5.fill(fieldColor)
+                p5.textFont('Pretendard Medium');
+                p5.textAlign(p5.CENTER, p5.CENTER)
+                p5.textSize(height/3);
+                p5.text('BPM = '+ BPM,width/2, height/2 )
+                BPMpup--
+                p5.textAlign(p5.LEFT, p5.TOP)
+            }
+        }
+
+
+
+
+        function deleteProject(){
+
         }
 
         function updateLayerSps(){
@@ -113,48 +165,82 @@
 
         function toggleToLayer(toLayer){
             p5.remove();
+            dispatch('projectTexts', [project_title, project_description])
             dispatch('layernum', toLayer)
             dispatch('layer', false);
         }
 
-        let inst_description = 
-        {
-            Piano: 'How to play: \nPress keyboard'
-        }
-        
-        function drawSettings (inst) {
+        let project_title = project.Title;
+        let project_description = project.Desc;
+        function drawSettings () {
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
-            let width_ratio = p5.width/1920;
-            let height_ratio = p5.height/1080;
+            let width_ratio = width/1920;
+            let height_ratio = height/1080;
             p5.noStroke();
             p5.textSize(width_ratio*60);
-            p5.text('Project title',width_ratio*120,height_ratio*204);
-            p5.textFont('Pretendard Medium');
-            p5.textSize(width_ratio*25);
-            p5.text(inst_description[inst],width_ratio*120,height_ratio*351);
+            p5.textWrap(p5.CHAR);
+            p5.text(project_title,text_start,height*0.2, text_end);
             
-            if (inst=='guitar'){
-                p5.textSize(width_ratio*20);
-                p5.text('pitch',width_ratio*120,height_ratio*474);
-            }
-
-            p5.textSize(width_ratio*20);
-            p5.text('Layer Amp',width_ratio*120,height_ratio*869);
+            p5.textFont('Pretendard Medium');
+            p5.textSize(width_ratio*30);
+            p5.text(project_description,text_start,height*0.4, text_end);
         };
+  
+        let titleTile, descTile
+        let titleOK = false
+        let descOK = false
+        function textSprites(){
+            
+            
+            let fieldColor = p5.color(colors.default)
+            fieldColor.setAlpha(30);
+            titleTile = new p5.Sprite((text_end+text_start*2)/2, height*0.27, text_end, (height*0.2), 'kinematic')
+            titleTile.color =  fieldColor;
+            titleTile.stroke = fieldColor;
 
-        function makeLayerBackSprite(){
-            let fieldColor = p5.color(colors.back)
-            fieldColor.setAlpha(0);
+            titleTile.draw = () =>{
+                if(titleTile.mouse.hovering()){
+                    p5.fill(fieldColor);
+                    p5.rect(0, 0, text_end, (height*0.2))
+                    titleOK =true;
+                } else{ titleOK = false }}
 
-            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
-            interactionTile.color =  fieldColor;
-            interactionTile.stroke =  fieldColor;
+            descTile = new p5.Sprite((text_end+text_start*2)/2, height*0.59, text_end, (height*0.4), 'kinematic')
+            descTile.color =  fieldColor;
+            descTile.stroke =  fieldColor;
+            descTile.draw = () =>{
+                if(descTile.mouse.hovering()){
+                    p5.fill(fieldColor);
+                    p5.rect(0, 0, text_end, (height*0.4))
+                    descOK =true;
+                } else{ descOK = false }}
+        }
+        let isUser=true
+        p5.keyTyped=()=>{
+            
+            if (titleOK && isUser &&(project_title.length<25)){
+                project_title = project_title+p5.key}
+            if (descOK && isUser &&(project_description.length<200)){
+                project_description = project_description+p5.key}
+        }
+        p5.keyPressed=()=>{
+            if (titleOK && isUser){
+                if(p5.key=='Backspace'){project_title = project_title.slice(0, -1);}
+                else if(p5.key==' '){project_title = project_title+' '}
+            }
+            if (descOK && isUser){
+                if(p5.key=='Backspace'){project_description = project_description.slice(0, -1);}
+                else if(p5.key==' '){project_description = project_description+' '}
+            }
         }
 
         function keyboardHandler(){
             //pause
-            if (p5.kb.presses('space')) {isPlay = !isPlay;}
+            if(!(titleOK) && !(descOK)){
+                if (p5.kb.presses('space')) {isPlay = !isPlay;}
+            }
+            
         }
         
         let isDrag = 0;
@@ -163,15 +249,11 @@
             //interaction section
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
-            layerColor= layerColoring(inst, p5)
-            if (isDrag || interactionTile.mouse.hovering()) {
-                p5.fill(layerColor);
-                p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
-                layerColor.setAlpha(100)
-            } else{
-                p5.fill(colors.default);
-                p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
-            }
+            layerColor= layerColoring('piano', p5)
+
+            p5.fill(colors.default);
+            p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
+            
             p5.blendMode(p5.BLEND);
         }
 

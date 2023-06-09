@@ -1,6 +1,6 @@
 <script context="module">
 
-    import {width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius, HeightBetLayer} from '../Constants.svelte';
+    import {width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius, HeightBetLayer,text_start} from '../Constants.svelte';
 
     export function timeCursorMake(p5, cursorHeight){
         let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2, 'kinematic');
