@@ -112,8 +112,10 @@
             ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
             bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
-            backButton = makeButton(p5, 'Delete', deleteLayer, 0)
-            backButton.y = height*12/13
+            deleteButton = makeButton(p5, 'Delete', deleteLayer, 0)
+            deleteButton.y = height*12/13
+
+
         }
 
         function deleteLayer(){

@@ -9,9 +9,8 @@
     export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
     
     let layers = project.Layers;
-    let layer = layers[layerToSee];
 
-    console.log(width, height, layer, NumBar)
+    console.log(width, height, NumBar)
 
     //max number of bar in one display
     //const numBarShow = 3;
