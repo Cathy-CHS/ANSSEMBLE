@@ -108,7 +108,13 @@
             }
         }
 
-        
+        let layerSps=[]
+        function makeLayerSps(){
+            for (let i=0; i<layers.length;i++){
+                layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, i, i))
+            }
+        }
+
         let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
         let layerMakers = []
         
@@ -127,6 +133,7 @@
             let magicLocationNumber = 9
             for (let inst of insts){
                 let tempButton = makeButton(p5, inst, makeNewLayer, magicLocationNumber+insts.indexOf(inst), inst)
+                tempButton.y = height*12/13
                 layerMakers.push(tempButton)
             }
         }
@@ -154,12 +161,7 @@
         }
 
 
-        let layerSps=[]
-        function makeLayerSps(){
-            for (let i=0; i<layers.length;i++){
-                layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, i, i))
-            }
-        }
+
 
         function updateLayerSps(){
             if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
