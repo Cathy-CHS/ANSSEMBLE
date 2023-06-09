@@ -1,6 +1,6 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
-    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, text_start} from './Constants.svelte';
+    import { colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, MasterVolOrigin, text_start } from './Constants.svelte';
     import { timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp } from './layers/LayerSettings.svelte';
 
     export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
@@ -13,6 +13,7 @@
     //const numBarShow = 3;
 
     let BPM = BPMorigin;
+    let masterVol = MasterVolOrigin;
 
     let soundObject = [
         {
@@ -96,7 +97,7 @@
             //backButton = makeButton(p5, 'Back', toggleToNode, 0)
             backButton = makeButton(p5, 'Back', projToTot , 0, 0)
             duplButton = makeButton(p5, 'AddProject', dupProject, 1, 0)
-            ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
+            ampButton = makeButton(p5, 'AmpIcon', amplitudeChanger, 2)
             bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
 
@@ -130,6 +131,16 @@
             let index = layers.length - 1
             layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, index, index))
         }
+
+        let ampindex = 4;
+        let amppup = 0;
+        function amplitudeChanger(){
+            const ampmulti = [0.2, 0.4, 0.6, 0.8, 1]
+            ampindex = ((ampindex>=(ampmulti.length-1))? 0: ampindex+1);
+            masterVol = ampmulti[ampindex];
+            amppup = 70;
+            console.log(masterVol);
+        }
         
         let BPMindex = 0
         let BPMpup = 0;
@@ -139,9 +150,8 @@
             BPM = BPMorigin*BPMmulti[BPMindex]
             frameRate = 1/(60/(BPM/4)/256)
             p5.frameRate(frameRate);
-            BPMpup = frameRate
-
-            console.log(BPM)
+            BPMpup = frameRate;
+            console.log(BPM);
         }
         function popUp(){
             if(BPMpup){
@@ -155,18 +165,23 @@
                 BPMpup--
                 p5.textAlign(p5.LEFT, p5.TOP)
             }
+            if(amppup){
+                let fieldColor = p5.color(colors.default)
+                fieldColor.setAlpha(100*amppup/frameRate);
+                p5.fill(fieldColor)
+                p5.textFont('Pretendard Medium');
+                p5.textAlign(p5.CENTER, p5.CENTER)
+                p5.textSize(height/5);
+                p5.text('PLAY VOL = '+ masterVol +'x', width/2, height/2 )
+                amppup--
+                p5.textAlign(p5.LEFT, p5.TOP)
+            }
         }
 
 
         function updateLayerSps(){
             if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
         }
-
-
-        function placeholder(){
-
-        }
-
 
         function toggleToLayer(toLayer){
             p5.remove();
@@ -270,11 +285,12 @@
                             if (point.hasOwnProperty("duration")) {
                                 const inst = instList.indexOf(layer.Inst);
                                 const pitchnum = pianoPitchList.indexOf(point.pitch);
-                                soundObject[inst].Soundtrack[pitchnum].play();
+                                console.log(layer.Amplitude);
+                                soundObject[inst].Soundtrack[pitchnum].play(0, 1, masterVol*layer.Amplitude);
                                 soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
                             } else {
                                 const inst = instList.indexOf(layer.Inst);
-                                soundObject[inst].Soundtrack[0].play(0, 1, point.amp/100);
+                                soundObject[inst].Soundtrack[0].play(0, 1, masterVol*layer.Amplitude*point.amp/100);
                             }
                         }
                     }

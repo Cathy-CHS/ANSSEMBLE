@@ -17,9 +17,10 @@
     Origin : null,
     NumReproduction : 0,
     Layers :[
-                  {
-                      Inst: "piano",
-                      points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
+                {
+                    Inst: "piano",
+                    Amplitude: 0.8,
+                    points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
                                   pitch: 'C4',
                                   bar: 1,
                                   start: 5,
@@ -41,10 +42,11 @@
                                   duration: 30
                                   }
                               ]
-                  }, 
-                  {
-                      Inst: "base",
-                      points: [{ // Amp: 100이 최대
+                }, 
+                {
+                    Inst: "base",
+                    Amplitude: 0.6,
+                    points: [{ // Amp: 100이 최대
                                   amp: 100,
                                   bar: 1,
                                   start: 5,
@@ -62,29 +64,30 @@
                                   start: 120,
                                   }
                               ]
-                  },
-                   {
-                       Inst: "base",
-                       points: [{ // Amp: 100이 최대
-                                   amp: 30,
-                                   bar: 1,
-                                   start: 100,
-                                   }, {
-                                   amp: 30,
-                                   bar: 1,
-                                   start: 200,
-                                   }, {
-                                   amp: 50,
-                                   bar: 3,
-                                   start: 7,
-                                   },{
-                                   amp: 20,
-                                   bar: 2,
-                                   start: 120,
-                                   }
-                               ]
-                   }            
-        ]
+                },
+                {
+                    Inst: "base",
+                    Amplitude: 0.2,
+                    points: [{ // Amp: 100이 최대
+                                amp: 30,
+                                bar: 1,
+                                start: 100,
+                                }, {
+                                amp: 30,
+                                bar: 1,
+                                start: 200,
+                                }, {
+                                amp: 50,
+                                bar: 3,
+                                start: 7,
+                                },{
+                                amp: 20,
+                                bar: 2,
+                                start: 120,
+                                }
+                            ]
+                }            
+            ]
     }
     const test_project2 = JSON.parse(JSON.stringify(test_project))
     test_project2.Layers.splice(2, 1);
