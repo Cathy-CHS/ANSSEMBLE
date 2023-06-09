@@ -18,6 +18,7 @@
 	Layers :[
                 {
                     Inst: "piano",
+                    Amplitude: 0.8,
                     points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
                                 pitch: 'C4',
                                 bar: 1,
@@ -43,6 +44,7 @@
                 }, 
                 {
                     Inst: "base",
+                    Amplitude: 0.6,
                     points: [{ // Amp: 100이 최대
                                 amp: 100,
                                 bar: 1,

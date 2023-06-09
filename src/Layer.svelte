@@ -15,6 +15,7 @@
 
     let layer = layers[layerToSee];
     let inst = layer.Inst;
+    let amp = layer.Amplitude;
     console.log(width, height, layer, NumBar)
     let BPM = 60;
     const dispatch=createEventDispatcher();
@@ -141,7 +142,7 @@
             if (inst == "piano") {
                 const pianoPitch = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
                 let existingPitches = keyboardHandlerPiano(p5, layer, absoluteTick);
-                playSound(inst, pianoPitch, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
+                playSound(inst, amp, pianoPitch, existingPitches.filter(pitch => !pastPitches.includes(pitch)));
                 stopSound(inst, pianoPitch, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
                 pastPitches = existingPitches;
             }
@@ -160,7 +161,7 @@
                 layerColor.setAlpha(100)
                 if (inst == "base") {
                     let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
-                    if (amplitude) playSound(inst, amplitude, null);
+                    if (amplitude) playSound(inst, amp, amplitude, null);
                 }
                 layerColor.setAlpha(90)
             } else{
@@ -181,11 +182,11 @@
                             if (point.hasOwnProperty("duration")) {
                                 const inst = instList.indexOf(layer.Inst);
                                 const pitchnum = pianoPitchList.indexOf(point.pitch);
-                                soundObject[inst].Soundtrack[pitchnum].play();
+                                soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude);
                                 soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
                             } else {
                                 const inst = instList.indexOf(layer.Inst);
-                                soundObject[inst].Soundtrack[0].play(0, 1, point.amp/100);
+                                soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
                             }
                         }
                     }
@@ -253,14 +254,14 @@
             soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
         }
 
-        function playSound(inst, a, b) {
+        function playSound(inst, ampl, a, b) {
             if(inst == 'piano') {
                 for(let i of b) {
-                    soundObject[0].Soundtrack[a.indexOf(i)].play();
+                    soundObject[0].Soundtrack[a.indexOf(i)].play(0, 1, ampl);
                 }
             }
             else if(inst == 'base') {
-                soundObject[1].Soundtrack[0].play(0, 1, a);
+                soundObject[1].Soundtrack[0].play(0, 1, ampl*a);
             }
         }
 
