@@ -1,10 +1,7 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
-    // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, text_start} from './Constants.svelte';
-
-
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
+    import { timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp } from './layers/LayerSettings.svelte';
 
     export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
     
@@ -30,20 +27,6 @@
     let instList = ["piano", "base", "cymbal"];
     const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
-    // const sampler = new Tone.Sampler({
-	// 	urls: {
-	// 		"C4": "C4.mp3",
-	// 		"D#4": "Ds4.mp3",
-	// 		"F#4": "Fs4.mp3",
-	// 		"A4": "A4.mp3",
-	// 	},
-	// 	baseUrl: "https://tonejs.github.io/audio/salamander/",
-	// 	release: 1,
-	// }).toDestination();
-
-    // Tone.Transport.bpm.value = BPM;
-	// Tone.Transport.start();
-    // sampler.start();
     const dispatch=createEventDispatcher();
     let absoluteTick = 0;
     const sketch = (p5) =>{
@@ -56,7 +39,6 @@
         // 1 bar time / 256 = 1 tick time
         // inverse of 1 tick time = fr
         let frameRate = 1/(60/(BPM/4)/256)
-        //console.log(frameRate);
 
         let isPlay = 0;
 
@@ -70,9 +52,7 @@
             p5.noStroke();
             p5.frameRate(frameRate);
             textSprites()
-           // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, height);
-            // await Tone.start();
             makeButtons()
             makeLayerSps()
         }
@@ -93,6 +73,7 @@
             mouseHandler()
             timegoes();
         }
+
         p5.mouseWheel = (a)=>{
             //console.log(a)
             if (p5.mouseX>startingPoint){
@@ -110,6 +91,7 @@
 
         let backButton, duplButton, ampButton, bpmButton, playButton
         let layerMakers = []
+        
         function makeButtons(){
             //backButton = makeButton(p5, 'Back', toggleToNode, 0)
             backButton = makeButton(p5, 'Back', projToTot , 0, 0)
@@ -193,8 +175,8 @@
             dispatch('layer', false);
         }
 
-        let project_title = project.Title
-        let project_description = project.Desc
+        let project_title = project.Title;
+        let project_description = project.Desc;
         function drawSettings () {
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
@@ -208,6 +190,7 @@
             p5.textSize(width_ratio*30);
             p5.text(project_description,text_start,height*0.4, text_end);
         };
+  
         let titleTile, descTile
         let titleOK = false
         let descOK = false
@@ -268,7 +251,6 @@
         let layerColor
         function mouseHandler(){
             //interaction section
-            //console.log(p5.mouseX, p5.mouseY)
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
             layerColor= layerColoring('piano', p5)
@@ -278,7 +260,6 @@
             
             p5.blendMode(p5.BLEND);
         }
-
 
         function timegoes(){
             if(isPlay){
@@ -366,15 +347,10 @@
     }
 
     let sketchId;
-    // let toneId;
     onMount(function () {
     let myp5 = new p5(sketch, sketchId);
-    // let mytone = new Tone(sampler, toneId);
     });
 
 </script>
 
-<!-- <Piano bind:this={piano} /> -->
-
 <div {sketchId} />
-<!-- <div {toneId} /> -->
