@@ -1,10 +1,10 @@
 <script context="module">
 
     import { onMount } from 'svelte';
-    import { width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius } from '../Constants.svelte';
+    import {width, height, colors, numBarShow, startingPoint, layerWidth, lineWidth, layerInstLineWidth, maxAmpRadius, HeightBetLayer} from '../Constants.svelte';
 
     export function timeCursorMake(p5, cursorHeight){
-        let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2);
+        let timeCursor = new p5.Sprite(100, 100, lineWidth*15*2, lineWidth*15*2, 'kinematic');
         timeCursor.draw = ()=>{
             p5.strokeCap(p5.ROUND)
             p5.strokeWeight(lineWidth);
@@ -112,5 +112,44 @@
         } 
         p5.blendMode(p5.BLEND);
     }
+
+    let highToolY = height/13
+    const buttonDia = width/20
+    export function makeButton(p5, text, func, order, value){
+        let tempButton = new  p5.Sprite(width/20+buttonDia/2+order*buttonDia*1.1, highToolY,buttonDia,buttonDia, 'kinematic')
+        tempButton.img = 'assets/'+text+'.png'
+        tempButton.draw = () =>{
+            p5.image(tempButton.img, 0, 0, buttonDia, buttonDia)
+            if(tempButton.mouse.presses()){
+                func(value)
+            }
+            if(tempButton.mouse.hovering()){
+                p5.fill('rgba(200,200,200, 0.25)')
+                p5.ellipse(0, 0, buttonDia)
+            }
+        }
+        return tempButton
+    }
+    export function makeLayerSp(p5, func, showHeight, order, value){
+        let yLocation = showHeight+(1+order)*HeightBetLayer
+        let tempSprite = new  p5.Sprite((startingPoint+width)/2, yLocation,width-startingPoint,HeightBetLayer, 'kinematic')
+
+        tempSprite.draw = () =>{
+            if(tempSprite.mouse.presses()){
+                func(value)
+            }
+            if(tempSprite.mouse.hovering()){
+                p5.fill('rgba(200,200,200, 0.25)')
+                p5.rect(0, 0, width-startingPoint,HeightBetLayer)
+            }
+        }
+        tempSprite.udt = (showHeight)=>{
+            tempSprite.y = showHeight+(1+order)*HeightBetLayer
+        }
+        return tempSprite
+    
+    }
+
+
 
 </script>

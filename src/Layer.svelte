@@ -7,17 +7,13 @@
     import { mouseHandlerBase } from './instruments/Base.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
-    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing } from './layers/LayerSettings.svelte';
+    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton } from './layers/LayerSettings.svelte';
     
     export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
-    let layer = layers[layerToSee];
-    let inst = layer.Inst;
-    console.log(width, height, layer, NumBar)
+
 
     //max number of bar in one display
     //const numBarShow = 3;
-
-    let BPM = 60;
 
     // create a synth and connect it to the main output (your speakers)
     // const synth = new Tone.Synth().toDestination();
@@ -37,6 +33,10 @@
 	// 	release: 1,
 	// }).toDestination();
 
+    let layer = layers[layerToSee];
+    let inst = layer.Inst;
+    console.log(width, height, layer, NumBar)
+    let BPM = 60;
     // Tone.Transport.bpm.value = BPM;
 	// Tone.Transport.start();
     // sampler.start();
@@ -78,6 +78,8 @@
         }
         
         p5.setup = async ()=>{
+
+
             p5.noCursor()
             p5.createCanvas(width, height);
             p5.noStroke();
@@ -86,66 +88,47 @@
             // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, gridHeight);
             // await Tone.start();          
-            makeButtons();  
+            makeButtons();
         }
 
         p5.draw = ()=>{
             p5.clear();
             p5.background(p5.color(colors.back));
-            
             grid(p5, gridHeight, showLocation)
             drawSettings (inst)
             layerdrawing(p5, mainLayerHeight, layer);
-            
             for (let i=0; i<layers.length;i++){if (i != layerToSee) layerdrawing(p5, otherLayerHeight, layers[i]);}
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
-            // toggleToProject();
         }
-
         let backButton, duplButton, bpmButton, playButton
         function makeButtons(){
-            let highToolY = height/13
-            const buttonDia = width/20
-            function makeButton(text, func, order){
-                let tempButton = new  p5.Sprite(width/20+buttonDia/2+order*buttonDia*1.1, highToolY,buttonDia,buttonDia, 'kinematic')
-                tempButton.img = 'assets/'+text+'.png'
-                tempButton.draw = () =>{
-                    p5.image(tempButton.img, 0, 0, buttonDia, buttonDia)
-                        if(tempButton.mouse.presses()){
-                        func()
-                    }
-                    if(tempButton.mouse.hovering()){
-                        p5.fill('rgba(200,200,200, 0.25)')
-                        p5.ellipse(0, 0, buttonDia)
-                    }
-                }
-                return tempButton
-            }
-            backButton = makeButton('Back', toggleToProject, 0)
-            duplButton = makeButton('DuplicateLayer', placeholder, 1)
-            bpmButton = makeButton('BPMIcon', placeholder, 3)
-            playButton = makeButton('songPlay', function(){isPlay = !isPlay}, 4)
+            backButton = makeButton(p5, 'Back', toggleToProject, 0)
+            duplButton = makeButton(p5, 'DuplicateLayer', function(){dispatch('layerDup')}, 1)
+            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
+            playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
         }
 
         function placeholder(){
+
         }
+
 
         function toggleToProject(){
             p5.remove();
-            dispatch('layer', false);
+            dispatch('layerToProject');
         }
         let inst_description = 
         {
-            Piano: 'Press keyboard',
-            Base: 'Click, Drag, and let go'
+            piano: 'Press keyboard',
+            base: 'Click, Drag, and let go'
         }
         
         function drawSettings (inst) {
             p5.fill('#f5fafa');
-            p5.textFont("pretendard Black");
+            p5.textFont('Pretendard Black');
             let width_ratio = p5.width/1920;
             let height_ratio = p5.height/1080;
             p5.noStroke();
