@@ -105,13 +105,15 @@
             p5.textWrap(p5.CHAR)
             for (let i=0; i<Object.keys(database).length;i++){
                 let elemHeight = showHeight+(i+1)*HeightBetLayer
-                p5.fill(p5.color(colors.default))
-                p5.text(database[i].Title, startingPoint/2, elemHeight- height/40*3/2, text_end/4)
+                
 
                 let tempLayers = database[i.toString()].Layers
                 for (let j=0; j<tempLayers.length;j++){
                     layerdrawing(p5, elemHeight, tempLayers[j]);
                 }
+                p5.noStroke()
+                p5.fill(p5.color(colors.default))
+                p5.text(database[i].Title, startingPoint/2, elemHeight- height/40*3/2, text_end/3.7)
             }
             //p5.textAlign(p5.LEFT, p5.TOP)
             keyboardHandler()
