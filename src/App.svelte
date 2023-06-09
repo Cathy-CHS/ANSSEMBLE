@@ -87,7 +87,7 @@
 			]
 	}
 
-  let project = test_project
+    let project = test_project;
 	let layers = project.Layers;
 	let layerToSee = 1;
 	let NumBar = project.NumBar;
@@ -123,7 +123,7 @@
         <Project on:layer = {layerToggle}
         on:projectTexts = {changeDescs}
         on:layernum ={layerSwitch}
-         {width} {height} {layers} {layerToSee} {NumBar}/>
+         {width} {height} {project} {layerToSee} {NumBar}/>
     </div>
 {/if}
 
