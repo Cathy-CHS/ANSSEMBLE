@@ -105,15 +105,21 @@
             mouseHandler()
             timegoes();
         }
-        let backButton, duplButton, ampButton, bpmButton, playButton
+        let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
         function makeButtons(){
             backButton = makeButton(p5, 'Back', toggleToProject, 0)
             duplButton = makeButton(p5, 'DuplicateLayer', function(){dispatch('layerDup')}, 1)
             ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
             bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
+            backButton = makeButton(p5, 'Delete', deleteLayer, 0)
+            backButton.y = height*12/13
         }
 
+        function deleteLayer(){
+            dispatch('deleteLayer', layerToSee)
+            p5.remove();
+        }
         function placeholder(){
 
         }
@@ -158,7 +164,7 @@
             }
 
             p5.textSize(width_ratio*20);
-            p5.text('Layer Amp',text_start,height_ratio*869);
+            //p5.text('Layer Amp',text_start,height_ratio*869);
         };
 
         function makeInteractionField(){

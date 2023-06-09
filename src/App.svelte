@@ -104,6 +104,13 @@
                 toggleProject: false};
     function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
     function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
+    const layerDelete = event => {
+        let toDelete = event.detail
+        console.log(toDelete)
+        layerToggle()
+        layers.splice(toDelete, 1);
+        console.log(layers)
+     }
     const layerSwitch = event => {layerToSee=event.detail}
 </script>
 
@@ -113,6 +120,7 @@
         <Layer 
         on:layerToProject = {layerToggle}
         on:layerDup={layerDuplicate} 
+        on:deleteLayer={layerDelete}
         {width} {height} {layers} {layerToSee} {NumBar}/>
         <!-- <Piano/> -->
     </div>
@@ -120,6 +128,7 @@
     <div transition:fade>
         <Project on:layer = {layerToggle}
         on:layernum ={layerSwitch}
+
          {width} {height} {project} {layerToSee} {NumBar}/>
     <!-- <Piano/> -->
     </div>

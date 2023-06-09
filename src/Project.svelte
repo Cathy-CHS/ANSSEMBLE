@@ -11,7 +11,6 @@
     let layers = project.Layers;
     let layer = layers[layerToSee];
 
-    let inst = layer.Inst;
     console.log(width, height, layer, NumBar)
 
     //max number of bar in one display
@@ -92,7 +91,7 @@
             p5.background(p5.color(colors.back));
             
             grid(p5, height, showLocation)
-            drawSettings (inst)
+            drawSettings ()
             
             for (let i=0; i<layers.length;i++){
                 layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, layers[i]);
@@ -144,7 +143,7 @@
         }
         let project_title = project.Title
         let project_description = project.Desc
-        function drawSettings (inst) {
+        function drawSettings () {
             p5.fill('#f5fafa');
             p5.textFont('Pretendard Black');
             let width_ratio = p5.width/1920;
@@ -158,10 +157,6 @@
             p5.textSize(width_ratio*30);
             p5.text(project_description,width_ratio*120,height_ratio*400, startingPoint*0.7);
             
-            if (inst=='guitar'){
-                p5.textSize(width_ratio*20);
-                p5.text('pitch',width_ratio*120,height_ratio*474);
-            }
 
             p5.textSize(width_ratio*20);
             p5.text('Layer Amp',width_ratio*120,height_ratio*869);
@@ -188,7 +183,7 @@
             //console.log(p5.mouseX, p5.mouseY)
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
-            layerColor= layerColoring(inst, p5)
+            layerColor= layerColoring('piano', p5)
             if (isDrag || interactionTile.mouse.hovering()) {
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
