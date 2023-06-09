@@ -1,7 +1,7 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
     // import * as Tone from 'tone';
-    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, layerInstLineWidth,  maxAmpRadius} from './Constants.svelte';
+    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, layerInstLineWidth,  maxAmpRadius, BPMorigin} from './Constants.svelte';
 
 
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
@@ -15,7 +15,7 @@
     //max number of bar in one display
     //const numBarShow = 3;
 
-    let BPM = 60;
+    let BPM = BPMorigin;
 
     let soundObject = [
         {
@@ -108,15 +108,51 @@
             }
         }
 
-
-        let backButton, duplButton, bpmButton, playButton
+        
+        let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
+        let layerMakers = []
+        
         function makeButtons(){
             //backButton = makeButton(p5, 'Back', toggleToNode, 0)
             backButton = makeButton(p5, 'Back', function(){dispatch('projToTot')}, 0, 0)
             duplButton = makeButton(p5, 'AddProject', function(){dispatch('projDup')}, 1)
-            bpmButton = makeButton(p5, 'BPMIcon', placeholder, 3)
+            ampButton = makeButton(p5, 'AmpIcon', placeholder, 2)
+            bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
+            deleteButton = makeButton(p5, 'Delete', deleteProject, 0)
+            deleteButton.y = height*12/13
+
+            // instruments
+            const insts = ['piano', 'guitar', 'base', 'cymBal', 'snare']
+            let magicLocationNumber = 9
+            for (let inst of insts){
+                let tempButton = makeButton(p5, inst, makeNewLayer, magicLocationNumber+insts.indexOf(inst), inst)
+                layerMakers.push(tempButton)
+            }
         }
+        function makeNewLayer(inst){
+            let newLayer = {}
+            newLayer.Inst = inst
+            newLayer.points = []
+            layers.push(newLayer)
+            let index = layers.length - 1
+            layerSps.push(makeLayerSp(p5, toggleToLayer, showHeight, index, index))
+        }
+        
+        
+        let BPMindex = 0
+        function BPMchanger(){
+            const BPMmulti = [1, 1.25, 1.5, 1.75, 2, 2.25, 2.5]
+            BPMindex = ((BPMindex>=(BPMmulti.length-1))? 0: BPMindex+1);
+            BPM = BPMorigin*BPMmulti[BPMindex]
+            frameRate = 1/(60/(BPM/4)/256)
+            p5.frameRate(frameRate);
+            console.log(BPM)
+        }
+        function deleteProject(){
+
+        }
+
 
         let layerSps=[]
         function makeLayerSps(){
@@ -157,8 +193,6 @@
             p5.text(project_description,width_ratio*120,height_ratio*400, startingPoint*0.7);
             
 
-            p5.textSize(width_ratio*20);
-            p5.text('Layer Amp',width_ratio*120,height_ratio*869);
         };
 
         function textSprites(){

@@ -100,7 +100,7 @@
 	let layers = project.Layers;
 	let layerToSee = 1;
 	let NumBar = project.NumBar;
-	let toggle= {toggleLayer : true, 
+	let toggle= {toggleLayer : false, 
                 toggleProject: false};
     function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
     function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
