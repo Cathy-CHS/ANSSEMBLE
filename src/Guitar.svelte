@@ -9,6 +9,12 @@
 const sketch = (p5) => {
     let instrument = 'GUITAR';
     let instrument_description = 'how to play description \nEx. Pull and let go';
+    let x1 = 0;
+    let x2 = 0;
+    let y1 = 0;
+    let y2 = 0;
+    let curve1 = [0.0];
+    let curve2 = [0.0];
 
 
     p5.preload = () => {
@@ -16,7 +22,7 @@ const sketch = (p5) => {
     };
 
     p5.setup = () => {
-     p5.createCanvas(p5.windowWidth, p5.windowWidth/1920*1080);
+     p5.createCanvas(p5.windowWidth, p5.windowWidth/2000*1200);
      
     };
 
@@ -52,7 +58,6 @@ const sketch = (p5) => {
        let height_ratio = p5.height/1080;
        let mouseX = p5.mouseX;
        let mouseY = p5.mouseY;
-       console.log(mouseX,mouseY);
        if ((back_button[0]<mouseX)&&(mouseX<back_button[0]+back_button[2])){
           console.log("back_button");
        }
@@ -88,7 +93,54 @@ const sketch = (p5) => {
 
 
 
-   function drawstring (){   }
+   function drawstring (){
+    let width_ratio = p5.width/1920;
+    let height_ratio = p5.height/1080;
+    p5.noFill();
+
+
+    p5.stroke('#99E4D3');
+    p5.strokeWeight(5);
+    if(curve1[0]==0) curve1=[width_ratio*1846,height_ratio*498.4];
+    
+
+    p5.mousePressed = () =>{
+        x1 = p5.mouseX;
+        y1 = p5.mouseY;
+    }
+
+    p5.mouseDragged = () => {
+        if ( (x1 > width_ratio*582.6) ){
+            console.log("aa");
+            p5.beginShape();
+            p5.stroke('#99E4D3');
+            p5.noFill();
+            p5.strokeWeight(5);
+            p5.vertex(width_ratio*528.6, height_ratio*498.4);
+            p5.bezierVertex(p5.mouseX, p5.mouseY,p5.mouseX, p5.mouseY, width_ratio*1846,height_ratio*498.4);
+            p5.endShape();         
+    }
+    }
+
+    p5.mouseReleased = () => {
+        x2 = p5.mouseX;
+        y2 = p5.mouseY;
+        x1 = 0;
+        y1= 0;
+    }
+
+    if (x1==0){
+        p5.beginShape();
+            p5.vertex(width_ratio*528.6, height_ratio*498.4);
+            p5.bezierVertex(width_ratio*528.6, height_ratio*498.4,width_ratio*528.6, height_ratio*498.4, width_ratio*1846,height_ratio*498.4);
+            p5.endShape();
+    }
+
+
+
+
+    p5.strokeWeight(1);
+   }
 
    function drawpitch (){
     let width_ratio = p5.width/1920;
@@ -136,7 +188,6 @@ const sketch = (p5) => {
     }
     }
 
-    console.log(keypressed);
 
    }
    
