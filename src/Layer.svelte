@@ -96,6 +96,7 @@
             //p5.drawGui();
             p5.clear();
             p5.background(p5.color(colors.back));
+            popUp()
             grid(p5, gridHeight, showLocation)
             drawSettings (inst)
             layerdrawing(p5, mainLayerHeight, layer);
@@ -127,13 +128,29 @@
         }
 
         let BPMindex = 0
+        let BPMpup = 0;
         function BPMchanger(){
-            const BPMmulti = [1, 1.25, 1.5, 1.75, 2]
+            const BPMmulti = [1, 1.25, 1.5, 1.75, 2, 2.25, 2.5]
             BPMindex = ((BPMindex>=(BPMmulti.length-1))? 0: BPMindex+1);
             BPM = BPMorigin*BPMmulti[BPMindex]
             frameRate = 1/(60/(BPM/4)/256)
             p5.frameRate(frameRate);
+            BPMpup = frameRate
+
             console.log(BPM)
+        }
+        function popUp(){
+            if(BPMpup){
+                let fieldColor = p5.color(colors.default)
+                fieldColor.setAlpha(100*BPMpup/frameRate);
+                p5.fill(fieldColor)
+                p5.textFont('Pretendard Medium');
+                p5.textAlign(p5.CENTER, p5.CENTER)
+                p5.textSize(height/3);
+                p5.text('BPM = '+ BPM,width/2, height/2 )
+                BPMpup--
+                p5.textAlign(p5.LEFT, p5.TOP)
+            }
         }
 
         function toggleToProject(){
