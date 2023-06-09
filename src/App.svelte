@@ -71,32 +71,39 @@
                                 }
                             ]
                 },
-                // {
-                //     Inst: "cymbal",
-                //     points: [{ // Amp: 100이 최대
-                //                 amp: 30,
-                //                 bar: 1,
-                //                 start: 100,
-                //                 }, {
-                //                 amp: 30,
-                //                 bar: 1,
-                //                 start: 200,
-                //                 }, {
-                //                 amp: 50,
-                //                 bar: 3,
-                //                 start: 7,
-                //                 },{
-                //                 amp: 20,
-                //                 bar: 2,
-                //                 start: 120,
-                //                 }
-                //             ]
-                // }
-                
+                 {
+                     Inst: "base",
+                     points: [{ // Amp: 100이 최대
+                                 amp: 30,
+                                 bar: 1,
+                                 start: 100,
+                                 }, {
+                                 amp: 30,
+                                 bar: 1,
+                                 start: 200,
+                                 }, {
+                                 amp: 50,
+                                 bar: 3,
+                                 start: 7,
+                                 },{
+                                 amp: 20,
+                                 bar: 2,
+                                 start: 120,
+                                 }
+                             ]
+                 }            
 			]
 	}
+    const test_project2 = JSON.parse(JSON.stringify(test_project))
+    test_project2.Layers.splice(2, 1);
+    const test_project3 = JSON.parse(JSON.stringify(test_project))
+    test_project3.Layers.splice(0, 1);
 
-    let project = test_project
+
+
+    const test_DB = {0:test_project, 1:test_project2, 2:test_project3}
+
+    let project = test_DB[2]
 	let layers = project.Layers;
 	let layerToSee = 1;
 	let NumBar = project.NumBar;
