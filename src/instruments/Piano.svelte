@@ -19,8 +19,8 @@
     const keyToPitch = key1ToPitch.concat(key2ToPitch, key3ToPitch, key4ToPitch);
     
     export function drawPiano (keys, p5) {
-        const width_ratio = p5.width/1920;
-        const height_ratio = p5.height/1080;
+        const width_ratio = p5.width/2000;
+        const height_ratio = p5.height/1200;
         const Xoffset = width_ratio*100;
         const Yoffset = width_ratio*100;
         highlight1 = new Array(11).fill(0);
@@ -102,7 +102,7 @@
         
         // export as [ [key, pitch], ...]
         if (tempPitch.length>=1){
-            //console.log(tempPitch)
+            console.log(tempPitch)
             return tempPitch
         } else return [];
         

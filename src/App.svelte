@@ -7,11 +7,11 @@
     
 	const test_project = {
 	Maker : "user",
-	Title: "Example_project",
+	Title: "Example_projectasdfas",
 	Tag : ['example', 'tags', 'P2'],
-	Desc : "Example project for implementation",
+	Desc : "Example project for implementation, Example project for implementation,Example project for implementation,Example project for implementation",
 	// 8 마디
-	NumBar : "6",
+	NumBar : "4",
 	NumOrbit : 0,
 	Origin : null,
 	NumReproduction : 0,
@@ -89,17 +89,27 @@
 			]
 	}
 
-	let layers = test_project.Layers;
-	let layerToSee = 0;
-	let NumBar = test_project.NumBar;
-	let toggle= {toggleLayer : true, 
+    let project = test_project;
+	let layers = project.Layers;
+	let layerToSee = 1;
+	let NumBar = project.NumBar;
+	let toggle= {toggleLayer : false,
                 toggleProject: false};
     function layerToggle(){toggle.toggleLayer = !toggle.toggleLayer}
     function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
-    const layerSwitch = event => {
-        console.log(event.detail)
-        layerToSee=event.detail
-  }
+    const layerDelete = event => {
+        let toDelete = event.detail
+        console.log(toDelete)
+        layerToggle()
+        layers.splice(toDelete, 1);
+        console.log(layers)
+     }
+    const layerSwitch = event => {layerToSee=event.detail}
+    const changeDescs = event => {
+        project.Title = event.detail[0]
+        project.Desc = event.detail[1]
+     }
+
 </script>
 
 {#if toggle.toggleLayer}
@@ -107,13 +117,15 @@
         <Layer 
         on:layerToProject = {layerToggle}
         on:layerDup={layerDuplicate} 
+        on:deleteLayer={layerDelete}
         {width} {height} {layers} {layerToSee} {NumBar}/>
     </div>
 {:else if !(toggle.toggleLayer)}
     <div transition:fade>
         <Project on:layer = {layerToggle}
+        on:projectTexts = {changeDescs}
         on:layernum ={layerSwitch}
-         {width} {height} {layers} {layerToSee} {NumBar}/>
+         {width} {height} {project} {layerToSee} {NumBar}/>
     </div>
 {/if}
 
