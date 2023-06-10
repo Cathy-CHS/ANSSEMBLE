@@ -50,7 +50,7 @@
         ];
 
         p5.preload = () => {
-            backIcon = p5.loadImage('assets/Back.png');
+            backIcon = p5.loadImage('assets/buttons/Back.png');
             loadSoundtrack(soundObject);
         }
         let gui
