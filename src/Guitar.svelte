@@ -13,8 +13,9 @@ const sketch = (p5) => {
     let x2 = 0;
     let y1 = 0;
     let y2 = 0;
-    let curve1 = [0.0];
-    let curve2 = [0.0];
+    let pitch = 0;
+    let frame = 0;
+
 
 
     p5.preload = () => {
@@ -97,46 +98,73 @@ const sketch = (p5) => {
     let width_ratio = p5.width/1920;
     let height_ratio = p5.height/1080;
     p5.noFill();
-
-
     p5.stroke('#99E4D3');
     p5.strokeWeight(5);
-    if(curve1[0]==0) curve1=[width_ratio*1846,height_ratio*498.4];
     
 
     p5.mousePressed = () =>{
+        if ((p5.mouseX >width_ratio*528.6)&&(p5.mouseX <width_ratio*1846)&& (p5.mouseY<height_ratio*(643.4+30))&&(p5.mouseY>height_ratio*(643.4-30))){
         x1 = p5.mouseX;
         y1 = p5.mouseY;
-    }
-
-    p5.mouseDragged = () => {
-        if ( (x1 > width_ratio*582.6) ){
-            console.log("aa");
-            p5.beginShape();
-            p5.stroke('#99E4D3');
-            p5.noFill();
-            p5.strokeWeight(5);
-            p5.vertex(width_ratio*528.6, height_ratio*498.4);
-            p5.bezierVertex(p5.mouseX, p5.mouseY,p5.mouseX, p5.mouseY, width_ratio*1846,height_ratio*498.4);
-            p5.endShape();         
-    }
+        }
+        else {
+            x1 = 0;
+            y1 = 0;
+        }
     }
 
     p5.mouseReleased = () => {
         x2 = p5.mouseX;
         y2 = p5.mouseY;
+
+
+//pitch : y2 
+
         x1 = 0;
         y1= 0;
+
+        pitch = height_ratio*643.4-y2;
+        console.log(Math.abs(pitch));
     }
 
-    if (x1==0){
+
+    if (p5.mouseIsPressed){
         p5.beginShape();
-            p5.vertex(width_ratio*528.6, height_ratio*498.4);
-            p5.bezierVertex(width_ratio*528.6, height_ratio*498.4,width_ratio*528.6, height_ratio*498.4, width_ratio*1846,height_ratio*498.4);
+            p5.stroke('#99E4D3');
+            // p5.noFill();
+            p5.strokeWeight(5);
+            p5.vertex(width_ratio*528.6, height_ratio*643.4);
+            p5.bezierVertex(p5.mouseX, p5.mouseY,p5.mouseX, p5.mouseY, width_ratio*1846,height_ratio*643.4);
+            p5.endShape();         
+    }
+
+    else if (Math.abs(pitch) > 10){
+        if (frame%3 ==0){
+            p5.beginShape();
+            p5.stroke('#99E4D3');
+            p5.strokeWeight(5);
+            p5.vertex(width_ratio*528.6, height_ratio*643.4);
+            p5.bezierVertex(p5.mouseX, height_ratio*643.4 + pitch,p5.mouseX, height_ratio*643.4 + pitch, width_ratio*1846,height_ratio*643.4);
+        p5.endShape();
+        }
+        frame += 1;
+        pitch = -(pitch/1.08);
+        if (Math.abs(pitch) < 10){
+            pitch = 0;
+        }
+    }
+
+    else if ((x1==0) || pitch == 0){
+        p5.beginShape();
+            p5.vertex(width_ratio*528.6, height_ratio*643.4);
+            p5.bezierVertex(width_ratio*528.6, height_ratio*643.4,width_ratio*528.6, height_ratio*643, width_ratio*1846,height_ratio*643.4);
             p5.endShape();
     }
 
-
+    
+    p5.line(width_ratio*528.6, height_ratio*498.4,width_ratio*1846,height_ratio*498.4);
+    p5.line(width_ratio*528.6, height_ratio*787.07,width_ratio*1846,height_ratio*787.07);
+    p5.line(width_ratio*528.6, height_ratio*931.4,width_ratio*1846,height_ratio*931.4);
 
 
     p5.strokeWeight(1);
