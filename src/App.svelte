@@ -1,10 +1,49 @@
 <script>
     import { fly, fade, blur, slide, scale } from 'svelte/transition';
-	  import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
     import {width, height} from './Constants.svelte';
-	  import Layer from "./Layer.svelte";
-    import Project from "./Project.svelte";
-    import ProjectSelect from './ProjectSelect.svelte';
+	import Layer from "./layers/Layer.svelte";
+    import Project from "./projects/Project.svelte";
+    import ProjectSelect from './projects/ProjectSelect.svelte';
+    // import data from './firebase';
+
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "firebase/app";
+    import { getAnalytics } from "firebase/analytics";
+    import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-8EF5xR-SODBJi8XK3Ei13YJiw-X0i1g",
+        authDomain: "id311-finalteam5.firebaseapp.com",
+        projectId: "id311-finalteam5",
+        storageBucket: "id311-finalteam5.appspot.com",
+        messagingSenderId: "957534001506",
+        appId: "1:957534001506:web:bede6b717496bde6f6b43b",
+        measurementId: "G-6GRFL3D471",
+        databaseURL: "https://id311-finalteam5-default-rtdb.firebaseio.com/"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    function getData() {
+        return new Promise((resolve, reject) => {
+            const db = getDatabase();
+            const dbRef = ref(db);
+            let data;
+            get(dbRef).then((snapshot) => {
+                data = snapshot.val();
+                // console.log("result: "+data);
+                console.log("result: "+JSON.stringify(data));
+            });
+            resolve(data);
+        })
+    }
     
     const test_project = {
     Maker : "user",
@@ -97,12 +136,25 @@
     test_project3.Title = "P3"
 
     let user = "Anon"
-    const database = {0:test_project, 1:test_project2, 2:test_project3}
+    // const database = {0:test_project, 1:test_project2, 2:test_project3}
+    // let database = data;
+    let database;
     let projToSee = 0
-    let project = database[projToSee]
-    let layers = project.Layers;
+    let project;
+    let layers;
     let layerToSee = 1;
-    let NumBar = project.NumBar;
+    let NumBar;
+
+    async function loadData() {
+        database = await getData();
+        // console.log("db: "+JSON.stringify(data));
+        console.log("new db: "+JSON.stringify(database));
+        project = database[projToSee];
+        layers = project.Layers;
+        NumBar = project.NumBar;
+    }
+    
+    loadData();
 
     function initProj(projTo){
         projToSee = projTo

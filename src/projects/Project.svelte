@@ -1,7 +1,7 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
-    import { colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, MasterVolOrigin, text_start } from './Constants.svelte';
-    import { timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp } from './layers/LayerSettings.svelte';
+    import { colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, MasterVolOrigin, text_start } from '../Constants.svelte';
+    import { timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp } from '../layers/LayerSettings.svelte';
 
     export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
     

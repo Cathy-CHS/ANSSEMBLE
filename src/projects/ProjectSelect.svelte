@@ -1,10 +1,10 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
     // import * as Tone from 'tone';
-    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, text_start} from './Constants.svelte';
+    import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, text_start} from '../Constants.svelte';
 
 
-    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from './layers/LayerSettings.svelte';
+    import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from '../layers/LayerSettings.svelte';
   import { text } from 'svelte/internal';
 
     export let [width, height, database, projToSee, NumBar, user] = [400,300, {}, []];
