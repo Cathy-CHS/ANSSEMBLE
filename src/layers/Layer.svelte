@@ -90,8 +90,6 @@
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
             deleteButton = makeButton(p5, 'Delete', deleteLayer, 0)
             deleteButton.y = height*12/13
-
-
         }
 
         function deleteLayer(){
