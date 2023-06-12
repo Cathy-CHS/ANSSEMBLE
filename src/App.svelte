@@ -152,8 +152,10 @@
         project = database[projToSee];
         layers = project.Layers;
         NumBar = project.NumBar;
+        dataLoaded = true;
     }
     
+    let dataLoaded = false;
     loadData();
 
     function initProj(projTo){
@@ -198,37 +200,39 @@
     }
 </script>
 
-{#if !(toggle.toggleProject)}
-    <script>console.log('asdfasdf')</script>    
-    <ProjectSelect on:project = {projToggle}
-    on:projectnum ={projSwitch}
-    {width} {height} {database} {projToSee} {NumBar}, {user}/>
-{:else if toggle.toggleLayer}
-    <div transition:fade>
-        <Layer 
-        on:layerToProject = {layerToggle}
-        on:layerDup={layerDuplicate} 
-        on:deleteLayer={layerDelete}
-        {width} {height} {layers} {layerToSee} {NumBar}/>
-    </div>
-{:else if dupProjectToggle}
-    <div transition:fade>
-        <Project on:layer = {layerToggle}
-        on:projToTot = {projToggle}
-        on:projectTexts = {changeDescs}
-        on:layernum ={layerSwitch}
-        on:projDup = {dupProjectInside}
-        {width} {height} {project} {layerToSee} {NumBar}/>
-    </div>
-{:else if !(toggle.toggleLayer)}
-    <div transition:fade>
-        <Project on:layer = {layerToggle}
-        on:projToTot = {projToggle}
-        on:projectTexts = {changeDescs}
-        on:layernum ={layerSwitch}
-        on:projDup = {dupProjectInside}
-        {width} {height} {project} {layerToSee} {NumBar}/>
-    </div>
+{#if dataLoaded}
+    {#if !(toggle.toggleProject)}
+        <script>console.log('asdfasdf')</script>    
+        <ProjectSelect on:project = {projToggle}
+        on:projectnum ={projSwitch}
+        {width} {height} {database} {projToSee} {NumBar}, {user}/>
+    {:else if toggle.toggleLayer}
+        <div transition:fade>
+            <Layer 
+            on:layerToProject = {layerToggle}
+            on:layerDup={layerDuplicate} 
+            on:deleteLayer={layerDelete}
+            {width} {height} {layers} {layerToSee} {NumBar}/>
+        </div>
+    {:else if dupProjectToggle}
+        <div transition:fade>
+            <Project on:layer = {layerToggle}
+            on:projToTot = {projToggle}
+            on:projectTexts = {changeDescs}
+            on:layernum ={layerSwitch}
+            on:projDup = {dupProjectInside}
+            {width} {height} {project} {layerToSee} {NumBar}/>
+        </div>
+    {:else if !(toggle.toggleLayer)}
+        <div transition:fade>
+            <Project on:layer = {layerToggle}
+            on:projToTot = {projToggle}
+            on:projectTexts = {changeDescs}
+            on:layernum ={layerSwitch}
+            on:projDup = {dupProjectInside}
+            {width} {height} {project} {layerToSee} {NumBar}/>
+        </div>
+    {/if}
 {/if}
 
 <style>
