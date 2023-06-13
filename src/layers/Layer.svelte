@@ -3,6 +3,7 @@
     import { BPMorigin, colors, numBarShow, startingPoint, layerWidth, lineWidth, text_start, layerInstLineWidth, maxAmpRadius } from './Constants.svelte';
     import { keyboardHandlerPiano } from './instruments/Piano.svelte';
     import { mouseHandlerBase } from './instruments/Base.svelte';
+    import { drawButtons } from './instruments/Guitar.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
     import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './layers/LayerSettings.svelte';
@@ -89,9 +90,7 @@
             bpmButton = makeButton(p5, 'BPMIcon', BPMchanger, 3)
             playButton = makeButton(p5, 'songPlay', function(){isPlay = !isPlay}, 4)
             deleteButton = makeButton(p5, 'Delete', deleteLayer, 0)
-            deleteButton.y = height*12/13
-
-
+            deleteButton.y = height*12/13;
         }
 
         function deleteLayer(){
@@ -176,6 +175,7 @@
             if (inst=='guitar'){
                 p5.textSize(width_ratio*20);
                 p5.text('pitch',text_start,height_ratio*474);
+                drawButtons();
             }
 
             p5.textSize(width_ratio*20);
