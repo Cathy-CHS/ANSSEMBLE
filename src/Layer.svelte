@@ -4,6 +4,7 @@
     import { keyboardHandlerPiano } from './instruments/Piano.svelte';
     import { keyboardHandlerSnare } from './instruments/Snare.svelte';
     import { mouseHandlerBase } from './instruments/Base.svelte';
+    import { mouseHandlerCymbal } from './instruments/Cymbal.svelte';
 
     // import { loadSoundtrack } from './LayerSound.svelte';
     import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './layers/LayerSettings.svelte';
@@ -51,6 +52,10 @@
             {
                 Inst: "snare",
                 Soundtrack: []
+            },
+            {
+                Inst: "cymbal",
+                Soundtrack: []
             }
         ];
 
@@ -58,7 +63,6 @@
             backIcon = p5.loadImage('assets/Back.png');
             loadSoundtrack(soundObject);
         }
-        let gui
         
         p5.setup = async ()=>{
             p5.noCursor();
@@ -141,7 +145,8 @@
         {
             piano: 'Press keyboard',
             base: 'Click, Drag, and let go',
-            snare: 'Percuss keyboard'
+            snare: 'Percuss keyboard',
+            cymbal: 'Hit the line with cursor '
         }
         
         function drawSettings (inst) {
@@ -153,7 +158,10 @@
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.textWrap(p5.CHAR);
-            p5.text(inst,text_start,height_ratio*204, startingPoint*0.63);
+
+            let instText = inst
+            instText = instText.charAt(0).toUpperCase() + instText.slice(1)
+            p5.text(instText,text_start,height_ratio*204, startingPoint*0.63);
             
             p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*30);
@@ -192,10 +200,8 @@
             }
             else if (inst == "snare") {
                 let amplitude = keyboardHandlerSnare(p5, layer, absoluteTick);
-                //if (amplitude) console.log('asdf')
-                //playSound(inst, amplitude, null);
-            
-            
+                console.log(amplitude)
+                if (amplitude) playSound(inst, amplitude, null);
             }
 
         }
@@ -213,6 +219,10 @@
                 layerColor.setAlpha(100)
                 if (inst == "base") {
                     let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
+                    if (amplitude) playSound(inst, amplitude, null);
+                }
+                if (inst == "cymbal") {
+                    let amplitude = mouseHandlerCymbal(p5, layer, absoluteTick, interactionTile);
                     if (amplitude) playSound(inst, amplitude, null);
                 }
                 layerColor.setAlpha(90)
@@ -306,6 +316,8 @@
             soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
             //snare
             soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
+            //cymbal
+            soundObject[3].Soundtrack.push(p5.loadSound('assets/drum/ride.wav'));
         }
 
         function playSound(inst, a, b) {
@@ -319,6 +331,9 @@
             }
             else if(inst == 'snare') {
                 soundObject[2].Soundtrack[0].play(0, 1, a);
+            }
+            else if(inst == 'cymbal') {
+                soundObject[3].Soundtrack[0].play(0, 1, a);
             }
         }
  

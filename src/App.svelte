@@ -43,7 +43,7 @@
                               ]
                   }, 
                   {
-                      Inst: "snare",
+                      Inst: "cymbal",
                       points: [{ // Amp: 100이 최대
                                   amp: 100,
                                   bar: 1,
