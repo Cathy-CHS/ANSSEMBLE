@@ -129,10 +129,10 @@
             p5.remove()
         }
 
-
         function makeNewLayer(inst){
             let newLayer = {}
             newLayer.Inst = inst
+            newLayer.Amplitude = 1
             newLayer.points = []
             layers.push(newLayer)
             let index = layers.length - 1
@@ -160,6 +160,7 @@
             BPMpup = frameRate;
             console.log(BPM);
         }
+
         function popUp(){
             if(BPMpup){
                 let fieldColor = p5.color(colors.default)
@@ -184,7 +185,6 @@
                 p5.textAlign(p5.LEFT, p5.TOP)
             }
         }
-
 
         function updateLayerSps(){
             if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
@@ -217,8 +217,6 @@
         let titleOK = false
         let descOK = false
         function textSprites(){
-            
-            
             let fieldColor = p5.color(colors.default)
             fieldColor.setAlpha(30);
             titleTile = new p5.Sprite((text_end+text_start*2)/2, height*0.27, text_end, (height*0.2), 'kinematic')
@@ -242,14 +240,15 @@
                     descOK =true;
                 } else{ descOK = false }}
         }
+
         let isUser=true
         p5.keyTyped=()=>{
-            
             if (titleOK && isUser &&(project_title.length<25)){
                 project_title = project_title+p5.key}
             if (descOK && isUser &&(project_description.length<200)){
                 project_description = project_description+p5.key}
         }
+
         p5.keyPressed=()=>{
             if (titleOK && isUser){
                 if(p5.key=='Backspace'){project_title = project_title.slice(0, -1);}
@@ -266,7 +265,6 @@
             if(!(titleOK) && !(descOK)){
                 if (p5.kb.presses('space')) {isPlay = !isPlay;}
             }
-            
         }
         
         let isDrag = 0;
@@ -302,8 +300,6 @@
                     }
                 }
                 absoluteTick ++;
-            } else {
-                // pause all sound
             }
 
             if (absoluteTick<=numBarShow/2*256){

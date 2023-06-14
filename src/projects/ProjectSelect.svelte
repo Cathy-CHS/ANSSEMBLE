@@ -96,7 +96,6 @@
                 BPMpup--
                 p5.textAlign(p5.LEFT, p5.TOP)
             }
-            
             */
             p5.textFont('Pretendard Medium');
             p5.textSize(height/40);
@@ -119,6 +118,7 @@
             mouseHandler()
             timegoes();
         }
+
         p5.mouseWheel = (a)=>{
             //console.log(a)
             if (p5.mouseX>startingPoint){
@@ -149,6 +149,7 @@
             newProjButton = makeButton(p5, 'AddProject', makeNewProject, 9)
             newProjButton.y = height*12/13
         }
+
         function dupNewProject(){
             let index = Object.keys(database).length
             database[index] = JSON.parse(JSON.stringify(database[projectToSee]))
@@ -160,6 +161,7 @@
             updateWheelSps()
             console.log(database)
         }
+
         function makeNewProject(){
             let newProject = {
             Maker : user,
@@ -190,9 +192,9 @@
             frameRate = 1/(60/(BPM/4)/256)
             p5.frameRate(frameRate);
             BPMpup = frameRate
-
             console.log(BPM)
         }
+
         function popUp(){
             if(BPMpup){
                 let fieldColor = p5.color(colors.default)
@@ -207,7 +209,6 @@
             }
         }
 
-
         function updateWheelSps(){
             if (layerSps.length>0) for (let layerSp of layerSps) layerSp.udt(showHeight)
             for (let button of followButtons){
@@ -215,11 +216,8 @@
             }
         }
 
-
-
         function toggleToProject(clickProject){
             if (clickProject == projectToSee){
-                
                 dispatch('project', false);
                 dispatch('projectnum', clickProject)
                 p5.remove();
@@ -247,7 +245,6 @@
 
         function keyboardHandler(){
             //pause
-
             if (p5.kb.presses('space')) {isPlay = !isPlay;}
         }
 
@@ -283,8 +280,6 @@
                     }
                 }
                 absoluteTick ++;
-            } else {
-                // pause all sound
             }
 
             if (absoluteTick<=numBarShow/2*256){
@@ -350,15 +345,10 @@
     }
 
     let sketchId;
-    // let toneId;
     onMount(function () {
     let myp5 = new p5(sketch, sketchId);
-    // let mytone = new Tone(sampler, toneId);
     });
 
 </script>
 
-<!-- <Piano bind:this={piano} /> -->
-
 <div {sketchId} />
-<!-- <div {toneId} /> -->

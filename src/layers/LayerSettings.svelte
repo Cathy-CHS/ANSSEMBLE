@@ -101,7 +101,6 @@
             p5.fill(layerColor)
             for (let point of points){
                 let x = timeToX(point.bar, point.start);
-
                 if (x>startingPoint && x<width){
                     if (x>width){x = width}
                     if (x<startingPoint){x = startingPoint}
