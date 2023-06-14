@@ -2,7 +2,9 @@
 
 **Online repository: [GitHub repo](https://github.com/Cathy-CHS/ID311_FinalProject)**
 
-**Demo link: [WebApp link](https://id311-finalteam5.web.app/)**
+**Deploy website: [WebApp link](https://id311-finalteam5.web.app/)**
+
+**Demo video: [Video link](demo)**
 
 
 

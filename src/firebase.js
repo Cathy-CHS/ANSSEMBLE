@@ -20,28 +20,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getDatabase();
-const dbRef = ref(db);
-let data;
-get(dbRef).then((snapshot) => {
-    data = snapshot.val();
-    // console.log("result: "+data);
-    // console.log("result: "+JSON.stringify(data));
-});
-
-// get(dbRef).then((snapshot) => {
-//     const data = snapshot.val();
-//     console.log(data);
-// });
-
-// onValue(dbRef, (snapshot) => {
-//     const data = snapshot.val();
-//     data.forEach((element) => {
-//         console.log(element);
-//     });
-// });
-
-// const analytics = getAnalytics(app);
+const data = getDatabase();
 
 export default data;

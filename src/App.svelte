@@ -6,27 +6,8 @@
     import Project from "./projects/Project.svelte";
     import ProjectSelect from './projects/ProjectSelect.svelte';
     import Mainscreen from './Mainscreen.svelte';
-
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "firebase/app";
-    import { getAnalytics } from "firebase/analytics";
+    import data from './firebase';
     import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
-
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-        apiKey: "AIzaSyD-8EF5xR-SODBJi8XK3Ei13YJiw-X0i1g",
-        authDomain: "id311-finalteam5.firebaseapp.com",
-        projectId: "id311-finalteam5",
-        storageBucket: "id311-finalteam5.appspot.com",
-        messagingSenderId: "957534001506",
-        appId: "1:957534001506:web:bede6b717496bde6f6b43b",
-        measurementId: "G-6GRFL3D471",
-        databaseURL: "https://id311-finalteam5-default-rtdb.firebaseio.com/"
-    };
 
     // GLOBALS
     let database=undefined;
@@ -36,13 +17,9 @@
     let layerToSee = 1;
     let NumBar;
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-
     function getData() {
         return new Promise((resolve, reject) => {
-            const db = getDatabase();
+            const db = data;
             const dbRef = ref(db);
             get(dbRef).then((snapshot) => {
                 const data = snapshot.val();
@@ -62,15 +39,6 @@
     main();
 
     let user = "Anon";
-
-    // async function loadData() {
-    //     database = await getData();
-    //     // console.log("db: "+JSON.stringify(data));
-    //     console.log("new db: "+JSON.stringify(database));
-    //     project = database[projToSee];
-    //     layers = project.Layers;
-    //     NumBar = project.NumBar;
-    // }
 
     function initProj(projTo){
         projToSee = projTo
