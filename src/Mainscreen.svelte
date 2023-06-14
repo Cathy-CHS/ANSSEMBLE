@@ -8,6 +8,7 @@
 
     export let [width, height] = [400, 300];
 
+    const dispatch = createEventDispatcher();
     const sketch = (p5) => {
         let input;
         let gui;
@@ -24,15 +25,10 @@
         p5.setup = () => {
             // p5.createCanvas(p5.windowWidth, p5.windowWidth/2000*1200);
             p5.createCanvas(width, height);
-            input = p5.createInput();
+            input = p5.createInput('Your nickname');
             input.position(p5.width/2-width/2000*300, p5.height/2);
             input.style('font-size', 40*p5.width/2000+'px');
-            // gui = p5.createGui();
-            // button = p5.createButton("LOGIN");
-            // button.position(p5.width/2+p5.windowWidth/2000*200,p5.height/2);
-            // button.mousePressed(enter);
-            // button.style('font-size', 40*p5.width/2000+'px');
-            // button.style('back-ground', p5.color(255,255,255,255));
+            let button = makeButton();
         };
 
         p5.draw = () => {
@@ -74,28 +70,19 @@
             p5.textSize(50);
             var name = input.value();
             console.log(name)
-            // 사용자 닉네임 입력
             if (name == ''){
-                //입력 안함
                 p5.fill(255);
                 console.log('Please type your name...');
-                p5.text('Please type your name again...',p5.width/2-width_ratio*150,p5.height/2+width_ratio*100);
             }
-            // else if (!namelist.includes(name)){
-            //     //리스트에 닉네임 없음
-            //     p5.fill(255);
-            //     console.log('Please check your name again...');
-            //     p5.text('Please check your name again...',p5.width/2-width_ratio*400,p5.height/2+width_ratio*100);
-            // }
             else {
                 p5.fill(255);
                 console.log('hello!');
-                p5.text('HELLO',p5.width/2-width_ratio*400,p5.height/2+width_ratio*100);
+                dispatch('start', false);
+                p5.remove();
             }
         }
 
         function makeellipse(ellipse){
-            
             let x = ellipse[0];
             let y = ellipse[1];
             let r = ellipse[2];
@@ -112,6 +99,28 @@
             if (ellipse[1] > p5.height - r || ellipse[1] < r) {
                 ellipse[4] = -ellipse[4];
             }
+        }
+
+        let highToolY = height/13
+        const buttonDia = width/20
+        function makeButton(){
+            let button = new p5.Sprite(p5.width/2+width/2000*280, p5.height*0.527, 80, 50, 'kinematic');
+            button.draw = () =>{
+                p5.fill('#bd9af0');
+                p5.rect(0, 0, 80, 50);
+                p5.fill(255);
+                p5.textFont('Pretendard Black');
+                p5.textSize(p5.width/2000*30);
+                p5.text('LOGIN', -22, 5);
+                if(button.mouse.presses()){
+                    enter();
+                }
+                if(button.mouse.hovering()){
+                    p5.fill('rgba(80, 80, 80, 0.25)');
+                    p5.rect(0, 0, 80, 50);
+                }
+            }
+            return button
         }
     }
 

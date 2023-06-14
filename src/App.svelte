@@ -80,8 +80,7 @@
         layerToSee = 1;
         NumBar = project.NumBar;
     }
-    let toggle= {toggleLayer : false, 
-                  toggleProject: false};
+    let toggle= {toggleLayer : false, toggleProject: false, toggleMain: true};
     let dupProjectToggle = false
     function layerToggle(){
         dupProjectToggle = false
@@ -89,12 +88,14 @@
     function projToggle(){
         dupProjectToggle = false
         toggle.toggleProject = !toggle.toggleProject}
+    function switchtoProject(){
+        toggle.toggleMain = !toggle.toggleMain}
     function layerDuplicate(){layers.push(JSON.parse(JSON.stringify(layers[layerToSee])))}
     const layerDelete = event => {
         let toDelete = event.detail
         layerToggle()
         layers.splice(toDelete, 1);
-     }
+    }
     const layerSwitch = event => {layerToSee=event.detail}
     const projSwitch = event => {
         projToSee=event.detail
@@ -115,36 +116,39 @@
 </script>
 
 {#if database}
-    <Mainscreen {width} {height} />
-    <!-- {#if !(toggle.toggleProject)}
-        <ProjectSelect on:project = {projToggle}
-        on:projectnum ={projSwitch}
-        {width} {height} {database} {projToSee} {NumBar}, {user}/>
-    {:else if toggle.toggleLayer}
-        <div transition:fade>
-            <Layer 
-            on:layerToProject = {layerToggle}
-            on:layerDup={layerDuplicate} 
-            on:deleteLayer={layerDelete}
-            {width} {height} {layers} {layerToSee} {projToSee} {NumBar}/>
-        </div>
-    {:else if dupProjectToggle}
-        <div transition:fade>
-            <Project on:layer = {layerToggle}
-            on:projToTot = {projToggle}
-            on:projectTexts = {changeDescs}
-            on:layernum ={layerSwitch}
-            on:projDup = {dupProjectInside}
-            {width} {height} {project} {projToSee} {NumBar}/>
-        </div>
-    {:else if !(toggle.toggleLayer)}
-        <div transition:fade>
-            <Project on:layer = {layerToggle}
-            on:projToTot = {projToggle}
-            on:projectTexts = {changeDescs}
-            on:layernum ={layerSwitch}
-            on:projDup = {dupProjectInside}
-            {width} {height} {project} {projToSee} {NumBar}/>
-        </div>
-    {/if} -->
+    {#if toggle.toggleMain}
+        <Mainscreen on:start = {switchtoProject} {width} {height} />
+    {:else}
+        {#if !(toggle.toggleProject)}
+            <ProjectSelect on:project = {projToggle}
+            on:projectnum ={projSwitch}
+            {width} {height} {database} {projToSee} {NumBar}, {user}/>
+        {:else if toggle.toggleLayer}
+            <div transition:fade>
+                <Layer 
+                on:layerToProject = {layerToggle}
+                on:layerDup={layerDuplicate} 
+                on:deleteLayer={layerDelete}
+                {width} {height} {layers} {layerToSee} {projToSee} {NumBar}/>
+            </div>
+        {:else if dupProjectToggle}
+            <div transition:fade>
+                <Project on:layer = {layerToggle}
+                on:projToTot = {projToggle}
+                on:projectTexts = {changeDescs}
+                on:layernum ={layerSwitch}
+                on:projDup = {dupProjectInside}
+                {width} {height} {project} {projToSee} {NumBar}/>
+            </div>
+        {:else if !(toggle.toggleLayer)}
+            <div transition:fade>
+                <Project on:layer = {layerToggle}
+                on:projToTot = {projToggle}
+                on:projectTexts = {changeDescs}
+                on:layernum ={layerSwitch}
+                on:projDup = {dupProjectInside}
+                {width} {height} {project} {projToSee} {NumBar}/>
+            </div>
+        {/if}
+    {/if}
 {/if}

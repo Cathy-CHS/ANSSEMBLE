@@ -101,8 +101,6 @@
             p5.textWrap(p5.CHAR)
             for (let i=0; i<Object.keys(database).length;i++){
                 let elemHeight = showHeight+(i+1)*HeightBetLayer
-                
-
                 let tempLayers = database[i.toString()].Layers
                 for (let j=0; j<tempLayers.length;j++){
                     layerdrawing(p5, elemHeight, tempLayers[j]);
