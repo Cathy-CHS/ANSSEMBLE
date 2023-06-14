@@ -174,11 +174,11 @@
         
         let inst_description = 
         {
-            piano: 'Press keyboard',
-            guitar: 'Press keyboard to select pitches.\nThen, drag the string and let go',
-            base: 'Click, drag, and let go',
-            snare: 'Percuss keyboard',
-            cymbal: 'Hit the line with cursor'
+            piano: 'Press keyboard.',
+            guitar: 'Press keyboard to select pitches.\nThen, drag the string and let go.',
+            base: 'Click, drag, and let go.',
+            snare: 'Percuss keyboard.',
+            cymbal: 'Hit the line with cursor.'
         }
         
         function drawSettings (inst) {

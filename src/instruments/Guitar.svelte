@@ -98,7 +98,7 @@
         p5.line(width_ratio*750, height_ratio*910, width_ratio*1800, height_ratio*910);
 
         p5.translate(-Xoffset, -Yoffset);
-        // p5.strokeWeight(1);
+        p5.noStroke();
 
         return amp;
     }
