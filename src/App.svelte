@@ -5,6 +5,7 @@
 	import Layer from "./layers/Layer.svelte";
     import Project from "./projects/Project.svelte";
     import ProjectSelect from './projects/ProjectSelect.svelte';
+    import Mainscreen from './Mainscreen.svelte';
 
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "firebase/app";
@@ -114,7 +115,8 @@
 </script>
 
 {#if database}
-    {#if !(toggle.toggleProject)}
+    <Mainscreen {width} {height} />
+    <!-- {#if !(toggle.toggleProject)}
         <ProjectSelect on:project = {projToggle}
         on:projectnum ={projSwitch}
         {width} {height} {database} {projToSee} {NumBar}, {user}/>
@@ -144,5 +146,5 @@
             on:projDup = {dupProjectInside}
             {width} {height} {project} {projToSee} {NumBar}/>
         </div>
-    {/if}
+    {/if} -->
 {/if}
