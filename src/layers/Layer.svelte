@@ -2,6 +2,7 @@
     import { onMount, createEventDispatcher } from 'svelte';
     import { BPMorigin, colors, numBarShow, startingPoint, layerWidth, lineWidth, text_start, layerInstLineWidth, maxAmpRadius } from '../Constants.svelte';
     import { keyboardHandlerPiano } from '../instruments/Piano.svelte';
+    import { keyboardHandlerSnare } from '../instruments/Snare.svelte';
     import { mouseHandlerBase } from '../instruments/Base.svelte';
     import { drawButtons } from '../instruments/Guitar.svelte';
     import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
@@ -45,6 +46,10 @@
             },
             {
                 Inst: "base",
+                Soundtrack: []
+            },
+            {
+                Inst: "snare",
                 Soundtrack: []
             }
         ];
@@ -159,7 +164,8 @@
         let inst_description = 
         {
             piano: 'Press keyboard',
-            base: 'Click, Drag, and let go'
+            base: 'Click, drag, and let go',
+            snare: 'Percuss keyboard'
         }
         
         function drawSettings (inst) {
@@ -209,6 +215,10 @@
                 stopSound(inst, pianoPitch, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
                 pastPitches = existingPitches;
             }
+            else if (inst == "snare") {
+                let amplitude = keyboardHandlerSnare(p5, layer, absoluteTick);
+                // if (amplitude) playSound(inst, layer.Amplitude, amplitude, null);
+            }
         }
         
 
@@ -234,7 +244,7 @@
             p5.blendMode(p5.BLEND);
         }
 
-        let instList = ["piano", "base", "cymbal"];
+        let instList = ["piano", "base", "snare", "cymbal"];
         const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
         function timegoes(){
@@ -315,6 +325,8 @@
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
             //bass
             soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
+            //snare
+            soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
         }
 
         function playSound(inst, ampl, a, b) {
@@ -326,6 +338,10 @@
             else if(inst == 'base') {
                 console.log(ampl*a);
                 soundObject[1].Soundtrack[0].play(0, 1, ampl*a);
+            }
+            else if(inst == 'snare') {
+                console.log(ampl*a);
+                soundObject[2].Soundtrack[0].play(0, 1, ampl*a);
             }
         }
  
