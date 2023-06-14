@@ -151,13 +151,7 @@
         }
 
         let existingPitches = existingKeys.map(function(element) {return keyToPitch[keyList.indexOf(element)]});
-        // console.log(existingPitches);
         return existingPitches;
-        /*
-        if (p5.kb.presses('b')) {
-           console.log(layer.points)
-        }
-        */
     }
 
 

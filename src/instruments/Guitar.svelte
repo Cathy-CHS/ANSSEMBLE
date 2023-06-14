@@ -12,51 +12,7 @@
     let pitch = 0;
     let frame = 0;
 
-    export function drawButtons(){
-        let width_ratio = p5.width/1920;
-        let height_ratio = p5.height/1080;
-        let back_button = [width_ratio*78,height_ratio*93,width_ratio*26,height_ratio*41];
-        let add_button = [width_ratio*141,height_ratio*93,width_ratio*51,height_ratio*51];
-        let speed_button = [width_ratio*290,height_ratio*93,width_ratio*37,height_ratio*43];
-        let play_button = [width_ratio*361,height_ratio*93,width_ratio*32,height_ratio*41];
-        p5.stroke('#93c7f1');
-        p5.rect(back_button[0],back_button[1],back_button[2],back_button[3]);
-        p5.rect(add_button[0],add_button[1],add_button[2],add_button[3]);
-        p5.rect(speed_button[0],speed_button[1],speed_button[2],speed_button[3]);
-        p5.rect(play_button[0],play_button[1],play_button[2],play_button[3]);
-
-        p5.mousePressed = () => {
-            let width_ratio = p5.width/1920;
-            let height_ratio = p5.height/1080;
-            let mouseX = p5.mouseX;
-            let mouseY = p5.mouseY;
-            if ((back_button[0]<mouseX)&&(mouseX<back_button[0]+back_button[2])){
-                console.log("back_button");
-            }
-            if ((add_button[0]<mouseX)&&(mouseX<add_button[0]+add_button[2])){
-                console.log("add_button");
-            }
-            if ((speed_button[0]<mouseX)&&(mouseX<speed_button[0]+speed_button[2])){
-                console.log("speed_button");
-            }
-            if ((play_button[0]<mouseX)&&(mouseX<play_button[0]+play_button[2])){
-                console.log("play_button");
-            }
-        }
-    }
-
-const sketch = (p5) => {
-
-    p5.draw = () => {
-
-        drawbuttons();
-        drawtexts();
-        drawstring();
-        drawpitch ();
-
-    };
-
-    function drawstring (){
+    export function drawString (p5){
         let width_ratio = p5.width/1920;
         let height_ratio = p5.height/1080;
         p5.noFill();
@@ -78,7 +34,6 @@ const sketch = (p5) => {
             y2 = p5.mouseY;
             x1 = 0;
             y1= 0;
-
             pitch = height_ratio*643.4-y2;
             console.log(Math.abs(pitch));
         }
@@ -123,7 +78,7 @@ const sketch = (p5) => {
         p5.strokeWeight(1);
     }
 
-    function drawpitch (){
+    export function drawPitch (p5){
         let width_ratio = p5.width/1920;
         let height_ratio = p5.height/1080;
         
@@ -137,7 +92,6 @@ const sketch = (p5) => {
                 }
         }
         }
-
 
         for (let i = 0; i<pitchwhitekey.length ; i++){
             p5.stroke(255);
@@ -171,8 +125,6 @@ const sketch = (p5) => {
 
 
     }
-   
-};
+
 
 </script>
-<P5 {sketch} />

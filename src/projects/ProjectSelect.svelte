@@ -25,35 +25,25 @@
             Soundtrack: []
         },
         {
-            Inst: "base",
+            Inst: "guitar",
             Soundtrack: []
         },
         {
-            Inst: "snare",
+            Inst: "base",
             Soundtrack: []
         },
         {
             Inst: "cymbal",
             Soundtrack: []
+        },
+        {
+            Inst: "snare",
+            Soundtrack: []
         }
     ];
-    let instList = ["piano", "base", "snare", "cymbal"];
+    let instList = ["piano", "guitar", "base", "cymbal", "snare"];
     const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
-    // const sampler = new Tone.Sampler({
-	// 	urls: {
-	// 		"C4": "C4.mp3",
-	// 		"D#4": "Ds4.mp3",
-	// 		"F#4": "Fs4.mp3",
-	// 		"A4": "A4.mp3",
-	// 	},
-	// 	baseUrl: "https://tonejs.github.io/audio/salamander/",
-	// 	release: 1,
-	// }).toDestination();
-
-    // Tone.Transport.bpm.value = BPM;
-	// Tone.Transport.start();
-    // sampler.start();
     const dispatch=createEventDispatcher();
     let absoluteTick = 0;
     const sketch = (p5) =>{
@@ -348,11 +338,11 @@
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/B5.mp3'));
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
             //bass
-            soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
-            //snare
-            soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
+            soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
             //cymbal
             soundObject[3].Soundtrack.push(p5.loadSound('assets/drum/ride.wav'));
+            //snare
+            soundObject[4].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
         }
     }
 

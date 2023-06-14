@@ -5,7 +5,7 @@
     import { keyboardHandlerSnare } from '../instruments/Snare.svelte';
     import { mouseHandlerBase } from '../instruments/Base.svelte';
     import { mouseHandlerCymbal } from '../instruments/Cymbal.svelte';
-    import { drawButtons } from '../instruments/Guitar.svelte';
+    import { drawString, drawPitch } from '../instruments/Guitar.svelte';
     import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
     import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
     
@@ -46,15 +46,19 @@
                 Soundtrack: []
             },
             {
+                Inst: "guitar",
+                Soundtrack: []
+            },
+            {
                 Inst: "base",
                 Soundtrack: []
             },
             {
-                Inst: "snare",
+                Inst: "cymbal",
                 Soundtrack: []
             },
             {
-                Inst: "cymbal",
+                Inst: "snare",
                 Soundtrack: []
             }
         ];
@@ -256,7 +260,7 @@
             p5.blendMode(p5.BLEND);
         }
 
-        let instList = ["piano", "base", "snare", "cymbal"];
+        let instList = ["piano", "guitar", "base", "cymbal", "snare"];
         const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
 
         function timegoes(){
@@ -336,11 +340,11 @@
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/B5.mp3'));
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
             //bass
-            soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
-            //snare
-            soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
+            soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
             //cymbal
             soundObject[3].Soundtrack.push(p5.loadSound('assets/drum/ride.wav'));
+            //snare
+            soundObject[4].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
         }
 
         function playSound(inst, ampl, a, b) {
@@ -351,14 +355,15 @@
             }
             else if(inst == 'base') {
                 console.log(ampl*a);
-                soundObject[1].Soundtrack[0].play(0, 1, ampl*a);
-            }
-            else if(inst == 'snare') {
-                console.log(ampl*a);
                 soundObject[2].Soundtrack[0].play(0, 1, ampl*a);
             }
             else if(inst == 'cymbal') {
+                console.log(ampl*a);
                 soundObject[3].Soundtrack[0].play(0, 1, ampl*a);
+            }
+            else if(inst == 'snare') {
+                console.log(ampl*a);
+                soundObject[4].Soundtrack[0].play(0, 1, ampl*a);
             }
         }
  

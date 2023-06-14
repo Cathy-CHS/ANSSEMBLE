@@ -162,12 +162,5 @@
                 return amp;
             }
         }
-        //let existingPitches = existingKeys.map(function(element) {return keyToPitch[keyList.indexOf(element)]});
-        // console.log(existingPitches);
-        /*
-        if (p5.kb.presses('b')) {
-           console.log(layer.points)
-        }
-        */
     }
 </script>
