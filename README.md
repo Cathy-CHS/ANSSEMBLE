@@ -201,13 +201,14 @@ Base drums usually produce the loudest and dullest sound. Therefore, the task lo
 
 Basically, Visual que was used to pull and release like a rubber band. First of all, if one hold the mouse, it draws a circle (meaning maximum) that can guess the intensity of playing the instrument, and drag it to make the line connected and the circle inside grow larger. And when user let it go, user get a point on the layer with a poping visual feedback.
 
+![Guitar](pics/guitarPage.png)
 ## Guitar
 The visual elements of the actual guitar and its mechanism were implemented in the p5.js environment.
 Press the keyboard with left hand to adjust the pitch and bounce the string to determine the strength, like a real guitar. 
 
 It is possible to pull the string by clicking the string and dragging the mouse. When player release the mouse, an animation, which line bounces up and down and then stops, will be played. 
 Depending on how much the string is pulled, if the string is placed further away, it produces a stronger sound and the amplitude of the guitar string animation is even greater.
-
+The player can also select the desired pitch combination with the keyboard, just like holding the guitar's code.
 
 
 
