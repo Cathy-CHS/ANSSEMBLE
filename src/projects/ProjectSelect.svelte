@@ -42,7 +42,8 @@
         }
     ];
     let instList = ["piano", "guitar", "base", "cymbal", "snare"];
-    const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4', 'A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+    const pianoPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','D#4','F#4','G#4','A#4','C#5','D#5','F#5','G#5','A#5','C3','D3','E3','F3','G3','A3','B3','C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+    const guitarPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','C3','D3','E3','F3','G3','A3','B3','C4','D4'];
 
     const dispatch=createEventDispatcher();
     let absoluteTick = 0;
@@ -265,15 +266,18 @@
                     if (layer.points) {
                         for (let point of layer.points) {
                             if (absoluteTick == (point.bar-1)*256+point.start) {
-                                // console.log(layer.Inst);
-                                if (point.hasOwnProperty("duration")) {
+                                if (layer.Inst == 'piano') {
                                     const inst = instList.indexOf(layer.Inst);
                                     const pitchnum = pianoPitchList.indexOf(point.pitch);
-                                    soundObject[inst].Soundtrack[pitchnum].play();
+                                    soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude);
                                     soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                                } else if (layer.Inst == 'guitar') {
+                                    const inst = instList.indexOf(layer.Inst);
+                                    const pitchnum = guitarPitchList.indexOf(point.pitch);
+                                    soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude*point.amp/100);
                                 } else {
                                     const inst = instList.indexOf(layer.Inst);
-                                    soundObject[inst].Soundtrack[0].play(0, 1, point.amp/100);
+                                    soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
                                 }
                             }
                         }
@@ -339,6 +343,22 @@
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/A5.mp3'));
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/B5.mp3'));
             soundObject[0].Soundtrack.push(p5.loadSound('assets/piano/C6.mp3'));
+            // guitar
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/Cs3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/Ds3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/Fs3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/Gs3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/As3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/Cs4.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/C3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/D3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/E3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/F3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/G3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/A3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/B3.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/C4.mp3'));
+            soundObject[1].Soundtrack.push(p5.loadSound('assets/guitar/D4.mp3'));
             //bass
             soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
             //cymbal

@@ -11,11 +11,11 @@
     let y2 = 0;
     let pitch = 0;
     let frame = 0;
-    let amplitude;
     let highlightWhite = new Array(9).fill(0);
     let highlightBlack = new Array(8).fill(0);
     
-    export function mouseHandlerGuitar (p5, layer, absoluteTick, interactionTile){
+    export function mouseHandlerGuitar (p5, layer, absoluteTick, pitches, interactionTile){
+        let amp = 0;
         let width_ratio = p5.width/2000;
         let height_ratio = p5.height/1200;
         const Xoffset = width_ratio*100;
@@ -27,7 +27,7 @@
         p5.stroke('#99E4D3');
         p5.strokeWeight(2);
         
-        p5.mousePressed = () =>{
+        if (interactionTile.mouse.presses()) {
             if ((p5.mouseX >width_ratio*750)&&(p5.mouseX <width_ratio*1800)&& (p5.mouseY<height_ratio*(650+30))&&(p5.mouseY>height_ratio*(650-30))){
             x1 = p5.mouseX;
             y1 = p5.mouseY;
@@ -37,16 +37,8 @@
                 y1 = 0;
             }
         }
-        p5.mouseReleased = () => {
-            x2 = p5.mouseX;
-            y2 = p5.mouseY;
-            x1 = 0;
-            y1= 0;
-            pitch = height_ratio*650-y2;
-            console.log(Math.abs(pitch));
-        }
 
-        if (p5.mouseIsPressed){
+        else if (interactionTile.mouse.pressing()) {
             p5.beginShape();
             p5.stroke('#99E4D3');
             // p5.noFill();
@@ -56,7 +48,29 @@
             p5.endShape();         
         }
 
-        else if (Math.abs(pitch) > 10){
+        else if (interactionTile.mouse.released()) {
+            x2 = p5.mouseX;
+            y2 = p5.mouseY;
+            x1 = 0;
+            y1= 0;
+            pitch = height_ratio*650-y2;
+            console.log(Math.abs(pitch));
+            amp = Number.parseFloat(Math.abs(height_ratio*650-y2)*0.005).toFixed(2);
+            if (amp > 1) amp = 1;
+            // console.log(amp);
+            if (!layer.points) layer.points = [];
+            if (pitches != []){
+                for (let pitch of pitches) {
+                    layer.points.push(
+                                    {pitch: pitch,
+                                    amp: amp*100, 
+                                    bar: Math.floor(absoluteTick/256)+1,
+                                    start: absoluteTick%256+1})
+                }
+            }
+        }
+
+        if (Math.abs(pitch) > 10){
             if (frame%3 ==0){
                 p5.beginShape();
                 p5.stroke('#99E4D3');
@@ -85,6 +99,8 @@
 
         p5.translate(-Xoffset, -Yoffset);
         p5.strokeWeight(1);
+
+        return amp;
     }
 
     let pastKeys = [];
@@ -105,8 +121,8 @@
         
         let pitchwhitekey = ['A','S','D','F','G','H','J','K','L'];
         let pitchblackkey = ['W','E','none','T','Y','U','none','O'];
-        let pitchwhite = ['C1','D1','E1','F1','G1','A1','B1','C2','D2'];
-        let pitchblack = ['C#1','D#1',null,'F#1','G#1','A#1',null,'C#2'];
+        let pitchwhite = ['C3','D3','E3','F3','G3','A3','B3','C4','D4'];
+        let pitchblack = ['C#3','D#3',null,'F#3','G#3','A#3',null,'C#4'];
         let pitchList = [];
 
         if (oldKeys.length>=1){
@@ -128,24 +144,26 @@
         for (let i = 0; i<pitchwhitekey.length; i++){
             if(highlightWhite[i]) pitchList.push(pitchwhite[i]);
             p5.stroke(255);
+            p5.strokeWeight(1);
             p5.fill(highlightTile(highlightWhite[i]));
-            p5.rect(width_ratio*112 + width_ratio*31*i,height_ratio*536,width_ratio*31,height_ratio*106);
-            p5.rect(width_ratio*112 + width_ratio*31*i,height_ratio*693,width_ratio*31,height_ratio*31);
+            p5.rect(width_ratio*112 + width_ratio*35*i,height_ratio*536,width_ratio*35,height_ratio*130);
+            p5.rect(width_ratio*112 + width_ratio*35*i,height_ratio*745,width_ratio*35,height_ratio*45);
             p5.noStroke();
             p5.fill(255-highlightTile(highlightWhite[i]));
-            p5.text(pitchwhitekey[i],width_ratio*120 + width_ratio*31*i,height_ratio*(685+31));
+            p5.text(pitchwhitekey[i],width_ratio*122 + width_ratio*35*i,height_ratio*(745+33));
         }
 
         for (let i = 0; i<pitchblackkey.length; i++){
             if(highlightBlack[i]) pitchList.push(pitchblack[i]);
             p5.stroke(255);
+            p5.strokeWeight(1);
             p5.fill(highlightTile(highlightBlack[i]));
             if (pitchblackkey[i] !== 'none'){
-                p5.rect(width_ratio*127.5 + width_ratio*31*i,height_ratio*536,width_ratio*31,height_ratio*60);
-                p5.rect(width_ratio*(112+31/2) + width_ratio*31*i,height_ratio*661,width_ratio*31,height_ratio*31);
+                p5.rect(width_ratio*127.5 + width_ratio*35*i,height_ratio*536,width_ratio*35,height_ratio*80);
+                p5.rect(width_ratio*(112+35/2) + width_ratio*35*i,height_ratio*700,width_ratio*35,height_ratio*45);
                 p5.noStroke();
                 p5.fill(255-highlightTile(highlightBlack[i]));
-                p5.text(pitchblackkey[i],width_ratio*(120+31/2) + width_ratio*31*i,height_ratio*685);
+                p5.text(pitchblackkey[i],width_ratio*(122+35/2) + width_ratio*35*i,height_ratio*(700+33));
             }
         }
         
