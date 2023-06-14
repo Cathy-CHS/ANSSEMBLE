@@ -1,108 +1,74 @@
 <script>
     import { fly, fade, blur, slide, scale } from 'svelte/transition';
-	  import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
     import {width, height} from './Constants.svelte';
-	  import Layer from "./Layer.svelte";
-    import Project from "./Project.svelte";
-    import ProjectSelect from './ProjectSelect.svelte';
-    
-    const test_project = {
-    Maker : "user",
-    Title: "Example_projectasdfas",
-    Tag : ['example', 'tags', 'P2'],
-    Desc : "Example project for implementation, Example project for implementation,Example project for implementation,Example project for implementation",
-    // 8 마디
-    NumBar : "4",
-    NumOrbit : 0,
-    Origin : null,
-    NumReproduction : 0,
-    Layers :[
-                {
-                    Inst: "piano",
-                    Amplitude: 0.8,
-                    points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
-                                  pitch: 'C4',
-                                  bar: 1,
-                                  start: 5,
-                                  duration: 20
-                                  }, {
-                                  pitch: 'E5',
-                                  bar: 1,
-                                  start: 5,
-                                  duration: 100
-                                  }, {
-                                  pitch: 'G4',
-                                  bar: 1,
-                                  start: 7,
-                                  duration: 100
-                                  },{
-                                  pitch: 'C5',
-                                  bar: 2,
-                                  start: 120,
-                                  duration: 30
-                                  }
-                              ]
-                }, 
-                {
-                    Inst: "base",
-                    Amplitude: 0.6,
-                    points: [{ // Amp: 100이 최대
-                                  amp: 100,
-                                  bar: 1,
-                                  start: 5,
-                                  }, {
-                                  amp: 50,
-                                  bar: 1,
-                                  start: 5,
-                                  }, {
-                                  amp: 30,
-                                  bar: 1,
-                                  start: 7,
-                                  },{
-                                  amp: 70,
-                                  bar: 2,
-                                  start: 120,
-                                  }
-                              ]
-                },
-                {
-                    Inst: "base",
-                    Amplitude: 0.2,
-                    points: [{ // Amp: 100이 최대
-                                amp: 30,
-                                bar: 1,
-                                start: 100,
-                                }, {
-                                amp: 30,
-                                bar: 1,
-                                start: 200,
-                                }, {
-                                amp: 50,
-                                bar: 3,
-                                start: 7,
-                                },{
-                                amp: 20,
-                                bar: 2,
-                                start: 120,
-                                }
-                            ]
-                }            
-            ]
-    }
-    const test_project2 = JSON.parse(JSON.stringify(test_project))
-    test_project2.Layers.splice(2, 1);
-    test_project2.Title = "P2"
-    const test_project3 = JSON.parse(JSON.stringify(test_project))
-    test_project3.Layers.splice(0, 1);
-    test_project3.Title = "P3"
+	import Layer from "./layers/Layer.svelte";
+    import Project from "./projects/Project.svelte";
+    import ProjectSelect from './projects/ProjectSelect.svelte';
 
-    let user = "Anon"
-    const database = {0:test_project, 1:test_project2, 2:test_project3}
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "firebase/app";
+    import { getAnalytics } from "firebase/analytics";
+    import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-8EF5xR-SODBJi8XK3Ei13YJiw-X0i1g",
+        authDomain: "id311-finalteam5.firebaseapp.com",
+        projectId: "id311-finalteam5",
+        storageBucket: "id311-finalteam5.appspot.com",
+        messagingSenderId: "957534001506",
+        appId: "1:957534001506:web:bede6b717496bde6f6b43b",
+        measurementId: "G-6GRFL3D471",
+        databaseURL: "https://id311-finalteam5-default-rtdb.firebaseio.com/"
+    };
+
+    // GLOBALS
+    let database=undefined;
     let projToSee = 0
-    let project = database[projToSee]
-    let layers = project.Layers;
+    let project;
+    let layers;
     let layerToSee = 1;
-    let NumBar = project.NumBar;
+    let NumBar;
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    function getData() {
+        return new Promise((resolve, reject) => {
+            const db = getDatabase();
+            const dbRef = ref(db);
+            get(dbRef).then((snapshot) => {
+                const data = snapshot.val();
+                 database = data;
+                console.log(database);
+                console.log('Database is loaded');
+                resolve(data);
+            });
+        })
+    }
+
+    // Start here
+    async function main(){
+        await getData();
+        console.log('start')
+    }
+    main();
+
+    let user = "Anon";
+
+    // async function loadData() {
+    //     database = await getData();
+    //     // console.log("db: "+JSON.stringify(data));
+    //     console.log("new db: "+JSON.stringify(database));
+    //     project = database[projToSee];
+    //     layers = project.Layers;
+    //     NumBar = project.NumBar;
+    // }
 
     function initProj(projTo){
         projToSee = projTo
@@ -146,39 +112,39 @@
     }
 </script>
 
-{#if !(toggle.toggleProject)}
-    <script>console.log('asdfasdf')</script>    
-    <ProjectSelect on:project = {projToggle}
-    on:projectnum ={projSwitch}
-    {width} {height} {database} {projToSee} {NumBar}, {user}/>
-{:else if toggle.toggleLayer}
-    <div transition:fade>
-        <Layer 
-        on:layerToProject = {layerToggle}
-        on:layerDup={layerDuplicate} 
-        on:deleteLayer={layerDelete}
-        {width} {height} {layers} {layerToSee} {NumBar}/>
-    </div>
-{:else if dupProjectToggle}
-    <div transition:fade>
-        <Project on:layer = {layerToggle}
-        on:projToTot = {projToggle}
-        on:projectTexts = {changeDescs}
-        on:layernum ={layerSwitch}
-        on:projDup = {dupProjectInside}
-        {width} {height} {project} {layerToSee} {NumBar}/>
-    </div>
-{:else if !(toggle.toggleLayer)}
-    <div transition:fade>
-        <Project on:layer = {layerToggle}
-        on:projToTot = {projToggle}
-        on:projectTexts = {changeDescs}
-        on:layernum ={layerSwitch}
-        on:projDup = {dupProjectInside}
-        {width} {height} {project} {layerToSee} {NumBar}/>
-    </div>
+{#if database}
+    {#if !(toggle.toggleProject)}
+        <ProjectSelect on:project = {projToggle}
+        on:projectnum ={projSwitch}
+        {width} {height} {database} {projToSee} {NumBar}, {user}/>
+    {:else if toggle.toggleLayer}
+        <div transition:fade>
+            <Layer 
+            on:layerToProject = {layerToggle}
+            on:layerDup={layerDuplicate} 
+            on:deleteLayer={layerDelete}
+            {width} {height} {layers} {layerToSee} {projToSee} {NumBar}/>
+        </div>
+    {:else if dupProjectToggle}
+        <div transition:fade>
+            <Project on:layer = {layerToggle}
+            on:projToTot = {projToggle}
+            on:projectTexts = {changeDescs}
+            on:layernum ={layerSwitch}
+            on:projDup = {dupProjectInside}
+            {width} {height} {project} {projToSee} {NumBar}/>
+        </div>
+    {:else if !(toggle.toggleLayer)}
+        <div transition:fade>
+            <Project on:layer = {layerToggle}
+            on:projToTot = {projToggle}
+            on:projectTexts = {changeDescs}
+            on:layernum ={layerSwitch}
+            on:projDup = {dupProjectInside}
+            {width} {height} {project} {projToSee} {NumBar}/>
+        </div>
+    {/if}
 {/if}
-
 <style>
 
 </style>

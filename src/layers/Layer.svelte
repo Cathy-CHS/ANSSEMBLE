@@ -1,14 +1,13 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
-    import { BPMorigin, colors, numBarShow, startingPoint, layerWidth, lineWidth, text_start, layerInstLineWidth, maxAmpRadius } from './Constants.svelte';
-    import { keyboardHandlerPiano } from './instruments/Piano.svelte';
-    import { mouseHandlerBase } from './instruments/Base.svelte';
-    import { drawButtons } from './instruments/Guitar.svelte';
-
-    // import { loadSoundtrack } from './LayerSound.svelte';
-    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './layers/LayerSettings.svelte';
+    import { BPMorigin, colors, numBarShow, startingPoint, layerWidth, lineWidth, text_start, layerInstLineWidth, maxAmpRadius } from '../Constants.svelte';
+    import { keyboardHandlerPiano } from '../instruments/Piano.svelte';
+    import { mouseHandlerBase } from '../instruments/Base.svelte';
+    import { drawButtons } from '../instruments/Guitar.svelte';
+    import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
+    import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
     
-    export let [width, height, layers, layerToSee, NumBar] = [400,300, {}, []];
+    export let [width, height, layers, layerToSee, projToSee, NumBar] = [400,300, {}, []];
 
     //max number of bar in one display
     //const numBarShow = 3;
@@ -80,6 +79,12 @@
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
+            writeData(layer);
+        }
+
+        function writeData(layer) {
+            const db = getDatabase();
+            set(ref(db, `${projToSee}/Layers/${layerToSee}`), layer);
         }
 
         let backButton, duplButton, ampButton, bpmButton, playButton, deleteButton
@@ -319,6 +324,7 @@
                 }
             }
             else if(inst == 'base') {
+                console.log(ampl*a);
                 soundObject[1].Soundtrack[0].play(0, 1, ampl*a);
             }
         }
