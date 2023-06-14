@@ -46,6 +46,7 @@
             hitPointX = p5.mouseX
             amplitude = Math.floor(Math.pow(radi, 1.5)/Math.pow(maxRadi, 1.5)*100);
             tempRadi = radi*3;
+            if (!layer.points) layer.points = [];
             if (amplitude>5) layer.points.push(
                             {amp: amplitude, 
                             bar: Math.floor(newStart/256)+1,

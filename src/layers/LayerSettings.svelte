@@ -87,25 +87,29 @@
             p5.strokeCap(p5.ROUND);
             p5.strokeWeight(layerInstLineWidth);
             p5.stroke(layerColor);
-            for (let point of points){
-                let xi = timeToX(point.bar, point.start);
-                let xf = timeToX(point.bar, point.start+point.duration);
-                if (xf>startingPoint && xi<width){
-                    if (xf>width){xf = width}
-                    if (xi<startingPoint){xi = startingPoint}
-                    p5.line(xi, yLocation, xf, yLocation);
+            if (points) {
+                for (let point of points){
+                    let xi = timeToX(point.bar, point.start);
+                    let xf = timeToX(point.bar, point.start+point.duration);
+                    if (xf>startingPoint && xi<width){
+                        if (xf>width){xf = width}
+                        if (xi<startingPoint){xi = startingPoint}
+                        p5.line(xi, yLocation, xf, yLocation);
+                    }
                 }
             }
             p5.strokeCap(p5.SQUARE);
         } else if (inst == 'base' || inst == 'snare' || inst == 'cymbal' || inst == 'guitar'){
             p5.noStroke();
             p5.fill(layerColor)
-            for (let point of points){
-                let x = timeToX(point.bar, point.start);
-                if (x>startingPoint && x<width){
-                    if (x>width){x = width}
-                    if (x<startingPoint){x = startingPoint}
-                    p5.ellipse(x, yLocation, maxAmpRadius*Math.sqrt(point.amp/100));
+            if (points) {
+                for (let point of points){
+                    let x = timeToX(point.bar, point.start);
+                    if (x>startingPoint && x<width){
+                        if (x>width){x = width}
+                        if (x<startingPoint){x = startingPoint}
+                        p5.ellipse(x, yLocation, maxAmpRadius*Math.sqrt(point.amp/100));
+                    }
                 }
             }
             p5.strokeCap(p5.SQUARE);

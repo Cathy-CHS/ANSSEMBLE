@@ -140,6 +140,7 @@
                 mPoint.duration = absoluteTick - ((mPoint.bar-1)*256 +mPoint.start);
             }else{
                 let starting = absoluteTick
+                if (!layer.points) layer.points = [];
                 existingKeyPitches.push([keyPitch[0], layer.points.length])
                 console.log([keyPitch[0], layer.points.length])
                 layer.points.push(

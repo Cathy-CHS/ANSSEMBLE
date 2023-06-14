@@ -122,8 +122,6 @@
             p5.text(pitchblackkey[i],width_ratio*(120+31/2) + width_ratio*31*i,height_ratio*685);
         }
         }
-
-
     }
 
 

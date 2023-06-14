@@ -34,6 +34,7 @@
         else if (interactionTile.mouse.released()){
             isDrag = 0;
             tempRadi = radi;
+            if (!layer.points) layer.points = [];
             if (amplitude>10) layer.points.push(
                             {amp: amplitude, 
                             bar: Math.floor(newStart/256)+1,

@@ -80,7 +80,6 @@
         }
 
         p5.draw = ()=>{
-            //p5.drawGui();
             p5.clear();
             p5.background(p5.color(colors.back));
             popUp()
@@ -172,6 +171,7 @@
         let inst_description = 
         {
             piano: 'Press keyboard',
+            guitar: 'Drag the string and let go',
             base: 'Click, drag, and let go',
             snare: 'Percuss keyboard',
             cymbal: 'Hit the line with cursor'
@@ -194,11 +194,11 @@
             p5.textSize(width_ratio*30);
             p5.text('How to play: \n'+inst_description[inst],text_start,height_ratio*351);
             
-            if (inst=='guitar'){
-                p5.textSize(width_ratio*20);
-                p5.text('pitch',text_start,height_ratio*474);
-                drawButtons();
-            }
+            // if (inst=='guitar'){
+            //     p5.textSize(width_ratio*20);
+            //     p5.text('pitch',text_start,height_ratio*474);
+            //     drawButtons();
+            // }
 
             p5.textSize(width_ratio*20);
             //p5.text('Layer Amp',text_start,height_ratio*869);
@@ -226,6 +226,10 @@
                 stopSound(inst, pianoPitch, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
                 pastPitches = existingPitches;
             }
+            //guitar handler
+            else if (inst == "guitar") {
+                drawPitch(p5);
+            }
             //snare handler
             else if (inst == "snare") {
                 let amplitude = keyboardHandlerSnare(p5, layer, absoluteTick);
@@ -244,6 +248,9 @@
                 p5.fill(layerColor);
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
                 layerColor.setAlpha(100)
+                if (inst == "guitar") {
+                    drawString(p5);
+                }
                 if (inst == "base") {
                     let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
                     if (amplitude) playSound(inst, layer.Amplitude, amplitude, null);

@@ -154,6 +154,7 @@
                 let starting = absoluteTick
                 existingKeys.push(key)
                 console.log(existingKeys)
+                if (!layer.points) layer.points = [];
                 layer.points.push(
                 {
                 bar: Math.floor(starting/256)+1,
