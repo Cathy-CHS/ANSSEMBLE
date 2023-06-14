@@ -5,7 +5,6 @@
 	import Layer from "./layers/Layer.svelte";
     import Project from "./projects/Project.svelte";
     import ProjectSelect from './projects/ProjectSelect.svelte';
-    // import data from './firebase';
 
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "firebase/app";
@@ -27,6 +26,14 @@
         databaseURL: "https://id311-finalteam5-default-rtdb.firebaseio.com/"
     };
 
+    // GLOBALS
+    let database=undefined;
+    let projToSee = 0
+    let project;
+    let layers;
+    let layerToSee = 1;
+    let NumBar;
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
@@ -35,128 +42,33 @@
         return new Promise((resolve, reject) => {
             const db = getDatabase();
             const dbRef = ref(db);
-            let data;
             get(dbRef).then((snapshot) => {
-                data = snapshot.val();
-                // console.log("result: "+data);
-                console.log("result: "+JSON.stringify(data));
+                const data = snapshot.val();
+                 database = data;
+                console.log(database);
+                console.log('Database is loaded');
+                resolve(data);
             });
-            resolve(data);
         })
     }
-    
-    const test_project = {
-    Maker : "user",
-    Title: "Example_projectasdfas",
-    Tag : ['example', 'tags', 'P2'],
-    Desc : "Example project for implementation, Example project for implementation,Example project for implementation,Example project for implementation",
-    // 8 마디
-    NumBar : "4",
-    NumOrbit : 0,
-    Origin : null,
-    NumReproduction : 0,
-    Layers :[
-                {
-                    Inst: "piano",
-                    Amplitude: 0.8,
-                    points: [{ // 1번째 마디의 5번째 point에서 20/256만큼 진행
-                                  pitch: 'C4',
-                                  bar: 1,
-                                  start: 5,
-                                  duration: 20
-                                  }, {
-                                  pitch: 'E5',
-                                  bar: 1,
-                                  start: 5,
-                                  duration: 100
-                                  }, {
-                                  pitch: 'G4',
-                                  bar: 1,
-                                  start: 7,
-                                  duration: 100
-                                  },{
-                                  pitch: 'C5',
-                                  bar: 2,
-                                  start: 120,
-                                  duration: 30
-                                  }
-                              ]
-                }, 
-                {
-                    Inst: "base",
-                    Amplitude: 0.6,
-                    points: [{ // Amp: 100이 최대
-                                  amp: 100,
-                                  bar: 1,
-                                  start: 5,
-                                  }, {
-                                  amp: 50,
-                                  bar: 1,
-                                  start: 5,
-                                  }, {
-                                  amp: 30,
-                                  bar: 1,
-                                  start: 7,
-                                  },{
-                                  amp: 70,
-                                  bar: 2,
-                                  start: 120,
-                                  }
-                              ]
-                },
-                {
-                    Inst: "base",
-                    Amplitude: 0.2,
-                    points: [{ // Amp: 100이 최대
-                                amp: 30,
-                                bar: 1,
-                                start: 100,
-                                }, {
-                                amp: 30,
-                                bar: 1,
-                                start: 200,
-                                }, {
-                                amp: 50,
-                                bar: 3,
-                                start: 7,
-                                },{
-                                amp: 20,
-                                bar: 2,
-                                start: 120,
-                                }
-                            ]
-                }            
-            ]
-    }
-    const test_project2 = JSON.parse(JSON.stringify(test_project))
-    test_project2.Layers.splice(2, 1);
-    test_project2.Title = "P2"
-    const test_project3 = JSON.parse(JSON.stringify(test_project))
-    test_project3.Layers.splice(0, 1);
-    test_project3.Title = "P3"
 
-    let user = "Anon"
-    // const database = {0:test_project, 1:test_project2, 2:test_project3}
-    // let database = data;
-    let database;
-    let projToSee = 0
-    let project;
-    let layers;
-    let layerToSee = 1;
-    let NumBar;
-
-    async function loadData() {
-        database = await getData();
-        // console.log("db: "+JSON.stringify(data));
-        console.log("new db: "+JSON.stringify(database));
-        project = database[projToSee];
-        layers = project.Layers;
-        NumBar = project.NumBar;
-        dataLoaded = true;
+    // Start here
+    async function main(){
+        await getData();
+        console.log('start')
     }
-    
-    let dataLoaded = false;
-    loadData();
+    main();
+
+    let user = "Anon";
+
+    // async function loadData() {
+    //     database = await getData();
+    //     // console.log("db: "+JSON.stringify(data));
+    //     console.log("new db: "+JSON.stringify(database));
+    //     project = database[projToSee];
+    //     layers = project.Layers;
+    //     NumBar = project.NumBar;
+    // }
 
     function initProj(projTo){
         projToSee = projTo
@@ -200,9 +112,8 @@
     }
 </script>
 
-{#if dataLoaded}
+{#if database}
     {#if !(toggle.toggleProject)}
-        <script>console.log('asdfasdf')</script>    
         <ProjectSelect on:project = {projToggle}
         on:projectnum ={projSwitch}
         {width} {height} {database} {projToSee} {NumBar}, {user}/>
@@ -234,7 +145,6 @@
         </div>
     {/if}
 {/if}
-
 <style>
 
 </style>
