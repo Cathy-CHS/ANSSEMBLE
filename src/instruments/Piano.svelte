@@ -30,19 +30,19 @@
 
         if (keys.length>=1){
             for (let key of keys){
-            if (key1.includes(key)){
-                highlight1[key1.indexOf(key)] = 1;
+                if (key1.includes(key)){
+                    highlight1[key1.indexOf(key)] = 1;
+                }
+                if (key2.includes(key)){
+                    highlight2[key2.indexOf(key)] = 1;
+                }
+                if (key3.includes(key)){
+                    highlight3[key3.indexOf(key)] = 1;
+                }
+                if (key4.includes(key)){
+                    highlight4[key4.indexOf(key)] = 1;
+                }
             }
-            if (key2.includes(key)){
-                highlight2[key2.indexOf(key)] = 1;
-            }
-            if (key3.includes(key)){
-                highlight3[key3.indexOf(key)] = 1;
-            }
-            if (key4.includes(key)){
-                highlight4[key4.indexOf(key)] = 1;
-            }
-        }
         }
 
         p5.translate(Xoffset, Yoffset);

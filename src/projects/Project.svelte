@@ -300,17 +300,19 @@
         function timegoes(){
             if(isPlay){
                 for (let layer of layers) {
-                    for (let point of layer.points) {
-                        if (absoluteTick == (point.bar-1)*256+point.start) {
-                            if (point.hasOwnProperty("duration")) {
-                                const inst = instList.indexOf(layer.Inst);
-                                const pitchnum = pianoPitchList.indexOf(point.pitch);
-                                console.log(layer.Amplitude);
-                                soundObject[inst].Soundtrack[pitchnum].play(0, 1, masterVol*layer.Amplitude);
-                                soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
-                            } else {
-                                const inst = instList.indexOf(layer.Inst);
-                                soundObject[inst].Soundtrack[0].play(0, 1, masterVol*layer.Amplitude*point.amp/100);
+                    if (layer.points) {
+                        for (let point of layer.points) {
+                            if (absoluteTick == (point.bar-1)*256+point.start) {
+                                if (point.hasOwnProperty("duration")) {
+                                    const inst = instList.indexOf(layer.Inst);
+                                    const pitchnum = pianoPitchList.indexOf(point.pitch);
+                                    console.log(layer.Amplitude);
+                                    soundObject[inst].Soundtrack[pitchnum].play(0, 1, masterVol*layer.Amplitude);
+                                    soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                                } else {
+                                    const inst = instList.indexOf(layer.Inst);
+                                    soundObject[inst].Soundtrack[0].play(0, 1, masterVol*layer.Amplitude*point.amp/100);
+                                }
                             }
                         }
                     }

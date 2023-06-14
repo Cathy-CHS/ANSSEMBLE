@@ -5,7 +5,7 @@
     import { keyboardHandlerSnare } from '../instruments/Snare.svelte';
     import { mouseHandlerBase } from '../instruments/Base.svelte';
     import { mouseHandlerCymbal } from '../instruments/Cymbal.svelte';
-    import { drawString, drawPitch } from '../instruments/Guitar.svelte';
+    import { drawString, drawPitch, resetPitch } from '../instruments/Guitar.svelte';
     import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
     import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
     
@@ -111,6 +111,7 @@
         }
 
         function deleteLayer(){
+            if (inst == "guitar") resetPitch(p5);
             dispatch('deleteLayer', layerToSee)
             p5.remove();
         }
@@ -165,6 +166,7 @@
 
         function toggleToProject(){
             p5.remove();
+            if(inst == "guitar") resetPitch(p5);
             dispatch('layerToProject');
         }
         
@@ -249,7 +251,7 @@
                 p5.ellipse(p5.mouseX, p5.mouseY, lineWidth*20);
                 layerColor.setAlpha(100)
                 if (inst == "guitar") {
-                    drawString(p5);
+                    // drawString(p5);
                 }
                 if (inst == "base") {
                     let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
@@ -273,16 +275,18 @@
         function timegoes(){
             if(isPlay){
                 for (let layer of layers) {
-                    for (let point of layer.points) {
-                        if (absoluteTick == (point.bar-1)*256+point.start) {
-                            if (point.hasOwnProperty("duration")) {
-                                const inst = instList.indexOf(layer.Inst);
-                                const pitchnum = pianoPitchList.indexOf(point.pitch);
-                                soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude);
-                                soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
-                            } else {
-                                const inst = instList.indexOf(layer.Inst);
-                                soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
+                    if (layer.points) {
+                        for (let point of layer.points) {
+                            if (absoluteTick == (point.bar-1)*256+point.start) {
+                                if (point.hasOwnProperty("duration")) {
+                                    const inst = instList.indexOf(layer.Inst);
+                                    const pitchnum = pianoPitchList.indexOf(point.pitch);
+                                    soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude);
+                                    soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                                } else {
+                                    const inst = instList.indexOf(layer.Inst);
+                                    soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
+                                }
                             }
                         }
                     }
