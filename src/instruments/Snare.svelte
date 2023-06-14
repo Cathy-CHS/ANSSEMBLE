@@ -147,7 +147,7 @@
             }
         })
         // console.log(existingKeys);
-        let amp = 50; 
+        let amp = 30; 
         for (let key of useableKeys){
             if (!(existingKeys.includes(key))){
                 console.log(key , existingKeys)
@@ -159,11 +159,11 @@
                 bar: Math.floor(starting/256)+1,
                 start: starting%256,
                 amp: amp})
+                return amp;
             }
         }
         //let existingPitches = existingKeys.map(function(element) {return keyToPitch[keyList.indexOf(element)]});
         // console.log(existingPitches);
-        return amp;
         /*
         if (p5.kb.presses('b')) {
            console.log(layer.points)

@@ -31,6 +31,10 @@
         {
             Inst: "snare",
             Soundtrack: []
+        },
+        {
+            Inst: "cymbal",
+            Soundtrack: []
         }
     ];
     let instList = ["piano", "base", "snare", "cymbal"];
@@ -347,6 +351,8 @@
             soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
             //snare
             soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
+            //cymbal
+            soundObject[3].Soundtrack.push(p5.loadSound('assets/drum/ride.wav'));
         }
     }
 

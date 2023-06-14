@@ -4,6 +4,7 @@
     import { keyboardHandlerPiano } from '../instruments/Piano.svelte';
     import { keyboardHandlerSnare } from '../instruments/Snare.svelte';
     import { mouseHandlerBase } from '../instruments/Base.svelte';
+    import { mouseHandlerCymbal } from '../instruments/Cymbal.svelte';
     import { drawButtons } from '../instruments/Guitar.svelte';
     import { timeCursorMake, timeCursorMove, grid, layerColoring, layerdrawing, makeButton} from './LayerSettings.svelte';
     import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
@@ -51,6 +52,10 @@
             {
                 Inst: "snare",
                 Soundtrack: []
+            },
+            {
+                Inst: "cymbal",
+                Soundtrack: []
             }
         ];
 
@@ -58,7 +63,6 @@
             backIcon = p5.loadImage('assets/buttons/Back.png');
             loadSoundtrack(soundObject);
         }
-        let gui
         
         p5.setup = async ()=>{
             p5.noCursor();
@@ -165,7 +169,8 @@
         {
             piano: 'Press keyboard',
             base: 'Click, drag, and let go',
-            snare: 'Percuss keyboard'
+            snare: 'Percuss keyboard',
+            cymbal: 'Hit the line with cursor'
         }
         
         function drawSettings (inst) {
@@ -177,7 +182,9 @@
             p5.noStroke();
             p5.textSize(width_ratio*60);
             p5.textWrap(p5.CHAR);
-            p5.text(inst,text_start,height_ratio*204, startingPoint*0.63);
+            let instText = inst
+            instText = instText.charAt(0).toUpperCase() + instText.slice(1)
+            p5.text(instText,text_start,height_ratio*204, startingPoint*0.63);
             
             p5.textFont('Pretendard Medium');
             p5.textSize(width_ratio*30);
@@ -197,7 +204,7 @@
             let fieldColor = p5.color(colors.back)
             fieldColor.setAlpha(0);
 
-            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
+            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint)*1.2, (height - gridHeight)*1.4, 'kinematic')
             interactionTile.color =  fieldColor;
             interactionTile.stroke =  fieldColor;
         }
@@ -215,9 +222,10 @@
                 stopSound(inst, pianoPitch, pastPitches.filter(pitch => !existingPitches.includes(pitch)));
                 pastPitches = existingPitches;
             }
+            //snare handler
             else if (inst == "snare") {
                 let amplitude = keyboardHandlerSnare(p5, layer, absoluteTick);
-                // if (amplitude) playSound(inst, layer.Amplitude, amplitude, null);
+                if (amplitude) playSound(inst, layer.Amplitude, amplitude, null);
             }
         }
         
@@ -234,6 +242,10 @@
                 layerColor.setAlpha(100)
                 if (inst == "base") {
                     let amplitude = mouseHandlerBase(p5, layer, absoluteTick, interactionTile);
+                    if (amplitude) playSound(inst, layer.Amplitude, amplitude, null);
+                }
+                if (inst == "cymbal") {
+                    let amplitude = mouseHandlerCymbal(p5, layer, absoluteTick, interactionTile);
                     if (amplitude) playSound(inst, layer.Amplitude, amplitude, null);
                 }
                 layerColor.setAlpha(90)
@@ -327,6 +339,8 @@
             soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
             //snare
             soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
+            //cymbal
+            soundObject[3].Soundtrack.push(p5.loadSound('assets/drum/ride.wav'));
         }
 
         function playSound(inst, ampl, a, b) {
@@ -342,6 +356,9 @@
             else if(inst == 'snare') {
                 console.log(ampl*a);
                 soundObject[2].Soundtrack[0].play(0, 1, ampl*a);
+            }
+            else if(inst == 'cymbal') {
+                soundObject[3].Soundtrack[0].play(0, 1, ampl*a);
             }
         }
  
