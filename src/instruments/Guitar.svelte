@@ -77,7 +77,7 @@
                 p5.strokeWeight(2);
                 p5.vertex(width_ratio*750, height_ratio*650);
                 p5.bezierVertex(p5.mouseX, height_ratio*650 + pitch,p5.mouseX, height_ratio*650 + pitch, width_ratio*1800,height_ratio*650);
-            p5.endShape();
+                p5.endShape();
             }
             frame += 1;
             pitch = -(pitch/1.08);
