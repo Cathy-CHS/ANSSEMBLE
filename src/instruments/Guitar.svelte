@@ -25,7 +25,7 @@
 
         p5.noFill();
         p5.stroke('#99E4D3');
-        p5.strokeWeight(2);
+        p5.strokeWeight(4);
         
         if (interactionTile.mouse.presses()) {
             if ((p5.mouseX >width_ratio*750)&&(p5.mouseX <width_ratio*1800)&& (p5.mouseY<height_ratio*(650+30))&&(p5.mouseY>height_ratio*(650-30))){
@@ -42,7 +42,7 @@
             p5.beginShape();
             p5.stroke('#99E4D3');
             // p5.noFill();
-            p5.strokeWeight(2);
+            p5.strokeWeight(4);
             p5.vertex(width_ratio*750, height_ratio*650);
             p5.bezierVertex(p5.mouseX, p5.mouseY,p5.mouseX, p5.mouseY, width_ratio*1800,height_ratio*650);
             p5.endShape();         
@@ -74,7 +74,7 @@
             if (frame%3 ==0){
                 p5.beginShape();
                 p5.stroke('#99E4D3');
-                p5.strokeWeight(2);
+                p5.strokeWeight(4);
                 p5.vertex(width_ratio*750, height_ratio*650);
                 p5.bezierVertex(p5.mouseX, height_ratio*650 + pitch,p5.mouseX, height_ratio*650 + pitch, width_ratio*1800,height_ratio*650);
                 p5.endShape();
@@ -98,7 +98,7 @@
         p5.line(width_ratio*750, height_ratio*910, width_ratio*1800, height_ratio*910);
 
         p5.translate(-Xoffset, -Yoffset);
-        p5.strokeWeight(1);
+        // p5.strokeWeight(1);
 
         return amp;
     }
@@ -144,7 +144,7 @@
         for (let i = 0; i<pitchwhitekey.length; i++){
             if(highlightWhite[i]) pitchList.push(pitchwhite[i]);
             p5.stroke(255);
-            p5.strokeWeight(1);
+            p5.strokeWeight(2);
             p5.fill(highlightTile(highlightWhite[i]));
             p5.rect(width_ratio*112 + width_ratio*35*i,height_ratio*536,width_ratio*35,height_ratio*130);
             p5.rect(width_ratio*112 + width_ratio*35*i,height_ratio*745,width_ratio*35,height_ratio*45);
@@ -156,7 +156,7 @@
         for (let i = 0; i<pitchblackkey.length; i++){
             if(highlightBlack[i]) pitchList.push(pitchblack[i]);
             p5.stroke(255);
-            p5.strokeWeight(1);
+            p5.strokeWeight(2);
             p5.fill(highlightTile(highlightBlack[i]));
             if (pitchblackkey[i] !== 'none'){
                 p5.rect(width_ratio*127.5 + width_ratio*35*i,height_ratio*536,width_ratio*35,height_ratio*80);
