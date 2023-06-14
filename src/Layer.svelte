@@ -180,7 +180,7 @@
             let fieldColor = p5.color(colors.back)
             fieldColor.setAlpha(0);
 
-            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint), (height - gridHeight), 'kinematic')
+            interactionTile = new p5.Sprite((startingPoint+width)/2, (gridHeight+height)/2, (width - startingPoint)*1.2, (height - gridHeight)*1.4, 'kinematic')
             interactionTile.color =  fieldColor;
             interactionTile.stroke =  fieldColor;
         }
