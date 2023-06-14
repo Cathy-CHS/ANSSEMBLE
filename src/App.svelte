@@ -109,8 +109,8 @@
         layerToSee = 1;
         NumBar = project.NumBar;
     }
-    let toggle= {toggleLayer : true, 
-                  toggleProject: true};
+    let toggle= {toggleLayer : false, 
+                  toggleProject: false};
     let dupProjectToggle = false
     function layerToggle(){
         dupProjectToggle = false

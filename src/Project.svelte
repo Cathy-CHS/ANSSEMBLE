@@ -26,6 +26,10 @@
         {
                 Inst: "snare",
                 Soundtrack: []
+        },
+        {
+            Inst: "cymbal",
+            Soundtrack: []
         }
     ];
     let instList = ["piano", "base", "snare","cymbal"];
@@ -106,7 +110,7 @@
 
 
             // instruments
-            const insts = ['piano', 'guitar', 'base', 'cymBal', 'snare']
+            const insts = ['piano', 'guitar', 'base', 'cymbal', 'snare']
             let magicLocationNumber = 9
             for (let inst of insts){
                 let tempButton = makeButton(p5, inst, makeNewLayer, magicLocationNumber+insts.indexOf(inst), inst)
@@ -349,6 +353,8 @@
             soundObject[1].Soundtrack.push(p5.loadSound('assets/drum/bass.wav'));
             //snare
             soundObject[2].Soundtrack.push(p5.loadSound('assets/drum/snare.wav'));
+            //cymbal
+            soundObject[3].Soundtrack.push(p5.loadSound('assets/drum/ride.wav'));
         }
     }
 
