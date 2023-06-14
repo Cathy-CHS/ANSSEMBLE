@@ -69,6 +69,7 @@
     }
 
     export function layerdrawing(p5, yLocation, layer){
+        // console.log("layer: "+JSON.stringify(layer));
         let points = layer.points;
         let inst = layer.Inst;
         p5.strokeWeight(lineWidth);

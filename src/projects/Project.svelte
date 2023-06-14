@@ -110,7 +110,7 @@
 
 
             // instruments
-            const insts = ['piano', 'guitar', 'base', 'cymBal', 'snare']
+            const insts = ['piano', 'guitar', 'base', 'cymbal', 'snare']
             let magicLocationNumber = 9
             for (let inst of insts){
                 let tempButton = makeButton(p5, inst, makeNewLayer, magicLocationNumber+insts.indexOf(inst), inst)
@@ -244,9 +244,13 @@
         let isUser=true
         p5.keyTyped=()=>{
             if (titleOK && isUser &&(project_title.length<25)){
-                project_title = project_title+p5.key}
+                project_title = project_title+p5.key
+                project.Title = project_title;
+            }
             if (descOK && isUser &&(project_description.length<200)){
-                project_description = project_description+p5.key}
+                project_description = project_description+p5.key
+                project.Desc = project_description;
+            }
         }
 
         p5.keyPressed=()=>{

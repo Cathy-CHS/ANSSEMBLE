@@ -10,6 +10,7 @@
     import { initializeApp } from "firebase/app";
     import { getAnalytics } from "firebase/analytics";
     import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
+
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -145,6 +146,3 @@
         </div>
     {/if}
 {/if}
-<style>
-
-</style>
