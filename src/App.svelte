@@ -122,7 +122,7 @@
         {#if !(toggle.toggleProject)}
             <ProjectSelect on:project = {projToggle}
             on:projectnum ={projSwitch}
-            {width} {height} {database} {projToSee} {NumBar}, {user}/>
+            {width} {height} {database} {projToSee} {NumBar} {user}/>
         {:else if toggle.toggleLayer}
             <div transition:fade>
                 <Layer 

@@ -40,38 +40,45 @@ As we can see from the definition of playground, we aimed for a very light and f
 
 
 # Structure & Switching
-This project used **svelte, p5.js, p5.sound, and p5.play**. 
+The main structure of our code is as follows.
 
 ```
 Anssemble/
 ├ src/
 │ │ instruments/
-│ │ ├ Interactions/
 │ │ ├ Base.svelte
 │ │ ├ Cymbal.svelte
 │ │ ├ Guitar.svelte
 │ │ ├ Piano.svelte
 │ │ └ Snare.svelte
 │ ├ layers/
-│ │ ├ LayerSettings.svelte
-│ │ └ LayerSound.svelte
+│ │ ├ Layer.svelte
+│ │ └ LayerSettings.svelte
+│ ├ projects/
+│ │ ├ Project.svelte
+│ │ └ ProjectSelect.svelte
 │ ├ App.svelte
+│ ├ Button.svelte
 │ ├ Constants.svelte
-│ ├ Layer.svelte
-│ ├ Project.svelte
-│ ├ ProjectSelect.svelte
-│ └ main.js
+│ ├ Mainscreen.svelte
+│ └ ...
 ├ public/
 │ ├ assets/
-│ │ ├[inst sound files]
-│ │ └[button icons]
+│ │ ├ [inst sound files]
+│ │ └ [button icons]
 │ ├ build/
-│ └ [etcs]
-├ scripts/
-├ package.json
-├ package-lock.json
-└ rollup.config.js
+│ └ ...
+└ ...
 ```
+This project uses **svelte**, **p5.js**, **p5.sound**, **p5.play**, and **Firebase**.
+Code files are grouped by functions, which are explained as below.
+- `src/`
+  - `instruments/` : The files receive user input and hold instrument interaction. Each file is assigned to different instrument.
+  - `layers/` : Two files in `layers` directory manages layer page and detailed settings, such as button interaction.
+  - `projects/` : Two files in `projects` directory shows project list and individual project session.
+  - `App.svelte` : It gets database from firebase and executes main function.
+  - `Button.svelte` & `Constants.svelte` : Additional button component and constants needed for setting
+- `public/` : It saves build information and assets.
 
 ## Common feature
 
@@ -98,7 +105,7 @@ The buttons on each page were produced using the Sprite of the **p5.play library
 
 ## Page switching
 
-Basically, in order to use p5Play, the instance of p5.Js was used instead of p5-svelte. However, there is no essential difference between p5-svelte and page switching.
+Basically, **in order to use p5Play, the instance of p5.js was used instead of p5-svelte.** However, there is no essential difference between p5-svelte and page switching.
 
 ```Javascript
 ...
@@ -111,39 +118,46 @@ function projToTot(){
 }
 ...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-{#if !(toggle.toggleProject)}
-<script>console.log('asdfasdf')</script>    
-    <ProjectSelect on:project = {projToggle}
-    on:projectnum ={projSwitch}
-    {width} {height} {database} {projToSee} {NumBar}, {user}/>
-{:else if toggle.toggleLayer}
-<div transition:fade>
-        <Layer 
-        on:layerToProject = {layerToggle}
-        on:layerDup={layerDuplicate} 
-        on:deleteLayer={layerDelete}
-        {width} {height} {layers} {layerToSee} {NumBar}/>
-    </div>
-{:else if dupProjectToggle}
-    <div transition:fade>
-        <Project on:layer = {layerToggle}
-        on:projToTot = {projToggle}
-        on:projectTexts = {changeDescs}
-        on:layernum ={layerSwitch}
-        on:projDup = {dupProjectInside}
-        {width} {height} {project} {layerToSee} {NumBar}/>
-    </div>
-{:else if !(toggle.toggleLayer)}
-    <div transition:fade>
-        <Project {same as above}>
-    </div>
-{/if}
-
+{#if toggle.toggleMain}
+        <Mainscreen on:start = {switchtoProject} {width} {height} />
+    {:else}
+        {#if !(toggle.toggleProject)}
+            <ProjectSelect on:project = {projToggle}
+            on:projectnum ={projSwitch}
+            {width} {height} {database} {projToSee} {NumBar} {user}/>
+        {:else if toggle.toggleLayer}
+            <div transition:fade>
+                <Layer 
+                on:layerToProject = {layerToggle}
+                on:layerDup={layerDuplicate} 
+                on:deleteLayer={layerDelete}
+                {width} {height} {layers} {layerToSee} {projToSee} {NumBar}/>
+            </div>
+        {:else if dupProjectToggle}
+            <div transition:fade>
+                <Project on:layer = {layerToggle}
+                on:projToTot = {projToggle}
+                on:projectTexts = {changeDescs}
+                on:layernum ={layerSwitch}
+                on:projDup = {dupProjectInside}
+                {width} {height} {project} {projToSee} {NumBar}/>
+            </div>
+        {:else if !(toggle.toggleLayer)}
+            <div transition:fade>
+                <Project on:layer = {layerToggle}
+                on:projToTot = {projToggle}
+                on:projectTexts = {changeDescs}
+                on:layernum ={layerSwitch}
+                on:projDup = {dupProjectInside}
+                {width} {height} {project} {projToSee} {NumBar}/>
+            </div>
+        {/if}
+    {/if}
 ```
 
 Basically, switching between pages used a dispatch mechanism. Here, not only the switching of the simple page, but also the data are dispatched to reflect the behavior at a point in time on each page. It was gathered in App.svelte and be processed and resupplied.
 
-Three toggles were used. First of all, there are basic DB-project toggle and project-layer toggle. In addition, there is a toggle that opens when copying a project, as the name suggests, called dupProjectToggle.
+Four toggles were used. First of all, there are basic DB-project toggle and project-layer toggle. In addition, there is a toggle that opens when copying a project, as the name suggests, called `dupProjectToggle`. Lastly, to distinguish main screen and project list, `switchToProject` toggle exists.
 
 The reason for this was the project copy function of the Project page, which was to implement the function of transferring the page to the copied project at the same time as the copy.
 
@@ -151,7 +165,7 @@ The reason for this was the project copy function of the Project page, which was
 ## DB page
 ![Selecting_page](pics/selectionPage.png)
 
-It is a page that can be accessed immediately after the title, and the main function is to select the project you want.
+It is a page that can be accessed immediately after the title, and the main function is to select the project you want. The database of the projects are imported from *Realtime Database* of Firebase, which is constantly updated while users add, edit, and delete layers and projects.
 
 ### Functions
 - (Click project part) Toggle project to open pre-listen/ duplicate icon
@@ -159,7 +173,7 @@ It is a page that can be accessed immediately after the title, and the main func
   - (When toggled) Can duplicate project
     - toggled project automatically change
     - add "-Copy" string in title of project if title size not exceed 25-5 char (max size of Title = 25 chars)
-  - (Click one more) Enter Project page
+  - (Click once more) Enter Project page
 - (Top tool bar) Back to title page, BPM changer
 - (Low + button) Add new project, with default format
 
@@ -197,7 +211,7 @@ Above all, this approach was possible because the maximum was 16 seconds in only
 # Instrument interactions (layer page)
 ![Base](pics/basePage.png)
 ## Base
-Base drums usually produce the loudest and dullest sound. Therefore, the task load is quite large in terms of interaction, and instead, the visual effect is large.
+Bass drums usually produce the loudest and dullest sound. Therefore, the task load is quite large in terms of interaction, and instead, the visual effect is large.
 
 Basically, Visual que was used to pull and release like a rubber band. First of all, if one hold the mouse, it draws a circle (meaning maximum) that can guess the intensity of playing the instrument, and drag it to make the line connected and the circle inside grow larger. And when user let it go, user get a point on the layer with a poping visual feedback.
 
@@ -244,3 +258,9 @@ In the case of visual interaction, during the click/dragging, like the amplitude
 ```
 
 Since Discrete differential was used to determine the speed of the cursor, moving average filter was applied to suppress noise and for natural, smooth interaction.
+
+# Challenges
+As we described at the top, we mainly used **svelte**, **p5.js**, **p5.sound**, **p5.play**, and **Firebase**. These are main challenges we met and solved.
+- To use Sprite, we applied p5.play to our project. However, the problem was p5-svelte does *NOT* support p5.play library. This made us to import p5.js in **instance mode**, instead of using p5-svelte in local.
+- As a result, it *restricted* using other functions and libraries(**tone.js, p5GUI**). To solve it, we used **p5.sound** and **p5.play** as alternatives for sound technique and GUI components, respectively. Also, applying methods such as `onMount()` was needed to solve additional conflicts and issues.
+- To share and merge codes easliy, we actively used git. Especially, merging individual codes by using **pull request** in GitHub helped a lot. Active learning and applying new features of git was one of our new trials.
