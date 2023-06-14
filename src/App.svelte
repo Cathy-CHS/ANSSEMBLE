@@ -123,7 +123,7 @@
             on:layerToProject = {layerToggle}
             on:layerDup={layerDuplicate} 
             on:deleteLayer={layerDelete}
-            {width} {height} {layers} {layerToSee} {NumBar}/>
+            {width} {height} {layers} {layerToSee} {projToSee} {NumBar}/>
         </div>
     {:else if dupProjectToggle}
         <div transition:fade>
@@ -132,7 +132,7 @@
             on:projectTexts = {changeDescs}
             on:layernum ={layerSwitch}
             on:projDup = {dupProjectInside}
-            {width} {height} {project} {layerToSee} {NumBar}/>
+            {width} {height} {project} {projToSee} {NumBar}/>
         </div>
     {:else if !(toggle.toggleLayer)}
         <div transition:fade>
@@ -141,7 +141,7 @@
             on:projectTexts = {changeDescs}
             on:layernum ={layerSwitch}
             on:projDup = {dupProjectInside}
-            {width} {height} {project} {layerToSee} {NumBar}/>
+            {width} {height} {project} {projToSee} {NumBar}/>
         </div>
     {/if}
 {/if}

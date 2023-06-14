@@ -2,8 +2,9 @@
     import { onMount, createEventDispatcher } from 'svelte';
     import { colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, MasterVolOrigin, text_start } from '../Constants.svelte';
     import { timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp } from '../layers/LayerSettings.svelte';
+    import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
 
-    export let [width, height, project, layerToSee, NumBar] = [400,300, {}, []];
+    export let [width, height, project, projToSee, NumBar] = [400,300, {}, []];
     
     let layers = project.Layers;
 
@@ -73,6 +74,12 @@
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
             timegoes();
+            writeData(project);
+        }
+
+        function writeData(project) {
+            const db = getDatabase();
+            set(ref(db, `${projToSee}`), project);
         }
 
         p5.mouseWheel = (a)=>{
@@ -281,7 +288,6 @@
                 for (let layer of layers) {
                     for (let point of layer.points) {
                         if (absoluteTick == (point.bar-1)*256+point.start) {
-                            // console.log(layer.Inst);
                             if (point.hasOwnProperty("duration")) {
                                 const inst = instList.indexOf(layer.Inst);
                                 const pitchnum = pianoPitchList.indexOf(point.pitch);

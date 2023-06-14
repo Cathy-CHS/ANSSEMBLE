@@ -1,11 +1,9 @@
 <script>
     import { onMount, createEventDispatcher } from 'svelte';
-    // import * as Tone from 'tone';
     import {colors, numBarShow, startingPoint, layerWidth, lineWidth,  HeightBetLayer, text_end, BPMorigin, text_start} from '../Constants.svelte';
-
-
     import {timeCursorMake,  timeCursorMove, grid, layerColoring, layerdrawing, makeButton, makeLayerSp} from '../layers/LayerSettings.svelte';
-  import { text } from 'svelte/internal';
+    import { text } from 'svelte/internal';
+    import { ref, child, get, set, getDatabase, onValue } from 'firebase/database';
 
     export let [width, height, database, projToSee, NumBar, user] = [400,300, {}, []];
     
@@ -156,6 +154,8 @@
             database[index] = JSON.parse(JSON.stringify(database[projectToSee]))
             if (database[index].Title.length<=(25-5)) database[index].Title +="-Copy" 
             layerSps.push(makeLayerSp(p5, toggleToProject, showHeight, index, index))
+            const db = getDatabase();
+            set(ref(db, `${index}`), database[projectToSee]);
             projectToSee = index
             updateWheelSps()
             console.log(database)
@@ -171,11 +171,12 @@
             NumOrbit : 0,
             Origin : null,
             NumReproduction : 0,
-            Layers :[{Inst:"base", points:[]}]
+            Layers :[{Inst:"base", Amplitude: 1, points:[]}]
             }
             let index = Object.keys(database).length
-            
             database[index] = newProject
+            const db = getDatabase();
+            set(ref(db, `${index}`), newProject);
             layerSps.push(makeLayerSp(p5, toggleToProject, showHeight, index, index))
             console.log(database)
         }

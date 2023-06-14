@@ -119,7 +119,6 @@
         
         //[ [key, pitch], ...]
         let tempPitch = playPiano (tempKeys)
-        //console.log(tempPitch)
         drawPiano(tempKeys, p5);
         if (!(tempPitch.length)) {
             existingKeyPitches = []
@@ -132,14 +131,12 @@
         })
         // drawing keys 
         let existingKeys = existingKeyPitches.map(function(element) {return element[0]})
-        // console.log(existingKeys);
         
         for (let keyPitch of tempPitch){
             if (existingKeys.includes(keyPitch[0])){
                 // [key, pointIndex] [1] of point to modify
                 let pointIndex = existingKeyPitches[existingKeys.indexOf(keyPitch[0])][1]
                 let mPoint =  layer.points[pointIndex]
-                
                 mPoint.duration = absoluteTick - ((mPoint.bar-1)*256 +mPoint.start);
             }else{
                 let starting = absoluteTick
