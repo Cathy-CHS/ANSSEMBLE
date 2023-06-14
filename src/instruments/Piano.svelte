@@ -21,8 +21,8 @@
     export function drawPiano (keys, p5) {
         const width_ratio = p5.width/2000;
         const height_ratio = p5.height/1200;
-        const Xoffset = width_ratio*100;
-        const Yoffset = width_ratio*100;
+        const Xoffset = width_ratio*150;
+        const Yoffset = width_ratio*130;
         highlight1 = new Array(11).fill(0);
         highlight2 = new Array(12).fill(0);
         highlight3 = new Array(9).fill(0);
@@ -87,7 +87,7 @@
         //console.log(keys);
         for (let key of keys){
             if (key1.includes(key)){
-                tempPitch.push([key, key1ToPitch[key1.indexOf(key)]]) ;
+                tempPitch.push([key, key1ToPitch[key1.indexOf(key)]]);
             }
             if (key2.includes(key)){
                 tempPitch.push([key,key2ToPitch[key2.indexOf(key)]]);
