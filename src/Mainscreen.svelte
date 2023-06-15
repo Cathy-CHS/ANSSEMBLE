@@ -69,7 +69,7 @@
             p5.textSize(50);
             var name = input.value();
             console.log(name)
-            if (name == ''){
+            if (name == '' || name == "Your nickname"){
                 p5.fill(255);
                 console.log('Please type your name...');
             }
