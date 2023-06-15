@@ -30,6 +30,7 @@
   - [Piano](#piano)
   - [Snare](#snare)
   - [Cymbal](#cymbal)
+- [Challenges](#challenges)
 
 
 # Anssemble

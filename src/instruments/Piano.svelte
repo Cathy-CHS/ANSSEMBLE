@@ -46,7 +46,7 @@
         }
 
         p5.translate(Xoffset, Yoffset);
-        /////////
+
         p5.fill(0);
         p5.stroke('#93c7f1');
         p5.strokeWeight(width_ratio*5);
@@ -84,7 +84,6 @@
 
     function playPiano (keys) {
         let tempPitch = []
-        //console.log(keys);
         for (let key of keys){
             if (key1.includes(key)){
                 tempPitch.push([key, key1ToPitch[key1.indexOf(key)]]);

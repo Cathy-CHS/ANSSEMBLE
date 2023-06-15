@@ -57,7 +57,6 @@
         // 1 bar time / 256 = 1 tick time
         // inverse of 1 tick time = fr
         let frameRate = 1/(60/(BPM/4)/256)
-        //console.log(frameRate);
 
         let isPlay = 0;
 
@@ -70,9 +69,7 @@
             p5.createCanvas(width, height);
             p5.noStroke();
             p5.frameRate(frameRate);
-           // setupPiano(p5, width, height);
             timeCursor = timeCursorMake(p5, height);
-            // await Tone.start();
             makeButtons()
             makeLayerSps()
         }
@@ -84,18 +81,6 @@
             popUp()
             grid(p5, height, showLocation)
             drawSettings ()
-            /*
-                let fieldColor = p5.color(colors.default)
-                fieldColor.setAlpha(100*BPMpup/frameRate);
-                p5.fill(fieldColor)
-                p5.textFont('Pretendard Medium');
-                p5.textAlign(p5.CENTER, p5.CENTER)
-                p5.textSize(height/3);
-                p5.text('BPM = '+ BPM,width/2, height/2 )
-                BPMpup--
-                p5.textAlign(p5.LEFT, p5.TOP)
-            }
-            */
             p5.textFont('Pretendard Medium');
             p5.textSize(height/40);
             p5.textWrap(p5.CHAR)
@@ -109,7 +94,6 @@
                 p5.fill(p5.color(colors.default))
                 p5.text(database[i].Title, startingPoint/2, elemHeight- height/40*3/2, text_end/3.7)
             }
-            //p5.textAlign(p5.LEFT, p5.TOP)
             keyboardHandler()
             absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
             mouseHandler()
@@ -117,7 +101,6 @@
         }
 
         p5.mouseWheel = (a)=>{
-            //console.log(a)
             if (p5.mouseX>startingPoint){
                 showHeight+=((a.delta>0)? -1:1)*height/25
                 updateWheelSps()
@@ -165,7 +148,6 @@
             Title: "New Project",
             Tag : [],
             Desc : "Write the description in 200 characters",
-            // 8 마디
             NumBar : "4",
             NumOrbit : 0,
             Origin : null,
@@ -247,7 +229,6 @@
 
         function mouseHandler(){
             //interaction section
-            //console.log(p5.mouseX, p5.mouseY)
             p5.noStroke()
             p5.blendMode(p5.HARD_LIGHT);
 

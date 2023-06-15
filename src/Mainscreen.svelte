@@ -13,7 +13,6 @@
         let input;
         let gui;
         let button;
-        // let namelist = ['KHJ', 'LNH', 'CHS']
 
         let ellipse1 = [p5.windowWidth/2000*300,p5.windowWidth/2000*300,p5.windowWidth/2000*300*3,p5.random(5),p5.random(5)];
         let ellipse2 = [p5.windowWidth/2000*800,p5.windowWidth/2000*800,p5.windowWidth/2000*250*3,p5.random(5),p5.random(5)];
@@ -23,7 +22,6 @@
         let ellipse6 = [p5.windowWidth/2000*1600,p5.windowWidth/2000*200,p5.windowWidth/2000*200*3,p5.random(5),p5.random(5)];
 
         p5.setup = () => {
-            // p5.createCanvas(p5.windowWidth, p5.windowWidth/2000*1200);
             p5.createCanvas(width, height);
             input = p5.createInput('Your nickname');
             input.position(p5.width/2-width/2000*300, p5.height/2);
@@ -44,8 +42,6 @@
             p5.noStroke(255);
             p5.textSize(width_ratio*50);
             p5.fill(153,228,211,200);
-            
-
 
             p5.blendMode(p5.HARD_LIGHT)
             p5.fill(250,222,150,180);
@@ -92,7 +88,6 @@
         
             let xspeed = ellipse[3];
             let yspeed = ellipse[4];
-            // console.log(ellipse[0],ellipse[1],ellipse[2],ellipse[3],ellipse[4]);
             p5.ellipse(x, y, r*2, r*2);
             ellipse[0] += ellipse[3]*0.1;
             ellipse[1] += ellipse[4]*0.1;
@@ -108,11 +103,9 @@
         const buttonDia = width/20
         function makeButton(){
             let button = new p5.Sprite(p5.width/2, p5.height*0.65, buttonDia, buttonDia, 'kinematic');
-            //button.textFont='Pretendard Black';
             button.draw = () =>{
                 
                 p5.fill(20);
-                //p5.fill('#bd9af0');
                 p5.ellipse(0, 0, buttonDia, buttonDia);
                 p5.fill(255);
                 p5.textAlign(p5.CENTER, p5.CENTER);
@@ -129,7 +122,6 @@
             return button
         }
     }
-
 
     let sketchId;
         onMount(function () {

@@ -38,7 +38,7 @@
         }
         }
         p5.translate(Xoffset, Yoffset);
-        /////////
+        
         p5.fill(0);
         p5.stroke('#fade96');
         p5.strokeWeight(width_ratio*5);
@@ -102,7 +102,6 @@
     };
     function playSnare (keys) {
         let useableKeys = []
-        //console.log(keys);
         for (let key of keys){
             if (key1.includes(key)){
                 useableKeys.push(key) ;
@@ -135,18 +134,16 @@
         
         //[ [key, pitch], ...]
         let useableKeys = playSnare (tempKeys)
-        //console.log(useableKeys)
         drawSnare(tempKeys, p5);
         if (!(useableKeys.length)) {
             existingKeys = []
         }
         existingKeys = existingKeys.filter((value, index, arr) =>{
             if (useableKeys.includes(value[0])){
-                //console.log(useableKeys)
                 return value
             }
         })
-        // console.log(existingKeys);
+        
         let amp = 30; 
         for (let key of useableKeys){
             if (!(existingKeys.includes(key))){

@@ -22,7 +22,7 @@
         if (timeCursor.mouse.dragging()) {
             let mouseLocation = p5.mouse.x;
             let relLocation = mouseLocation-X;
-            timeCursor.pos.x = Math.max(startingPoint, mouseLocation)// + timeCursor.mouse.x
+            timeCursor.pos.x = Math.max(startingPoint, mouseLocation)
             absoluteTick = parseInt(absoluteTick + relLocation/layerWidth*(numBarShow*256) * 0.1)
             if (absoluteTick<=0) absoluteTick = 0;
             else if(absoluteTick>=maxNumBar*256) absoluteTick = maxNumBar*256;
@@ -33,7 +33,7 @@
     export function timeCursorRemove(timeCursor){
         timeCursor.remove()
     }
-            //For element moving
+    //For element moving
 
     let showLocation = 0
     function timeToX(bar, start, showLoc = showLocation){
@@ -69,7 +69,6 @@
     }
 
     export function layerdrawing(p5, yLocation, layer){
-        // console.log("layer: "+JSON.stringify(layer));
         let points = layer.points;
         let inst = layer.Inst;
         p5.strokeWeight(lineWidth);

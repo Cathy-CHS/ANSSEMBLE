@@ -96,7 +96,6 @@
         }
 
         p5.mouseWheel = (a)=>{
-            //console.log(a)
             if (p5.mouseX>startingPoint){
                 showHeight+=((a.delta>0)? -1:1)*height/25
                 updateLayerSps()
@@ -114,7 +113,6 @@
         let layerMakers = []
         
         function makeButtons(){
-            //backButton = makeButton(p5, 'Back', toggleToNode, 0)
             backButton = makeButton(p5, 'Back', projToTot , 0, 0)
             duplButton = makeButton(p5, 'AddProject', dupProject, 1, 0)
             ampButton = makeButton(p5, 'AmpIcon', amplitudeChanger, 2)

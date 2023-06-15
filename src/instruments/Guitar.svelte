@@ -41,7 +41,6 @@
         else if (interactionTile.mouse.pressing()) {
             p5.beginShape();
             p5.stroke('#99E4D3');
-            // p5.noFill();
             p5.strokeWeight(4);
             p5.vertex(width_ratio*750, height_ratio*650);
             p5.bezierVertex(p5.mouseX, p5.mouseY,p5.mouseX, p5.mouseY, width_ratio*1800,height_ratio*650);
@@ -57,7 +56,6 @@
             console.log(Math.abs(pitch));
             amp = Number.parseFloat(Math.abs(height_ratio*650-y2)*0.005).toFixed(2);
             if (amp > 1) amp = 1;
-            // console.log(amp);
             if (!layer.points) layer.points = [];
             if (pitches != []){
                 for (let pitch of pitches) {

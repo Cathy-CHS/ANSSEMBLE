@@ -198,14 +198,7 @@
             p5.textSize(width_ratio*30);
             p5.text('How to play: \n'+inst_description[inst],text_start,height_ratio*351);
             
-            // if (inst=='guitar'){
-            //     p5.textSize(width_ratio*20);
-            //     p5.text('pitch',text_start,height_ratio*474);
-            //     drawButtons();
-            // }
-
             p5.textSize(width_ratio*20);
-            //p5.text('Layer Amp',text_start,height_ratio*869);
         };
 
         function makeInteractionField(){
