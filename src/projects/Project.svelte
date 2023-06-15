@@ -43,6 +43,7 @@
     const guitarPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','C3','D3','E3','F3','G3','A3','B3','C4','D4'];
 
     const dispatch=createEventDispatcher();
+    let absoluteRaw = 0;
     let absoluteTick = 0;
     const sketch = (p5) =>{
         let timeCursor
@@ -56,6 +57,8 @@
         let frameRate = 1/(60/(BPM/4)/256)
 
         let isPlay = 0;
+
+        let incrementMulti = 1;
 
         p5.preload = () => {
             loadSoundtrack(soundObject);
@@ -84,7 +87,7 @@
                 layerdrawing(p5, showHeight+(i+1)*HeightBetLayer, layers[i]);
             }
             keyboardHandler()
-            absoluteTick = timeCursorMove(p5, timeCursor, pointer, absoluteTick, NumBar)
+            absoluteRaw = timeCursorMove(p5, timeCursor, pointer, absoluteRaw, NumBar)
             mouseHandler()
             timegoes();
             writeData(project);
@@ -169,6 +172,7 @@
             frameRate = 1/(60/(BPM/4)/256)
             p5.frameRate(frameRate);
             BPMpup = frameRate;
+            incrementMulti = BPMmulti[BPMindex]
             console.log(BPM);
         }
 
@@ -319,22 +323,24 @@
                         }
                     }
                 }
-                absoluteTick ++;
+                absoluteRaw = absoluteRaw+incrementMulti
+                absoluteTick = Math.floor(absoluteRaw)
             }
 
-            if (absoluteTick<=numBarShow/2*256){
-                pointer = absoluteTick
+            if (absoluteRaw<=numBarShow/2*256){
+                pointer = absoluteRaw
                 showLocation = 0;
-            } else if (absoluteTick>(NumBar-numBarShow/2)*256){
-                pointer = absoluteTick - (NumBar-numBarShow)*256; 
+            } else if (absoluteRaw>(NumBar-numBarShow/2)*256){
+                pointer = absoluteRaw - (NumBar-numBarShow)*256; 
                 showLocation = (NumBar-numBarShow)*256;
-                if (absoluteTick>=NumBar*256){
+                if (absoluteRaw>=NumBar*256){
+                    absoluteRaw = 0;
                     absoluteTick = 0;
                 }
             }
             else {
                 pointer =numBarShow/2*256;
-                showLocation =absoluteTick - numBarShow/2*256}
+                showLocation =absoluteRaw - numBarShow/2*256}
         }
         //For decoding drag
         let xToTick  = (X) => (X-startingPoint)*numBarShow*256/layerWidth
