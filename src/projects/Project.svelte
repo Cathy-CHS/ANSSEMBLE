@@ -302,6 +302,7 @@
 
         function timegoes(){
             if(isPlay){
+                let diffCnt = Math.ceil(incrementMulti)
                 for (let layer of layers) {
                     if (layer.points) {
                         for (let point of layer.points) {
@@ -318,6 +319,27 @@
                                 } else {
                                     const inst = instList.indexOf(layer.Inst);
                                     soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
+                                }
+                            }
+                            if(diffCnt>=1){
+                                console.log(diffCnt)
+                                console.log(absoluteTick, absoluteRaw)
+                                for (let i=0; i<diffCnt; i++){
+                                    if (absoluteTick-i == (point.bar-1)*256+point.start) {
+                                        if (layer.Inst == 'piano') {
+                                            const inst = instList.indexOf(layer.Inst);
+                                            const pitchnum = pianoPitchList.indexOf(point.pitch);
+                                            soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude);
+                                            soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                                        } else if (layer.Inst == 'guitar') {
+                                            const inst = instList.indexOf(layer.Inst);
+                                            const pitchnum = guitarPitchList.indexOf(point.pitch);
+                                            soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude*point.amp/100);
+                                        } else {
+                                            const inst = instList.indexOf(layer.Inst);
+                                            soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
+                                        }
+                                    }
                                 }
                             }
                         }

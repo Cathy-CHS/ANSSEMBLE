@@ -272,6 +272,7 @@
         const guitarPitchList = ['C#3','D#3','F#3','G#3','A#3','C#4','C3','D3','E3','F3','G3','A3','B3','C4','D4'];
 
         function timegoes(){
+            let diffCnt = Math.ceil(incrementMulti)
             if(isPlay){
                 for (let layer of layers) {
                     if (layer.points) {
@@ -289,6 +290,27 @@
                                 } else {
                                     const inst = instList.indexOf(layer.Inst);
                                     soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
+                                }
+                            }
+                            if(diffCnt>=1){
+                                console.log(diffCnt)
+                                console.log(absoluteTick, absoluteRaw)
+                                for (let i=0; i<diffCnt; i++){
+                                    if (absoluteTick-i == (point.bar-1)*256+point.start) {
+                                        if (layer.Inst == 'piano') {
+                                            const inst = instList.indexOf(layer.Inst);
+                                            const pitchnum = pianoPitchList.indexOf(point.pitch);
+                                            soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude);
+                                            soundObject[inst].Soundtrack[pitchnum].stop(point.duration/frameRate);
+                                        } else if (layer.Inst == 'guitar') {
+                                            const inst = instList.indexOf(layer.Inst);
+                                            const pitchnum = guitarPitchList.indexOf(point.pitch);
+                                            soundObject[inst].Soundtrack[pitchnum].play(0, 1, layer.Amplitude*point.amp/100);
+                                        } else {
+                                            const inst = instList.indexOf(layer.Inst);
+                                            soundObject[inst].Soundtrack[0].play(0, 1, layer.Amplitude*point.amp/100);
+                                        }
+                                    }
                                 }
                             }
                         }
