@@ -4,7 +4,7 @@
 
 **Deploy website: [WebApp link](https://id311-finalteam5.web.app/)**
 
-**Demo video: [Video link](demo)**
+**Demo video: [Video link](https://youtu.be/MIKchVZx5A8)**
 
 
 
@@ -88,7 +88,7 @@ Code files are grouped by functions, which are explained as below.
 
 ### Common characteristic
 
-All projects are based on four bars. The default BPM is designated as 60, and can be done about twice as fast. Our project supports about five instruments which consists of two musical instruments (piano, guitar) and three percussion instruments (base, cymbals, and snare). Each instrument has a distinctive interaction.
+All projects are based on four bars. The default BPM is designated as 60, and can be done about twice as fast. Our project supports about five instruments which consists of two musical instruments (piano, guitar) and three percussion instruments (base, cymbals, and snare). Each instrument has a distinctive interaction. *(We fixed issues for controlling BPM, which was not properly held in in-class presentation.)*
 
 Player can also access the hidden lines above and below by scrolling the mouse.
 
@@ -226,6 +226,8 @@ Press the keyboard with left hand to adjust the pitch and bounce the string to d
 It is possible to pull the string by clicking the string and dragging the mouse. When player release the mouse, an animation, which line bounces up and down and then stops, will be played. 
 Depending on how much the string is pulled, if the string is placed further away, it produces a stronger sound and the amplitude of the guitar string animation is even greater.
 The player can also select the desired pitch combination with the keyboard, just like holding the guitar's code.
+
+Determine the intensity of the sound by calculating the difference between the position when the mouse is released and the first position. The value is then continuously multiplied by -1/2 to create an animation in which the line shakes.
 
 
 
