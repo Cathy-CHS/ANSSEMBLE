@@ -1,4 +1,4 @@
-# ID311_FinalProject
+# ANSSEMBLE
 
 **Online repository: [GitHub repo](https://github.com/Cathy-CHS/ID311_FinalProject)**
 
@@ -9,8 +9,7 @@
 
 
 
-- [ID311\_FinalProject](#id311_finalproject)
-- [Anssemble](#anssemble)
+- [ANSSEMBLE](#anssemble)
 - [Structure \& Switching](#structure--switching)
   - [Common feature](#common-feature)
     - [Common characteristic](#common-characteristic)
@@ -32,8 +31,7 @@
   - [Cymbal](#cymbal)
 - [Challenges](#challenges)
 
-
-# Anssemble
+*This is a Github repository for the final course project, ID311 Software Prototyping in 2023 Spring at KAIST.*
 
 **This project, "Anssemble" is a loop station playground.** Players can create short songs by stacking as many layers of instruments as they want. Players can also view other people's projects and modify them to their heart's content. And they can also share their thoughts briefly through the title and description of the project.
 
