@@ -24,7 +24,7 @@
   - [Layer Page](#layer-page)
     - [Functions](#functions-2)
 - [Instrument interactions (layer page)](#instrument-interactions-layer-page)
-  - [Base](#base)
+  - [Bass](#bass)
   - [Guitar](#guitar)
   - [Piano](#piano)
   - [Snare](#snare)
@@ -86,7 +86,7 @@ Code files are grouped by functions, which are explained as below.
 
 ### Common characteristic
 
-All projects are based on four bars. The default BPM is designated as 60, and can be done about twice as fast. Our project supports about five instruments which consists of two musical instruments (piano, guitar) and three percussion instruments (base, cymbals, and snare). Each instrument has a distinctive interaction. *(We fixed issues for controlling BPM, which was not properly held in in-class presentation.)*
+All projects are based on four bars. The default BPM is designated as 60, and can be done about twice as fast. Our project supports about five instruments which consists of two musical instruments (piano, guitar) and three percussion instruments (bass, cymbals, and snare). Each instrument has a distinctive interaction. *(We fixed issues for controlling BPM, which was not properly held in in-class presentation.)*
 
 Player can also access the hidden lines above and below by scrolling the mouse.
 
@@ -210,8 +210,8 @@ Above all, this approach was possible because the maximum was 16 seconds in only
 
 
 # Instrument interactions (layer page)
-![Base](pics/basePage.png)
-## Base
+![Bass](pics/basePage.png)
+## Bass
 Bass drums usually produce the loudest and dullest sound. Therefore, the task load is quite large in terms of interaction, and instead, the visual effect is large.
 
 Basically, Visual que was used to pull and release like a rubber band. First of all, if one hold the mouse, it draws a circle (meaning maximum) that can guess the intensity of playing the instrument, and drag it to make the line connected and the circle inside grow larger. And when user let it go, user get a point on the layer with a poping visual feedback.
@@ -247,7 +247,7 @@ In terms of visuals, the corresponding key is filled according to the pressing o
 The basic mechanism is derived from the real cymbals. The faster player hit the cymbals, the stronger the sound becomes. Therefore, hitting on the horizontal line with mouse cursor will create a playing point, where the corresponding amplitude changes according to the speed of the mouse.
 
 
-In the case of visual interaction, during the click/dragging, like the amplitude indicator of the Base, a circle is created which it's size depending on the speed of the cursor. Afterwards, when you virtually hit the line, a large circle appears and disappears in that position momentarily. It visually expresses an intense sound.
+In the case of visual interaction, during the click/dragging, like the amplitude indicator of the Bass, a circle is created which it's size depending on the speed of the cursor. Afterwards, when you virtually hit the line, a large circle appears and disappears in that position momentarily. It visually expresses an intense sound.
 
 ```Javascript
     function nowVel(){
